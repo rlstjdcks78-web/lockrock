@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="LOCK & ROCK">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#ffffff">
+    <title>도시락도 락이다 (LOCK & ROCK) - 대학생 커스텀 특가 도시락</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Pretendard Font -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                    },
+                    colors: {
+                        baemin: '#2ac1bc',
+                        baeminDark: '#219a96',
+                        rockRed: '#FF5A5F',
+                        bentoWood: '#e6dac3'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+        input, textarea {
+            user-select: text !important;
+            -webkit-user-select: text !important;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            height: 100dvh;
+            background-color: #121518;
+            font-family: 'Pretendard', sans-serif;
+            overflow: hidden;
+            overscroll-behavior: none;
+            touch-action: manipulation;
+        }
+
+        /* 모바일 노치 & 하단 홈바 Safe Area 대응 */
+        .safe-top {
+            padding-top: max(1rem, env(safe-area-inset-top));
+        }
+        .safe-bottom {
+            padding-bottom: max(1rem, env(safe-area-inset-bottom));
+        }
+        .safe-checkout-bar {
+            padding-bottom: max(0.875rem, calc(0.5rem + env(safe-area-inset-bottom)));
+        }
+
+        /* 모바일 화면 전환 애니메이션 및 완벽한 터치 제어 */
+        .app-screen {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+            will-change: transform;
+        }
+        .app-screen.screen-hidden {
+            transform: translateY(-100%);
+            pointer-events: none;
+        }
+
+        /* 스크롤바 숨기기 */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* 지도 배경 패턴 */
+        .map-bg {
+            background-color: #e5efe9;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.75) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(255,255,255,0.75) 2px, transparent 2px),
+                linear-gradient(rgba(255,255,255,0.35) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.35) 1px, transparent 1px);
+            background-size: 90px 90px, 90px 90px, 18px 18px, 18px 18px;
+            background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+        }
+
+        /* 도로 그래픽 */
+        .road-h {
+            position: absolute;
+            height: 26px;
+            width: 100%;
+            background: #ffffff;
+            border-top: 2px solid #cbd5e1;
+            border-bottom: 2px solid #cbd5e1;
+        }
+        .road-v {
+            position: absolute;
+            width: 26px;
+            height: 100%;
+            background: #ffffff;
+            border-left: 2px solid #cbd5e1;
+            border-right: 2px solid #cbd5e1;
+        }
+
+        /* 도시락 그리드 */
+        .bento-grid-4 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .bento-grid-5 {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 8px;
+        }
+        .bento-grid-5 > .slot-0 { grid-column: span 2; }
+        .bento-grid-5 > .slot-1 { grid-column: span 2; }
+        .bento-grid-5 > .slot-2 { grid-column: span 2; }
+        .bento-grid-5 > .slot-3 { grid-column: span 3; }
+        .bento-grid-5 > .slot-4 { grid-column: span 3; }
+
+        @keyframes floatBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .animate-float {
+            animation: floatBounce 1.8s infinite ease-in-out;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop {
+            animation: popIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+<body class="flex justify-center items-center w-full h-full">
+
+    <!-- 모바일 퍼스트 고정 컨테이너 (모바일에서는 100% 전체화면, PC에서는 430px 스마트폰 목업) -->
+    <div id="app-wrapper" class="relative w-full max-w-[430px] h-full sm:h-[100dvh] bg-[#f4f7f8] shadow-2xl overflow-hidden flex flex-col">
+
+        <!-- 토스트 알림창 (Alert 대체) -->
+        <div id="toast-container" class="absolute top-14 left-1/2 -translate-x-1/2 z-50 pointer-events-none w-[90%] flex flex-col items-center gap-2"></div>
+
+        <!-- ==========================================
+             [STEP 0] 시작 화면 (Splash / Intro Screen)
+             ========================================== -->
+        <div id="view-intro" class="app-screen z-30 flex flex-col justify-between bg-white px-5 safe-top safe-bottom overflow-y-auto no-scrollbar">
+            
+            <!-- 상단 브랜드 헤더 (로고 5번 연속 터치 시 관리자 PIN 모달 오픈) -->
+            <div class="flex items-center justify-between pt-1">
+                <div onclick="handleSecretLogoTap()" class="inline-flex items-center gap-2 cursor-pointer py-1 active:scale-95 transition">
+                    <span class="bg-rockRed text-white text-xs font-black px-2.5 py-1 rounded-lg tracking-wider shadow-xs">LOCK & ROCK</span>
+                    <span class="text-xs font-extrabold text-gray-500">도시락도 락이다</span>
+                </div>
+                <span class="text-[11px] font-bold text-baemin bg-teal-50 px-2.5 py-1 rounded-full border border-baemin/20">대학가 O2O 프로젝트</span>
+            </div>
+
+            <!-- 메인 타이틀 & 슬로건 -->
+            <div class="mt-2">
+                <div class="inline-block bg-red-50 text-rockRed text-[11px] font-extrabold px-2.5 py-1 rounded-md mb-2">
+                    🎸 새내기·팀플·자취생 점심 고민 끝!
+                </div>
+                <h1 class="text-[25px] leading-[1.28] font-black text-gray-900 tracking-tight">
+                    내 입맛은 <span class="text-baemin">LOCK</span>하고,<br>
+                    점심시간은 <span class="text-rockRed">ROCK</span>하게!<br>
+                    <span class="text-lg text-gray-800 font-extrabold">도시락도 락이다 (LOCK & ROCK)</span>
+                </h1>
+                <p class="text-xs text-gray-500 mt-1.5 leading-relaxed font-medium">
+                    선배·동기 눈치 보지 말고 내 맘대로 골라 담고 각자 결제하는 대학생 맞춤형 커스텀 특가 도시락 플랫폼
+                </p>
+            </div>
+
+            <!-- ==========================================================
+                 [대표님 이미지 교체 영역]
+                 아래 <img> 태그의 src="" 주소만 준비하신 이미지 파일 경로(또는 URL)로 바꾸시면
+                 시작 화면 중앙 배너 이미지가 즉시 변경됩니다!
+                 ========================================================== -->
+            <div class="relative w-full aspect-[16/9] rounded-2xl overflow-hidden shadow-md border border-gray-100 my-2.5 bg-gradient-to-br from-[#fff5f5] via-[#f0fdfa] to-[#fef3c7] flex items-center justify-center flex-shrink-0">
+                <img id="intro-hero-img" 
+                     src="https://placehold.co/800x450/FFF8F0/222222?text=LOCK+%26+ROCK%0A%EB%8F%84%EC%8B%9C%EB%9D%BD%EB%8F%84+%EB%9D%BD%EC%9D%B4%EB%8B%A4" 
+                     alt="도시락도 락이다 시작 이미지" 
+                     class="w-full h-full object-cover"
+                     onerror="this.style.display='none'">
+                
+                <!-- 이미지 위에 겹쳐지는 입체 배지 & 도시락 그래픽 -->
+                <div id="intro-hero-overlay" class="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent flex flex-col justify-between p-3.5">
+                    <div class="flex justify-between items-start">
+                        <span class="bg-white/95 backdrop-blur text-gray-900 text-[11px] font-extrabold px-2.5 py-1 rounded-full shadow-sm">
+                            🍱 N구 커스텀 조립 시뮬레이터
+                        </span>
+                        <span class="bg-rockRed text-white text-[11px] font-black px-2.5 py-1 rounded-full shadow-sm animate-pulse">
+                            마감특가 20~30%↓
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-11 h-11 rounded-2xl bg-bentoWood border-2 border-white shadow-md grid grid-cols-2 gap-0.5 p-1 flex-shrink-0">
+                            <div class="bg-white rounded-xs flex items-center justify-center text-xs">🥩</div>
+                            <div class="bg-white rounded-xs flex items-center justify-center text-xs">🥬</div>
+                            <div class="bg-white rounded-xs flex items-center justify-center text-xs">🍳</div>
+                            <div class="bg-white rounded-xs flex items-center justify-center text-xs">🌭</div>
+                        </div>
+                        <div class="text-white">
+                            <div class="text-sm font-black leading-snug">원하는 반찬만 쏙! 배달비 0원 묶음주문</div>
+                            <div class="text-[11px] text-gray-200 font-medium">총무가 N빵 정산 독촉할 필요 없는 각자내기</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 핵심 가치 3가지 카드 -->
+            <div class="space-y-1.5 my-1">
+                <div class="flex items-center gap-3 bg-gray-50 px-3.5 py-2 rounded-xl border border-gray-100">
+                    <span class="w-8 h-8 rounded-lg bg-teal-100/80 text-baemin flex items-center justify-center text-base font-black flex-shrink-0">🔒</span>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-xs font-extrabold text-gray-900">내 취향 반찬 LOCK (드래그 & 터치)</div>
+                        <div class="text-[11px] text-gray-500 truncate">버리는 반찬 없이 좋아하는 메뉴만 4구·5구에 조립</div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 bg-gray-50 px-3.5 py-2 rounded-xl border border-gray-100">
+                    <span class="w-8 h-8 rounded-lg bg-red-100/80 text-rockRed flex items-center justify-center text-base font-black flex-shrink-0">🚨</span>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-xs font-extrabold text-gray-900">우리 동네 반찬가게 마감특가 20~30% OFF</div>
+                        <div class="text-[11px] text-gray-500 truncate">당일 만든 신선한 반찬을 7천원대 가성비로 해결</div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 bg-gray-50 px-3.5 py-2 rounded-xl border border-gray-100">
+                    <span class="w-8 h-8 rounded-lg bg-amber-100/80 text-amber-600 flex items-center justify-center text-base font-black flex-shrink-0">🎸</span>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-xs font-extrabold text-gray-900">정산 스트레스 없이 각자내기 ROCK!</div>
+                        <div class="text-[11px] text-gray-500 truncate">단톡방 링크로 각자 결제하고 사장님껜 통합 주문서로 전송</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 시작하기 CTA 버튼 & 하단 시크릿 Admin 진입점 -->
+            <div class="pt-2">
+                <button onclick="handleStartApp()" class="w-full bg-rockRed hover:bg-red-600 text-white font-black py-4 rounded-2xl text-base shadow-lg shadow-red-500/30 transition transform active:scale-[0.98] flex items-center justify-center gap-2">
+                    <span>🍱 내 주변 반찬가게 찾고 도시락 만들기</span>
+                    <i class="fa-solid fa-chevron-right text-sm"></i>
+                </button>
+                <div class="text-center mt-2">
+                    <button onclick="openPinModal()" class="text-[10px] text-gray-300 hover:text-gray-400 font-semibold px-3 py-0.5">
+                        © LOCK & ROCK · Admin
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ==========================================
+             [STEP 1] 지도 기반 내 주변 반찬가게 탐색 화면
+             ========================================== -->
+        <div id="view-map" class="app-screen z-20 flex flex-col bg-white">
+            <!-- 지도 상단 헤더 (로고 5회 터치 시 관리자 진입 가능) -->
+            <div class="bg-white px-5 safe-top pb-3 shadow-sm z-10 border-b border-gray-100 flex items-center justify-between">
+                <div>
+                    <div onclick="handleSecretLogoTap()" class="inline-flex items-center gap-1.5 cursor-pointer active:scale-95 transition">
+                        <span class="bg-rockRed text-white text-[11px] font-black px-2 py-0.5 rounded-md tracking-wider">LOCK & ROCK</span>
+                        <span class="text-xs font-extrabold text-gray-700">도시락도 락이다</span>
+                    </div>
+                    <h2 class="text-base font-extrabold text-gray-900 mt-1">내 주변 반찬가게 찾기</h2>
+                </div>
+                <button onclick="handleBackToIntro()" class="text-xs font-bold text-gray-500 hover:text-gray-800 bg-gray-100 px-3 py-1.5 rounded-xl active:scale-95 transition">
+                    처음으로
+                </button>
+            </div>
+
+            <!-- 인터랙티브 캠퍼스 지도 영역 -->
+            <div class="relative flex-1 map-bg overflow-hidden">
+                <!-- 가상 도로 -->
+                <div class="road-h top-[32%]"></div>
+                <div class="road-h top-[68%]"></div>
+                <div class="road-v left-[28%]"></div>
+                <div class="road-v left-[72%]"></div>
+
+                <!-- 캠퍼스 랜드마크 -->
+                <div class="absolute top-[10%] left-[6%] bg-emerald-100/95 border border-emerald-300 text-emerald-800 px-3 py-1 rounded-xl text-[11px] font-bold shadow-xs">
+                    🏫 대학교 정문 캠퍼스존
+                </div>
+                <div class="absolute bottom-[12%] left-[6%] bg-blue-50/95 border border-blue-200 text-blue-700 px-2.5 py-1 rounded-lg text-[11px] font-semibold">
+                    🏠 자취촌 원룸 밀집구역
+                </div>
+
+                <!-- 상단 플로팅 가이드 -->
+                <div class="absolute top-3.5 left-1/2 -translate-x-1/2 bg-gray-900/85 backdrop-blur text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-md z-10 whitespace-nowrap animate-float">
+                    👇 매장을 터치해서 커스텀 도시락을 만들어 보세요!
+                </div>
+
+                <!-- 핀 1: 전주 반찬명가 -->
+                <button onclick="handleSelectShopPin('shop1')" id="pin-shop1" class="shop-pin absolute top-[32%] left-[38%] -translate-x-1/2 -translate-y-1/2 bg-white p-2.5 rounded-2xl shadow-xl border-2 border-baemin transition transform hover:scale-105 active:scale-95 text-left z-10 w-44">
+                    <div class="flex items-center justify-between">
+                        <span class="bg-rockRed text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded">마감특가 30%</span>
+                        <span class="text-[11px] font-bold text-amber-500">⭐ 4.9</span>
+                    </div>
+                    <div class="font-extrabold text-gray-900 text-xs mt-1">🍱 전주 반찬명가</div>
+                    <div class="text-[10px] text-gray-500 font-semibold mt-0.5">특가 12종 대기중 · 최소 7,000원</div>
+                    <div class="w-2.5 h-2.5 bg-white border-r-2 border-b-2 border-baemin rotate-45 absolute -bottom-1.5 left-1/2 -translate-x-1/2"></div>
+                </button>
+
+                <!-- 핀 2: 바른식단 효자점 -->
+                <button onclick="handleSelectShopPin('shop2')" id="pin-shop2" class="shop-pin absolute top-[62%] left-[66%] -translate-x-1/2 -translate-y-1/2 bg-white p-2.5 rounded-2xl shadow-xl border-2 border-transparent hover:border-baemin transition transform hover:scale-105 active:scale-95 text-left z-10 w-44">
+                    <div class="flex items-center justify-between">
+                        <span class="bg-baemin text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded">고단백 다이어트</span>
+                        <span class="text-[11px] font-bold text-amber-500">⭐ 4.8</span>
+                    </div>
+                    <div class="font-extrabold text-gray-900 text-xs mt-1">🥗 바른식단 효자점</div>
+                    <div class="text-[10px] text-gray-500 font-semibold mt-0.5">특가 5종 대기중 · 최소 7,000원</div>
+                    <div class="w-2.5 h-2.5 bg-white border-r-2 border-b-2 border-transparent rotate-45 absolute -bottom-1.5 left-1/2 -translate-x-1/2"></div>
+                </button>
+
+                <!-- 핀 3: 엄마손 대학로백반 -->
+                <button onclick="handleSelectShopPin('shop3')" id="pin-shop3" class="shop-pin absolute top-[50%] left-[25%] -translate-x-1/2 -translate-y-1/2 bg-white p-2 rounded-2xl shadow-lg border-2 border-transparent hover:border-baemin transition transform hover:scale-105 active:scale-95 text-left z-10 w-40">
+                    <div class="flex items-center justify-between">
+                        <span class="bg-amber-500 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded">자취생 소분특화</span>
+                        <span class="text-[11px] font-bold text-amber-500">⭐ 4.9</span>
+                    </div>
+                    <div class="font-extrabold text-gray-900 text-xs mt-1">🍲 엄마손 대학로백반</div>
+                    <div class="text-[10px] text-gray-500 font-semibold mt-0.5">집밥 반찬 · 최소 6,500원</div>
+                </button>
+            </div>
+
+            <!-- 하단 매장 상세 시트 -->
+            <div id="map-bottom-sheet" class="bg-white rounded-t-3xl px-5 pt-4 safe-bottom shadow-[0_-8px_25px_rgba(0,0,0,0.1)] z-20">
+                <div class="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-3"></div>
+                <div class="flex items-center gap-1.5">
+                    <span id="sheet-badge" class="bg-red-50 text-rockRed text-[11px] font-extrabold px-2 py-0.5 rounded-md">마감특가 20~30% 진행중</span>
+                    <span id="sheet-rating" class="text-xs font-bold text-gray-500">⭐ 4.9 · 최소주문 7,000원</span>
+                </div>
+                <h3 id="sheet-shop-name" class="text-xl font-black text-gray-900 mt-1">🍱 전주 반찬명가</h3>
+                <p id="sheet-shop-desc" class="text-xs text-gray-500 mt-0.5 mb-4">원하는 반찬만 골라 담고 팀원들과 배달비 걱정 없이 각자 결제하세요!</p>
+
+                <button onclick="handleEnterShop()" class="w-full bg-baemin hover:bg-baeminDark text-white font-black py-3.5 rounded-xl text-base shadow-lg shadow-teal-500/25 transition transform active:scale-[0.98] flex items-center justify-center gap-2">
+                    <span>커스텀 도시락 조립하기</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+
+        <!-- ==========================================
+             [STEP 2] 상점 커스텀 시뮬레이터 화면
+             ========================================== -->
+        <div id="view-store" class="app-screen flex flex-col w-full h-full bg-[#f4f7f8] z-10 overflow-hidden">
+            
+            <!-- 상점 상단 헤더 (로고 5번 터치 시 관리자 진입 가능) -->
+            <div class="bg-white px-4 safe-top pb-2.5 shadow-sm z-10 flex items-center justify-between border-b border-gray-100">
+                <div class="flex items-center gap-2.5">
+                    <button onclick="handleBackToMap()" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-700 font-bold transition active:scale-90">
+                        <i class="fa-solid fa-arrow-left text-sm"></i>
+                    </button>
+                    <div>
+                        <div onclick="handleSecretLogoTap()" class="inline-flex items-center gap-1 cursor-pointer">
+                            <span class="text-[10px] font-black text-rockRed tracking-wider">LOCK & ROCK</span>
+                            <span class="text-[10px] text-gray-300">|</span>
+                            <span class="text-[10px] font-bold text-gray-500">도시락도 락이다</span>
+                        </div>
+                        <h2 id="store-header-name" class="text-base font-extrabold text-gray-900 leading-tight">전주 반찬명가</h2>
+                    </div>
+                </div>
+
+                <!-- 팀플 공유 버튼 (트래킹 대상) -->
+                <button onclick="handleShareClick()" class="bg-baemin hover:bg-baeminDark text-white px-3 py-1.5 rounded-full text-xs font-extrabold flex items-center gap-1 shadow-xs transition active:scale-95">
+                    <span>🔗 팀플 공유</span>
+                </button>
+            </div>
+
+            <!-- 4구 / 5구 용기 선택 바 -->
+            <div class="px-4 py-2 bg-white border-b border-gray-100 flex items-center gap-2">
+                <div class="flex bg-gray-100 p-1 rounded-xl flex-1">
+                    <button id="ngu-btn-4" onclick="handleChangeNgu(4)" class="flex-1 py-1.5 text-xs font-extrabold rounded-lg transition bg-gray-900 text-white shadow-xs">
+                        4구 LOCK (일반)
+                    </button>
+                    <button id="ngu-btn-5" onclick="handleChangeNgu(5)" class="flex-1 py-1.5 text-xs font-extrabold rounded-lg transition text-gray-600 hover:text-gray-900">
+                        5구 LOCK (대용량)
+                    </button>
+                </div>
+                <button onclick="handleResetBento()" class="px-3 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-bold transition active:scale-95">
+                    비우기
+                </button>
+            </div>
+
+            <!-- 중앙: 도시락 조립 캔버스 영역 -->
+            <div class="flex-1 flex flex-col items-center justify-center px-4 py-1.5 relative overflow-hidden min-h-0">
+                
+                <!-- 드래그 앤 터치 가이드 -->
+                <div id="canvas-guide" class="mb-1.5 bg-rockRed text-white px-3.5 py-1 rounded-full text-[11px] font-bold shadow-xs flex items-center gap-1.5 animate-float">
+                    <span>👇 아래 반찬을 <b>터치(클릭)</b>하거나 위로 <b>끌어다 놓으세요!</b></span>
+                </div>
+
+                <!-- 도시락 박스 (모바일 작은 화면에서도 잘리지 않도록 반응형 크기 적용) -->
+                <div id="bento-container" class="w-full max-w-[260px] sm:max-w-[290px] aspect-square bg-bentoWood rounded-2xl p-2.5 shadow-inner border-4 border-[#d5c4a1] bento-grid-4 transition-all">
+                    <!-- JS로 슬롯 렌더링 -->
+                </div>
+
+                <!-- 칼로리 표시 On/Off 스위치 및 절약 배지 -->
+                <div class="w-full max-w-[260px] sm:max-w-[290px] flex justify-between items-center mt-1.5 px-1">
+                    <button onclick="toggleKcalVisibility()" class="text-[11px] font-bold text-gray-500 hover:text-gray-800 bg-white px-2.5 py-1 rounded-lg border border-gray-200 shadow-2xs flex items-center gap-1 active:scale-95">
+                        <span id="kcal-toggle-text">🥗 열량 표시 켜짐</span>
+                    </button>
+                    <span id="discount-saved-badge" class="hidden bg-red-50 text-rockRed border border-red-200 text-[11px] font-extrabold px-2 py-0.5 rounded-lg">
+                        마감특가 0원 절약!
+                    </span>
+                </div>
+            </div>
+
+            <!-- 하단: 반찬 카테고리 & 카드 리스트 -->
+            <div class="bg-white rounded-t-3xl pt-3 pb-20 shadow-[0_-5px_20px_rgba(0,0,0,0.06)] z-10 flex-shrink-0">
+                <!-- 카테고리 탭 -->
+                <div class="flex gap-2 overflow-x-auto no-scrollbar px-4 mb-2.5">
+                    <button onclick="handleSelectCategory('special')" data-cat="special" class="cat-tab px-3.5 py-1.5 rounded-full text-xs font-extrabold whitespace-nowrap transition bg-rockRed text-white shadow-xs">
+                        🚨 마감특가 (20~30% OFF)
+                    </button>
+                    <button onclick="handleSelectCategory('meat')" data-cat="meat" class="cat-tab px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition bg-gray-100 text-gray-600">
+                        🥩 고기/단백질
+                    </button>
+                    <button onclick="handleSelectCategory('veggie')" data-cat="veggie" class="cat-tab px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition bg-gray-100 text-gray-600">
+                        🥬 야채/나물
+                    </button>
+                </div>
+
+                <!-- 반찬 가로 스크롤 리스트 -->
+                <div id="food-list-container" class="flex gap-3 overflow-x-auto no-scrollbar px-4 pb-1">
+                    <!-- JS로 렌더링 -->
+                </div>
+            </div>
+
+            <!-- 최하단 고정 결제 바 (Safe Area 대응) -->
+            <div class="absolute bottom-0 inset-x-0 bg-baemin text-white px-5 pt-3 safe-checkout-bar flex justify-between items-center z-30 shadow-[0_-4px_15px_rgba(42,193,188,0.35)]">
+                <div>
+                    <div class="text-lg font-black leading-tight">
+                        내 결제 <span id="total-price-text">0</span>원
+                    </div>
+                    <div id="bottom-kcal-row" class="text-xs text-teal-50 font-medium mt-0.5">
+                        🥗 누적 열량: <span id="stat-kcal" class="font-extrabold">0</span> kcal · <span id="filled-count-text">0/4칸</span>
+                    </div>
+                </div>
+                <button onclick="handleCheckoutClick()" class="bg-white hover:bg-gray-50 text-baemin font-black px-4 py-2.5 rounded-xl text-sm shadow-md transition transform active:scale-95">
+                    각자내기 결제
+                </button>
+            </div>
+        </div>
+
+
+        <!-- ==========================================
+             [STEP 3] 마지막 단계: 방문자 이메일 수집 모달 (쿠폰 문구 없음)
+             ========================================== -->
+        <div id="modal-lead" class="fixed inset-0 z-50 bg-black/65 backdrop-blur-xs hidden items-center justify-center p-4">
+            <div class="bg-white w-full max-w-[390px] rounded-3xl overflow-hidden shadow-2xl animate-pop">
+                
+                <!-- 상단 스마트 묶음 결제 설명 배너 -->
+                <div class="bg-gradient-to-r from-baemin to-teal-500 p-5 text-white relative">
+                    <button onclick="closeLeadModal()" class="absolute top-4 right-4 w-7 h-7 rounded-full bg-black/20 hover:bg-black/30 flex items-center justify-center text-white">
+                        <i class="fa-solid fa-xmark text-sm"></i>
+                    </button>
+                    <span id="lead-modal-tag" class="bg-white/20 text-white text-[11px] font-extrabold px-2.5 py-0.5 rounded-full">
+                        🎉 스마트 묶음 주문 & 각자내기
+                    </span>
+                    <h3 id="lead-modal-title" class="text-lg font-black mt-2 leading-snug">
+                        내 도시락 금액만 각자 결제하면,<br>사장님께는 [하나의 통합 주문서]로 전송됩니다!
+                    </h3>
+                    <p class="text-[11px] text-teal-50 mt-1 opacity-95">
+                        총무가 돈 달라고 독촉할 필요 없이 깔끔하게 각자 정산 끝!
+                    </p>
+                </div>
+
+                <!-- 본문: 조립 요약 + 정식 오픈 알림 이메일 입력 폼 -->
+                <div id="lead-form-view" class="p-5">
+                    <!-- 내가 담은 도시락 내역 -->
+                    <div class="bg-gray-50 rounded-2xl p-3 border border-gray-200 mb-4">
+                        <div class="flex justify-between items-center border-b border-gray-200 pb-1.5 mb-1.5">
+                            <span class="text-[11px] font-bold text-gray-500">내가 조립한 LOCK & ROCK</span>
+                            <span id="modal-summary-spec" class="text-[11px] font-extrabold text-baemin">4구 LOCK · 0kcal</span>
+                        </div>
+                        <div id="modal-summary-items" class="text-xs font-bold text-gray-800 truncate">
+                            선택된 반찬 없음
+                        </div>
+                        <div class="flex justify-between items-center mt-2 pt-1.5 border-t border-dashed border-gray-200">
+                            <span class="text-[11px] font-semibold text-gray-500">내 개별 결제 예정 금액</span>
+                            <span id="modal-summary-price" class="text-sm font-black text-rockRed">0원</span>
+                        </div>
+                    </div>
+
+                    <!-- 정식 오픈 알림 안내 (쿠폰 언급 일절 없음) -->
+                    <div class="mb-4">
+                        <div class="flex items-center gap-1.5 text-rockRed font-extrabold text-xs mb-1">
+                            <span>🔥 현재 대학가 인근 반찬가게 사장님들과 정식 오픈을 준비하고 있습니다!</span>
+                        </div>
+                        <p class="text-xs text-gray-600 leading-relaxed">
+                            방금 조립하신 도시락 구성이 마음에 드셨나요? 이메일을 남겨주시면 <b>우리 학교 앞 정식 출시일과 제휴 매장 오픈 소식</b>을 가장 먼저 알려드릴게요!
+                        </p>
+                    </div>
+
+                    <form onsubmit="handleSubmitEmailLead(event)" class="space-y-2.5">
+                        <div>
+                            <label class="block text-[11px] font-bold text-gray-700 mb-1">이메일 주소 (필수) *</label>
+                            <input type="email" id="lead-email-input" required placeholder="example@univ.ac.kr" 
+                                class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 focus:border-baemin focus:ring-2 focus:ring-baemin/20 outline-none text-sm font-medium">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-gray-700 mb-1">소속 학과 또는 바라는 점 (선택)</label>
+                            <input type="text" id="lead-note-input" placeholder="예: 새내기인데 학식 대신 자주 쓰고 싶어요!" 
+                                class="w-full px-3.5 py-2 rounded-xl border border-gray-200 focus:border-baemin outline-none text-xs">
+                        </div>
+                        <button type="submit" class="w-full bg-rockRed hover:bg-red-600 text-white font-black py-3.5 rounded-xl text-sm shadow-lg shadow-red-500/25 transition transform active:scale-95 mt-1">
+                            🚀 정식 오픈 알림 신청하기
+                        </button>
+                    </form>
+                </div>
+
+                <!-- 이메일 제출 완료 화면 -->
+                <div id="lead-success-view" class="p-6 text-center hidden">
+                    <div class="w-14 h-14 bg-teal-50 text-baemin rounded-full flex items-center justify-center mx-auto text-2xl mb-3">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <h4 class="text-lg font-black text-gray-900">오픈 알림 신청이 완료되었습니다!</h4>
+                    <p class="text-xs text-gray-500 mt-1.5 leading-relaxed">
+                        소중한 관심 감사합니다! <b>도시락도 락이다 (LOCK & ROCK)</b>가 학교 앞 매장과 함께 정식 오픈하는 즉시 입력하신 이메일로 가장 먼저 소식을 전해드리겠습니다.
+                    </p>
+                    <button onclick="closeLeadModal()" class="w-full bg-gray-900 text-white font-bold py-3 rounded-xl text-sm mt-5">
+                        확인 및 돌아가기
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- ==========================================
+             [SECRET PIN] 관리자 비밀번호(1216) 입력 모달
+             ========================================== -->
+        <div id="modal-pin" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs hidden items-center justify-center p-4">
+            <div class="bg-gray-900 text-white w-full max-w-[320px] rounded-3xl p-6 border border-gray-700 shadow-2xl text-center animate-pop">
+                <div class="w-12 h-12 rounded-2xl bg-gray-800 text-baemin flex items-center justify-center mx-auto text-xl mb-3 border border-gray-700">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <h3 class="text-base font-black">관리자 전용 모드</h3>
+                <p class="text-xs text-gray-400 mt-1">지정된 4자리 비밀번호를 입력하세요</p>
+
+                <form onsubmit="handleVerifyPin(event)" class="mt-4">
+                    <input type="password" id="admin-pin-input" maxlength="4" inputmode="numeric" placeholder="••••"
+                        class="w-full bg-gray-800 border border-gray-600 focus:border-baemin rounded-xl py-3 text-center text-2xl font-black tracking-[12px] text-white outline-none">
+                    <p id="pin-error-msg" class="text-[11px] text-rockRed font-bold mt-2 hidden">비밀번호가 일치하지 않습니다.</p>
+                    <div class="flex gap-2 mt-4">
+                        <button type="button" onclick="closePinModal()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold py-2.5 rounded-xl text-xs">
+                            취소
+                        </button>
+                        <button type="submit" class="flex-1 bg-baemin hover:bg-baeminDark text-gray-900 font-black py-2.5 rounded-xl text-xs">
+                            확인
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <!-- ==========================================
+             [ADMIN] 실시간 클릭 & 전환율(CVR) 대시보드 모달
+             ========================================== -->
+        <div id="modal-admin" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs hidden items-center justify-center p-3">
+            <div class="bg-gray-900 text-white w-full max-w-[420px] max-h-[90dvh] rounded-3xl overflow-hidden shadow-2xl border border-gray-700 flex flex-col animate-pop">
+                
+                <!-- 헤더 -->
+                <div class="px-5 py-4 bg-gray-800 border-b border-gray-700 flex justify-between items-center">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="bg-baemin text-gray-900 text-[10px] font-black px-2 py-0.5 rounded">ADMIN (1216)</span>
+                            <h3 class="text-sm font-black text-white">LOCK & ROCK 전환율(CVR) 분석</h3>
+                        </div>
+                        <p class="text-[11px] text-gray-400 mt-0.5">실시간 클라우드 방문자 클릭 및 이메일 리드 집계</p>
+                    </div>
+                    <button onclick="closeAdminModal()" class="w-8 h-8 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center text-gray-300">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <!-- 대시보드 본문 -->
+                <div class="p-4 overflow-y-auto space-y-4 flex-1 text-xs no-scrollbar">
+                    
+                    <!-- KPI 6종 요약 -->
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="bg-gray-800 p-2.5 rounded-2xl border border-gray-700">
+                            <div class="text-gray-400 text-[10px] font-semibold">① 총 방문 수</div>
+                            <div id="kpi-visits" class="text-lg font-black text-white mt-0.5">0</div>
+                            <div class="text-[10px] text-emerald-400">Base 100%</div>
+                        </div>
+                        <div class="bg-gray-800 p-2.5 rounded-2xl border border-gray-700">
+                            <div class="text-gray-400 text-[10px] font-semibold">② 시작버튼 클릭</div>
+                            <div id="kpi-starts" class="text-lg font-black text-white mt-0.5">0</div>
+                            <div id="kpi-start-cvr" class="text-[10px] text-teal-300">진입 0%</div>
+                        </div>
+                        <div class="bg-gray-800 p-2.5 rounded-2xl border border-gray-700">
+                            <div class="text-gray-400 text-[10px] font-semibold">③ 매장 진입</div>
+                            <div id="kpi-enters" class="text-lg font-black text-white mt-0.5">0</div>
+                            <div id="kpi-enter-cvr" class="text-[10px] text-baemin">전환 0%</div>
+                        </div>
+                        <div class="bg-gray-800 p-2.5 rounded-2xl border border-gray-700">
+                            <div class="text-gray-400 text-[10px] font-semibold">④ 반찬 담기 클릭</div>
+                            <div id="kpi-adds" class="text-lg font-black text-white mt-0.5">0</div>
+                            <div class="text-[10px] text-gray-400">조립 액션</div>
+                        </div>
+                        <div class="bg-gray-800 p-2.5 rounded-2xl border border-gray-700">
+                            <div class="text-gray-400 text-[10px] font-semibold">⑤ 결제/공유 클릭</div>
+                            <div id="kpi-intents" class="text-lg font-black text-amber-400 mt-0.5">0</div>
+                            <div id="kpi-intent-detail" class="text-[10px] text-amber-200">결제0 · 공유0</div>
+                        </div>
+                        <div class="bg-gray-800 p-2.5 rounded-2xl border border-rockRed/60 bg-gradient-to-br from-gray-800 to-red-950/40">
+                            <div class="text-red-300 text-[10px] font-bold">⑥ 이메일 제출</div>
+                            <div id="kpi-leads" class="text-lg font-black text-rockRed mt-0.5">0</div>
+                            <div id="kpi-lead-cvr" class="text-[10px] text-red-300 font-bold">최종 CVR 0%</div>
+                        </div>
+                    </div>
+
+                    <!-- 퍼널 전환율 바 -->
+                    <div class="bg-gray-800 p-3.5 rounded-2xl border border-gray-700 space-y-2.5">
+                        <div class="font-extrabold text-white text-xs mb-1">📊 단계별 퍼널 전환율 (Funnel CVR)</div>
+                        <div>
+                            <div class="flex justify-between text-[11px] mb-1">
+                                <span class="text-gray-300">1. 시작 화면 방문 ➡️ 시작하기 클릭</span>
+                                <span id="funnel-txt-start" class="font-bold text-teal-300">0%</span>
+                            </div>
+                            <div class="w-full bg-gray-700 h-2 rounded-full overflow-hidden">
+                                <div id="funnel-bar-start" class="bg-teal-400 h-full rounded-full transition-all" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[11px] mb-1">
+                                <span class="text-gray-300">2. 지도 탐색 ➡️ 매장 커스텀 진입</span>
+                                <span id="funnel-txt-enter" class="font-bold text-baemin">0%</span>
+                            </div>
+                            <div class="w-full bg-gray-700 h-2 rounded-full overflow-hidden">
+                                <div id="funnel-bar-enter" class="bg-baemin h-full rounded-full transition-all" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[11px] mb-1">
+                                <span class="text-gray-300">3. 각자내기 결제 / 팀플 공유 클릭</span>
+                                <span id="funnel-txt-intent" class="font-bold text-amber-400">0%</span>
+                            </div>
+                            <div class="w-full bg-gray-700 h-2 rounded-full overflow-hidden">
+                                <div id="funnel-bar-intent" class="bg-amber-400 h-full rounded-full transition-all" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[11px] mb-1">
+                                <span class="text-gray-300">4. 최종 사전알림 이메일 제출 (Lead)</span>
+                                <span id="funnel-txt-lead" class="font-bold text-rockRed">0%</span>
+                            </div>
+                            <div class="w-full bg-gray-700 h-2 rounded-full overflow-hidden">
+                                <div id="funnel-bar-lead" class="bg-rockRed h-full rounded-full transition-all" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 수집된 이메일 리스트 -->
+                    <div class="bg-gray-800 p-3.5 rounded-2xl border border-gray-700">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-extrabold text-white text-xs">💌 방문자 이메일 목록 (Leads)</span>
+                            <button onclick="exportLeadsToCSV()" class="bg-baemin hover:bg-baeminDark text-gray-900 font-extrabold px-2.5 py-1 rounded-lg text-[11px] flex items-center gap-1">
+                                <i class="fa-solid fa-download"></i> CSV 저장
+                            </button>
+                        </div>
+                        <div id="admin-leads-list" class="space-y-2 max-h-40 overflow-y-auto pr-1">
+                            <!-- JS로 렌더링 -->
+                        </div>
+                    </div>
+
+                    <!-- 시작 화면 배너 이미지 즉시 교체 테스트 도구 -->
+                    <div class="bg-gray-800 p-3.5 rounded-2xl border border-gray-700">
+                        <div class="font-extrabold text-white text-xs mb-1">🖼️ 시작 화면 이미지 URL 변경 테스트</div>
+                        <p class="text-[10px] text-gray-400 mb-2">준비하신 이미지 주소를 넣으면 시작 화면 배너에 즉시 반영됩니다.</p>
+                        <div class="flex gap-1.5">
+                            <input type="text" id="admin-hero-url-input" placeholder="https://.../image.jpg" 
+                                class="flex-1 bg-gray-900 border border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none">
+                            <button onclick="handleChangeHeroImage()" class="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap">
+                                적용
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- 푸터 -->
+                <div class="px-5 py-3 bg-gray-800 border-t border-gray-700 flex justify-between items-center">
+                    <button onclick="handleResetAnalytics()" class="text-xs text-gray-400 hover:text-rockRed font-bold flex items-center gap-1">
+                        <i class="fa-solid fa-rotate-left"></i> 데이터 초기화
+                    </button>
+                    <button onclick="closeAdminModal()" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-1.5 rounded-xl text-xs font-bold">
+                        닫기
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ==========================================
+         자바스크립트: 상태 관리, 터치 드래그 & Firebase 연동
+         ========================================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, increment, onSnapshot, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // 관리자 비밀번호 설정 (요청하신 1216)
+        const ADMIN_PIN = "1216";
+
+        // ------------------------------------------
+        // 1. 매장 및 반찬 마스터 데이터 (발표자료 & 프로토타입 기준)
+        // ------------------------------------------
+        const SHOPS = {
+            shop1: {
+                id: 'shop1',
+                name: '🍱 전주 반찬명가',
+                badge: '마감특가 20~30% 진행중',
+                rating: '⭐ 4.9 · 최소주문 7,000원',
+                desc: '원하는 반찬만 골라 담고 팀원들과 배달비 걱정 없이 각자 결제하세요!'
+            },
+            shop2: {
+                id: 'shop2',
+                name: '🥗 바른식단 효자점',
+                badge: '고단백 다이어트 특화',
+                rating: '⭐ 4.8 · 최소주문 7,000원',
+                desc: '다이어터와 운동인을 위한 균형 잡힌 단백질 반찬 구성'
+            },
+            shop3: {
+                id: 'shop3',
+                name: '🍲 엄마손 대학로백반',
+                badge: '자취생 1인분 소분특화',
+                rating: '⭐ 4.9 · 최소주문 6,500원',
+                desc: '식재료 낭비 없이 딱 한 끼 먹을 만큼만 알뜰하게 담는 집밥 반찬'
+            }
+        };
+
+        const FOOD_ITEMS = [
+            // 마감특가 (20~30% OFF)
+            { id: 'f1', name: '제육볶음', category: 'special', oriPrice: 2500, price: 2000, discount: '20%↓', kcal: 220, icon: '🥩', bg: '#FFE0E0' },
+            { id: 'f2', name: '시금치무침', category: 'special', oriPrice: 1000, price: 700, discount: '30%↓', kcal: 40, icon: '🥬', bg: '#E8F5E9' },
+            { id: 'f3', name: '쏘야볶음', category: 'special', oriPrice: 1500, price: 1200, discount: '20%↓', kcal: 180, icon: '🌭', bg: '#FFF3E0' },
+            // 고기/단백질
+            { id: 'f4', name: '계란말이', category: 'meat', oriPrice: null, price: 1000, discount: null, kcal: 150, icon: '🍳', bg: '#FFF9C4' },
+            { id: 'f5', name: '진미채볶음', category: 'meat', oriPrice: null, price: 1500, discount: null, kcal: 110, icon: '🦑', bg: '#FFEBEE' },
+            { id: 'f6', name: '닭가슴살구이', category: 'meat', oriPrice: null, price: 1800, discount: null, kcal: 165, icon: '🍗', bg: '#FCE7F3' },
+            // 야채/나물
+            { id: 'f7', name: '무생채', category: 'veggie', oriPrice: null, price: 600, discount: null, kcal: 30, icon: '🥕', bg: '#FFEBEE' },
+            { id: 'f8', name: '콩나물무침', category: 'veggie', oriPrice: null, price: 700, discount: null, kcal: 45, icon: '🌱', bg: '#FEF9C3' },
+            { id: 'f9', name: '감자조림', category: 'veggie', oriPrice: null, price: 900, discount: null, kcal: 120, icon: '🥔', bg: '#F3F4F6' }
+        ];
+
+        // ------------------------------------------
+        // 2. 앱 내부 상태
+        // ------------------------------------------
+        let selectedShop = SHOPS.shop1;
+        let currentNgu = 4;
+        let bentoSlots = [null, null, null, null];
+        let activeSlotIndex = 0;
+        let currentCategory = 'special';
+        let showKcal = true;
+        let currentLeadTrigger = '각자내기 결제';
+
+        // 시크릿 로고 5연속 탭 감지 변수
+        let logoTapCount = 0;
+        let logoTapTimer = null;
+
+        // 애널리틱스 상태
+        let analytics = {
+            visits: 1,
+            startClicks: 0,
+            pinClicks: 0,
+            storeEnters: 0,
+            foodAdds: 0,
+            shareClicks: 0,
+            checkoutClicks: 0,
+            emailLeadsCount: 0
+        };
+        let leadsList = [];
+
+        // Firebase 설정
+        let db = null;
+        let auth = null;
+        let isFirebaseReady = false;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'lock-and-rock-mvp';
+
+        // ------------------------------------------
+        // 3. Firebase 초기화 및 실시간 트래킹
+        // ------------------------------------------
+        async function initTracker() {
+            try {
+                if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                    const firebaseConfig = JSON.parse(__firebase_config);
+                    const app = initializeApp(firebaseConfig);
+                    auth = getAuth(app);
+                    db = getFirestore(app);
+
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+
+                    if (auth.currentUser) {
+                        isFirebaseReady = true;
+                        const statsRef = doc(db, 'artifacts', appId, 'public', 'data', 'analytics', 'summary');
+                        
+                        const snap = await getDoc(statsRef);
+                        if (!snap.exists()) {
+                            await setDoc(statsRef, {
+                                visits: 1,
+                                startClicks: 0,
+                                pinClicks: 0,
+                                storeEnters: 0,
+                                foodAdds: 0,
+                                shareClicks: 0,
+                                checkoutClicks: 0,
+                                emailLeadsCount: 0
+                            });
+                        } else {
+                            await updateDoc(statsRef, { visits: increment(1) });
+                        }
+
+                        onSnapshot(statsRef, (docSnap) => {
+                            if (docSnap.exists()) {
+                                analytics = { ...analytics, ...docSnap.data() };
+                                updateAdminDashboardUI();
+                            }
+                        }, (err) => console.error("Stats listener error:", err));
+
+                        const leadsColRef = collection(db, 'artifacts', appId, 'public', 'data', 'leads');
+                        onSnapshot(leadsColRef, (querySnap) => {
+                            const temp = [];
+                            querySnap.forEach((d) => temp.push({ id: d.id, ...d.data() }));
+                            temp.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                            leadsList = temp;
+                            analytics.emailLeadsCount = leadsList.length;
+                            updateAdminDashboardUI();
+                        }, (err) => console.error("Leads listener error:", err));
+                    }
+                }
+            } catch (e) {
+                console.warn("Using local analytics mode:", e);
+            }
+            updateAdminDashboardUI();
+
+            // URL에 ?admin=true가 있으면 즉시 PIN 입력창 오픈
+            if (window.location.search.includes('admin=true')) {
+                openPinModal();
+            }
+        }
+
+        async function trackEvent(metricKey) {
+            analytics[metricKey] = (analytics[metricKey] || 0) + 1;
+            updateAdminDashboardUI();
+
+            if (isFirebaseReady && auth?.currentUser) {
+                try {
+                    const statsRef = doc(db, 'artifacts', appId, 'public', 'data', 'analytics', 'summary');
+                    await updateDoc(statsRef, { [metricKey]: increment(1) });
+                } catch (e) {}
+            }
+        }
+
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `bg-gray-900/95 border border-gray-700 text-white px-4 py-2.5 rounded-2xl shadow-xl text-xs font-bold flex items-center gap-2 animate-pop`;
+            toast.innerHTML = `<span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.25s ease';
+                setTimeout(() => toast.remove(), 250);
+            }, 2100);
+        }
+
+        // ------------------------------------------
+        // 4. 시크릿 관리자 진입 (로고 5번 탭 + 비밀번호 1216)
+        // ------------------------------------------
+        window.handleSecretLogoTap = function() {
+            logoTapCount++;
+            if (logoTapTimer) clearTimeout(logoTapTimer);
+
+            if (logoTapCount >= 5) {
+                logoTapCount = 0;
+                openPinModal();
+            } else {
+                if (logoTapCount >= 3) {
+                    showToast(`관리자 모드 진입까지 ${5 - logoTapCount}번 남았습니다`);
+                }
+                logoTapTimer = setTimeout(() => {
+                    logoTapCount = 0;
+                }, 2000);
+            }
+        };
+
+        window.openPinModal = function() {
+            document.getElementById('admin-pin-input').value = '';
+            document.getElementById('pin-error-msg').classList.add('hidden');
+            const modal = document.getElementById('modal-pin');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => document.getElementById('admin-pin-input').focus(), 100);
+        };
+
+        window.closePinModal = function() {
+            const modal = document.getElementById('modal-pin');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        };
+
+        window.handleVerifyPin = function(e) {
+            e.preventDefault();
+            const pinVal = document.getElementById('admin-pin-input').value.trim();
+            if (pinVal === ADMIN_PIN) {
+                closePinModal();
+                openAdminModal();
+            } else {
+                document.getElementById('pin-error-msg').classList.remove('hidden');
+                document.getElementById('admin-pin-input').value = '';
+            }
+        };
+
+        // ------------------------------------------
+        // 5. 화면 전환 (Step 0 시작화면 <-> Step 1 지도 <-> Step 2 커스텀)
+        // ------------------------------------------
+        window.handleStartApp = function() {
+            trackEvent('startClicks');
+            document.getElementById('view-intro').classList.add('screen-hidden');
+        };
+
+        window.handleBackToIntro = function() {
+            document.getElementById('view-intro').classList.remove('screen-hidden');
+        };
+
+        window.handleSelectShopPin = function(shopKey) {
+            trackEvent('pinClicks');
+            selectedShop = SHOPS[shopKey];
+
+            document.querySelectorAll('.shop-pin').forEach(el => {
+                el.classList.remove('border-baemin');
+                el.classList.add('border-transparent');
+            });
+            const activePin = document.getElementById(`pin-${shopKey}`);
+            if (activePin) {
+                activePin.classList.remove('border-transparent');
+                activePin.classList.add('border-baemin');
+            }
+
+            document.getElementById('sheet-shop-name').innerText = selectedShop.name;
+            document.getElementById('sheet-badge').innerText = selectedShop.badge;
+            document.getElementById('sheet-rating').innerText = selectedShop.rating;
+            document.getElementById('sheet-shop-desc').innerText = selectedShop.desc;
+        };
+
+        window.handleEnterShop = function() {
+            trackEvent('storeEnters');
+            document.getElementById('store-header-name').innerText = selectedShop.name.replace(/^[^\s]+\s/, '');
+            document.getElementById('view-map').classList.add('screen-hidden');
+        };
+
+        window.handleBackToMap = function() {
+            document.getElementById('view-map').classList.remove('screen-hidden');
+        };
+
+        // ------------------------------------------
+        // 6. 도시락 커스텀 시뮬레이터 로직
+        // ------------------------------------------
+        window.handleChangeNgu = function(ngu) {
+            currentNgu = ngu;
+            bentoSlots = new Array(ngu).fill(null);
+            activeSlotIndex = 0;
+
+            const btn4 = document.getElementById('ngu-btn-4');
+            const btn5 = document.getElementById('ngu-btn-5');
+            const container = document.getElementById('bento-container');
+
+            if (ngu === 4) {
+                btn4.className = "flex-1 py-1.5 text-xs font-extrabold rounded-lg transition bg-gray-900 text-white shadow-xs";
+                btn5.className = "flex-1 py-1.5 text-xs font-extrabold rounded-lg transition text-gray-600 hover:text-gray-900";
+                container.className = "w-full max-w-[260px] sm:max-w-[290px] aspect-square bg-bentoWood rounded-2xl p-2.5 shadow-inner border-4 border-[#d5c4a1] bento-grid-4 transition-all";
+            } else {
+                btn5.className = "flex-1 py-1.5 text-xs font-extrabold rounded-lg transition bg-gray-900 text-white shadow-xs";
+                btn4.className = "flex-1 py-1.5 text-xs font-extrabold rounded-lg transition text-gray-600 hover:text-gray-900";
+                container.className = "w-full max-w-[260px] sm:max-w-[290px] aspect-square bg-bentoWood rounded-2xl p-2.5 shadow-inner border-4 border-[#d5c4a1] bento-grid-5 transition-all";
+            }
+
+            renderBentoSlots();
+            updateTotalsUI();
+            document.getElementById('canvas-guide').style.display = 'flex';
+        };
+
+        function renderBentoSlots() {
+            const container = document.getElementById('bento-container');
+            container.innerHTML = '';
+
+            bentoSlots.forEach((food, idx) => {
+                const slotEl = document.createElement('div');
+                const isTarget = (idx === activeSlotIndex && !food);
+                slotEl.dataset.slotIndex = idx;
+
+                slotEl.className = `slot-${idx} bento-slot relative rounded-xl flex flex-col items-center justify-center transition-all cursor-pointer p-1 ${
+                    food 
+                    ? 'bg-white shadow-md border-2 border-baemin/40' 
+                    : isTarget 
+                        ? 'bg-teal-50/90 border-2 border-dashed border-baemin' 
+                        : 'bg-white/90 border-2 border-dashed border-gray-300'
+                }`;
+
+                if (food) {
+                    slotEl.innerHTML = `
+                        <button onclick="handleRemoveSlotItem(event, ${idx})" class="absolute top-1 right-1 w-5 h-5 rounded-full bg-gray-100 hover:bg-red-100 text-gray-400 hover:text-rockRed flex items-center justify-center text-[10px]">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                        <div class="text-3xl leading-none mb-1 animate-pop">${food.icon}</div>
+                        <div class="text-xs font-extrabold text-gray-800 truncate w-full text-center px-1">${food.name}</div>
+                        <div class="text-[10px] font-bold text-rockRed">${food.price.toLocaleString()}원</div>
+                    `;
+                } else {
+                    slotEl.innerHTML = `
+                        <span class="text-xs font-bold ${isTarget ? 'text-baemin' : 'text-gray-400'}">비어있음</span>
+                    `;
+                }
+
+                slotEl.addEventListener('click', () => {
+                    if (food) {
+                        bentoSlots[idx] = null;
+                        activeSlotIndex = idx;
+                        renderBentoSlots();
+                        updateTotalsUI();
+                    } else {
+                        activeSlotIndex = idx;
+                        renderBentoSlots();
+                    }
+                });
+
+                slotEl.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    slotEl.classList.add('scale-105', 'border-baemin');
+                });
+                slotEl.addEventListener('dragleave', () => {
+                    slotEl.classList.remove('scale-105', 'border-baemin');
+                });
+                slotEl.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const foodId = e.dataTransfer.getData('foodId');
+                    if (foodId) addFoodToSlot(foodId, idx);
+                });
+
+                container.appendChild(slotEl);
+            });
+        }
+
+        window.handleRemoveSlotItem = function(e, slotIdx) {
+            e.stopPropagation();
+            bentoSlots[slotIdx] = null;
+            activeSlotIndex = slotIdx;
+            renderBentoSlots();
+            updateTotalsUI();
+        };
+
+        window.handleResetBento = function() {
+            bentoSlots = new Array(currentNgu).fill(null);
+            activeSlotIndex = 0;
+            renderBentoSlots();
+            updateTotalsUI();
+            document.getElementById('canvas-guide').style.display = 'flex';
+        };
+
+        window.toggleKcalVisibility = function() {
+            showKcal = !showKcal;
+            document.getElementById('kcal-toggle-text').innerText = showKcal ? '🥗 열량 표시 켜짐' : '🙈 열량 가리기 켜짐';
+            updateTotalsUI();
+            renderFoodList();
+        };
+
+        function addFoodToSlot(foodId, targetIdx = null) {
+            const food = FOOD_ITEMS.find(f => f.id === foodId);
+            if (!food) return;
+
+            let slotToFill = targetIdx;
+            if (slotToFill === null) {
+                if (bentoSlots[activeSlotIndex] === null) {
+                    slotToFill = activeSlotIndex;
+                } else {
+                    slotToFill = bentoSlots.findIndex(s => s === null);
+                }
+            }
+
+            if (slotToFill === -1) {
+                showToast(`이미 ${currentNgu}구 용기가 모두 찼습니다! 5구 LOCK으로 바꾸거나 칸을 비워주세요.`);
+                return;
+            }
+
+            bentoSlots[slotToFill] = food;
+            trackEvent('foodAdds');
+
+            const nextEmpty = bentoSlots.findIndex(s => s === null);
+            if (nextEmpty !== -1) activeSlotIndex = nextEmpty;
+
+            document.getElementById('canvas-guide').style.display = 'none';
+            renderBentoSlots();
+            updateTotalsUI();
+        }
+
+        function updateTotalsUI() {
+            let totalPrice = 0;
+            let totalOriPrice = 0;
+            let totalKcal = 0;
+            let filledCount = 0;
+
+            bentoSlots.forEach(item => {
+                if (item) {
+                    totalPrice += item.price;
+                    totalOriPrice += (item.oriPrice || item.price);
+                    totalKcal += item.kcal;
+                    filledCount++;
+                }
+            });
+
+            document.getElementById('total-price-text').innerText = totalPrice.toLocaleString();
+            document.getElementById('filled-count-text').innerText = `${filledCount}/${currentNgu}칸`;
+            document.getElementById('stat-kcal').innerText = showKcal ? totalKcal.toLocaleString() : '비밀';
+
+            const saved = totalOriPrice - totalPrice;
+            const savedBadge = document.getElementById('discount-saved-badge');
+            if (saved > 0) {
+                savedBadge.innerText = `마감특가 ${saved.toLocaleString()}원 절약!`;
+                savedBadge.classList.remove('hidden');
+            } else {
+                savedBadge.classList.add('hidden');
+            }
+        }
+
+        window.handleSelectCategory = function(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-tab').forEach(btn => {
+                if (btn.dataset.cat === cat) {
+                    btn.className = "cat-tab px-3.5 py-1.5 rounded-full text-xs font-extrabold whitespace-nowrap transition bg-rockRed text-white shadow-xs";
+                } else {
+                    btn.className = "cat-tab px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition bg-gray-100 text-gray-600";
+                }
+            });
+            renderFoodList();
+        };
+
+        function renderFoodList() {
+            const container = document.getElementById('food-list-container');
+            container.innerHTML = '';
+
+            const filtered = FOOD_ITEMS.filter(item => item.category === currentCategory);
+
+            filtered.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "flex-shrink-0 w-20 text-center relative cursor-pointer select-none transition transform active:scale-95";
+                card.draggable = true;
+
+                card.innerHTML = `
+                    ${item.discount ? `<span class="absolute -top-1 right-0 bg-rockRed text-white text-[10px] font-black px-1.5 py-0.5 rounded-full z-10 shadow">${item.discount}</span>` : ''}
+                    <div class="w-16 h-16 rounded-full mx-auto flex items-center justify-center text-3xl shadow-md" style="background: ${item.bg}">
+                        ${item.icon}
+                    </div>
+                    <div class="text-xs font-extrabold text-gray-900 mt-1.5 truncate">${item.name}</div>
+                    ${item.oriPrice ? `<div class="text-[10px] text-gray-400 line-through leading-none mt-0.5">${item.oriPrice.toLocaleString()}원</div>` : '<div class="h-2.5"></div>'}
+                    <div class="text-xs font-black ${item.discount ? 'text-rockRed' : 'text-gray-900'}">${item.price.toLocaleString()}원</div>
+                    ${showKcal ? `<div class="text-[10px] text-gray-400">${item.kcal} kcal</div>` : ''}
+                `;
+
+                card.addEventListener('click', () => addFoodToSlot(item.id));
+                card.addEventListener('dragstart', (e) => e.dataTransfer.setData('foodId', item.id));
+                setupMobileTouchDrag(card, item);
+
+                container.appendChild(card);
+            });
+        }
+
+        // 모바일 터치 드래그 앤 드롭 구현
+        let touchGhost = null;
+        let touchStartPos = { x: 0, y: 0 };
+        let isDraggingTouch = false;
+
+        function setupMobileTouchDrag(el, item) {
+            el.addEventListener('touchstart', (e) => {
+                const touch = e.touches[0];
+                touchStartPos = { x: touch.clientX, y: touch.clientY };
+                isDraggingTouch = false;
+            }, { passive: true });
+
+            el.addEventListener('touchmove', (e) => {
+                const touch = e.touches[0];
+                const dy = Math.abs(touch.clientY - touchStartPos.y);
+                if (dy > 14 && !isDraggingTouch) {
+                    isDraggingTouch = true;
+                    touchGhost = document.createElement('div');
+                    touchGhost.innerText = item.icon;
+                    touchGhost.style.cssText = `position:fixed; font-size:44px; pointer-events:none; z-index:9999; transform:translate(-50%, -50%) scale(1.2); text-shadow:0 5px 15px rgba(0,0,0,0.25);`;
+                    document.body.appendChild(touchGhost);
+                }
+
+                if (isDraggingTouch && touchGhost) {
+                    e.preventDefault();
+                    touchGhost.style.left = `${touch.clientX}px`;
+                    touchGhost.style.top = `${touch.clientY - 35}px`;
+                }
+            }, { passive: false });
+
+            el.addEventListener('touchend', (e) => {
+                if (isDraggingTouch && touchGhost) {
+                    const touch = e.changedTouches[0];
+                    const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
+                    if (targetEl) {
+                        const slotEl = targetEl.closest('.bento-slot');
+                        if (slotEl && slotEl.dataset.slotIndex !== undefined) {
+                            addFoodToSlot(item.id, parseInt(slotEl.dataset.slotIndex));
+                        }
+                    }
+                    touchGhost.remove();
+                    touchGhost = null;
+                    isDraggingTouch = false;
+                }
+            });
+        }
+
+        // ------------------------------------------
+        // 7. Step 3: 팀플 공유 & 각자내기 결제 -> 이메일 수집 모달
+        // ------------------------------------------
+        window.handleShareClick = function() {
+            trackEvent('shareClicks');
+            currentLeadTrigger = '팀플 공유';
+
+            try {
+                const dummy = document.createElement('textarea');
+                dummy.value = window.location.href;
+                document.body.appendChild(dummy);
+                dummy.select();
+                document.execCommand('copy');
+                document.body.removeChild(dummy);
+            } catch (e) {}
+
+            openLeadModal(
+                '🔗 단톡방 함께주문 링크 복사 완료!',
+                '단톡방 친구들과 각자 먹고 싶은 반찬 고르고<br>배달비 걱정 없이 각자 결제하세요!'
+            );
+        };
+
+        window.handleCheckoutClick = function() {
+            const filledItems = bentoSlots.filter(Boolean);
+            if (filledItems.length === 0) {
+                showToast('먼저 원하시는 반찬을 도시락 용기에 담아주세요!');
+                return;
+            }
+            trackEvent('checkoutClicks');
+            currentLeadTrigger = '각자내기 결제';
+
+            openLeadModal(
+                '🎉 스마트 묶음 주문 & 각자내기',
+                '내 도시락 금액만 각자 결제하면,<br>사장님께는 [하나의 통합 주문서]로 전송됩니다!'
+            );
+        };
+
+        function openLeadModal(tagText, titleHtml) {
+            const filledItems = bentoSlots.filter(Boolean);
+            const totalPrice = filledItems.reduce((sum, i) => sum + i.price, 0);
+            const totalKcal = filledItems.reduce((sum, i) => sum + i.kcal, 0);
+
+            document.getElementById('lead-modal-tag').innerText = tagText;
+            document.getElementById('lead-modal-title').innerHTML = titleHtml;
+            document.getElementById('modal-summary-spec').innerText = `${currentNgu}구 LOCK · ${totalKcal}kcal`;
+            document.getElementById('modal-summary-items').innerText = filledItems.length > 0 
+                ? filledItems.map(i => `${i.icon}${i.name}`).join(', ') 
+                : '반찬 미선택 (팀플 공유 클릭)';
+            document.getElementById('modal-summary-price').innerText = `${totalPrice.toLocaleString()}원`;
+
+            document.getElementById('lead-form-view').classList.remove('hidden');
+            document.getElementById('lead-success-view').classList.add('hidden');
+            
+            const modal = document.getElementById('modal-lead');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        window.closeLeadModal = function() {
+            const modal = document.getElementById('modal-lead');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        };
+
+        window.handleSubmitEmailLead = async function(e) {
+            e.preventDefault();
+            const emailInput = document.getElementById('lead-email-input');
+            const noteInput = document.getElementById('lead-note-input');
+            const email = emailInput.value.trim();
+            const note = noteInput.value.trim();
+
+            if (!email) return;
+
+            const filledItems = bentoSlots.filter(Boolean);
+            const totalPrice = filledItems.reduce((sum, i) => sum + i.price, 0);
+            const summaryStr = filledItems.length > 0 
+                ? `${currentNgu}구(${filledItems.map(i => i.name).join('/')}) ${totalPrice}원`
+                : `메뉴 미선택 (${currentLeadTrigger})`;
+
+            const newLead = {
+                email,
+                note: note || '-',
+                shop: selectedShop.name,
+                bentoSummary: summaryStr,
+                trigger: currentLeadTrigger,
+                timestamp: Date.now(),
+                dateStr: new Date().toLocaleString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+            };
+
+            leadsList.unshift(newLead);
+            await trackEvent('emailLeadsCount');
+
+            if (isFirebaseReady && auth?.currentUser) {
+                try {
+                    const leadsColRef = collection(db, 'artifacts', appId, 'public', 'data', 'leads');
+                    await addDoc(leadsColRef, newLead);
+                } catch (err) {}
+            }
+
+            emailInput.value = '';
+            noteInput.value = '';
+
+            document.getElementById('lead-form-view').classList.add('hidden');
+            document.getElementById('lead-success-view').classList.remove('hidden');
+            updateAdminDashboardUI();
+        };
+
+        // ------------------------------------------
+        // 8. 관리자 대시보드 렌더링 & 이미지 교체 테스트
+        // ------------------------------------------
+        function openAdminModal() {
+            updateAdminDashboardUI();
+            const modal = document.getElementById('modal-admin');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        window.closeAdminModal = function() {
+            const modal = document.getElementById('modal-admin');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        };
+
+        window.handleChangeHeroImage = function() {
+            const url = document.getElementById('admin-hero-url-input').value.trim();
+            if (!url) {
+                showToast('이미지 URL을 입력해주세요.');
+                return;
+            }
+            const imgEl = document.getElementById('intro-hero-img');
+            imgEl.style.display = 'block';
+            imgEl.src = url;
+            showToast('시작 화면 이미지가 변경되었습니다!');
+        };
+
+        function updateAdminDashboardUI() {
+            const v = Math.max(analytics.visits || 1, 1);
+            const starts = analytics.startClicks || 0;
+            const enters = analytics.storeEnters || 0;
+            const adds = analytics.foodAdds || 0;
+            const shares = analytics.shareClicks || 0;
+            const checkouts = analytics.checkoutClicks || 0;
+            const intents = shares + checkouts;
+            const leads = Math.max(analytics.emailLeadsCount || 0, leadsList.length);
+
+            const startCvr = Math.min(100, Math.round((starts / v) * 100));
+            const enterCvr = Math.min(100, Math.round((enters / v) * 100));
+            const intentCvr = Math.min(100, Math.round((intents / v) * 100));
+            const leadCvr = Math.min(100, Math.round((leads / v) * 100));
+
+            document.getElementById('kpi-visits').innerText = v.toLocaleString();
+            document.getElementById('kpi-starts').innerText = starts.toLocaleString();
+            document.getElementById('kpi-start-cvr').innerText = `진입 ${startCvr}%`;
+            document.getElementById('kpi-enters').innerText = enters.toLocaleString();
+            document.getElementById('kpi-enter-cvr').innerText = `전환 ${enterCvr}%`;
+            document.getElementById('kpi-adds').innerText = adds.toLocaleString();
+            document.getElementById('kpi-intents').innerText = intents.toLocaleString();
+            document.getElementById('kpi-intent-detail').innerText = `결제${checkouts} · 공유${shares}`;
+            document.getElementById('kpi-leads').innerText = leads.toLocaleString();
+            document.getElementById('kpi-lead-cvr').innerText = `최종 CVR ${leadCvr}%`;
+
+            document.getElementById('funnel-txt-start').innerText = `${starts}회 (${startCvr}%)`;
+            document.getElementById('funnel-bar-start').style.width = `${startCvr}%`;
+            document.getElementById('funnel-txt-enter').innerText = `${enters}회 (${enterCvr}%)`;
+            document.getElementById('funnel-bar-enter').style.width = `${enterCvr}%`;
+            document.getElementById('funnel-txt-intent').innerText = `${intents}회 (${intentCvr}%)`;
+            document.getElementById('funnel-bar-intent').style.width = `${intentCvr}%`;
+            document.getElementById('funnel-txt-lead').innerText = `${leads}건 (${leadCvr}%)`;
+            document.getElementById('funnel-bar-lead').style.width = `${leadCvr}%`;
+
+            const listEl = document.getElementById('admin-leads-list');
+            if (leadsList.length === 0) {
+                listEl.innerHTML = `<div class="text-center py-5 text-gray-500">아직 등록된 이메일이 없습니다.</div>`;
+            } else {
+                listEl.innerHTML = leadsList.map((item, idx) => `
+                    <div class="bg-gray-900 p-2.5 rounded-xl border border-gray-700 flex justify-between items-center gap-2">
+                        <div class="min-w-0">
+                            <div class="font-bold text-teal-300 truncate">${idx + 1}. ${item.email}</div>
+                            <div class="text-[10px] text-gray-400 truncate mt-0.5">${item.bentoSummary} · ${item.note}</div>
+                        </div>
+                        <div class="text-[10px] text-gray-500 whitespace-nowrap">${item.dateStr || '방금'}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        window.exportLeadsToCSV = function() {
+            if (leadsList.length === 0) {
+                showToast('다운로드할 이메일 내역이 없습니다.');
+                return;
+            }
+            let csv = '\uFEFF번호,이메일,학과/메모,매장,조립내역,유입버튼,일시\n';
+            leadsList.forEach((row, idx) => {
+                csv += `${idx + 1},"${row.email}","${row.note}","${row.shop}","${row.bentoSummary}","${row.trigger}","${row.dateStr}"\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `lock_and_rock_leads_${new Date().toISOString().slice(0,10)}.csv`;
+            link.click();
+            showToast('CSV 다운로드가 완료되었습니다.');
+        };
+
+        window.handleResetAnalytics = async function() {
+            analytics = {
+                visits: 1,
+                startClicks: 0,
+                pinClicks: 0,
+                storeEnters: 0,
+                foodAdds: 0,
+                shareClicks: 0,
+                checkoutClicks: 0,
+                emailLeadsCount: 0
+            };
+            leadsList = [];
+            updateAdminDashboardUI();
+
+            if (isFirebaseReady && auth?.currentUser) {
+                try {
+                    const statsRef = doc(db, 'artifacts', appId, 'public', 'data', 'analytics', 'summary');
+                    await setDoc(statsRef, analytics);
+                } catch (e) {}
+            }
+            showToast('집계 데이터가 초기화되었습니다.');
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderBentoSlots();
+            renderFoodList();
+            updateTotalsUI();
+            initTracker();
+        });
+    </script>
+</body>
+</html>
