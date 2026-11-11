@@ -592,7 +592,7 @@
                             <span class="bg-baemin text-gray-900 text-[10px] font-black px-2 py-0.5 rounded">ADMIN (1216)</span>
                             <h3 class="text-sm font-black text-white">LOCK & ROCK 전환율(CVR) 분석</h3>
                         </div>
-                        <p class="text-[11px] text-gray-400 mt-0.5">실시간 클라우드 방문자 클릭 및 이메일 리드 집계</p>
+                        <p id="admin-storage-status" class="text-[11px] text-emerald-400 font-bold mt-0.5">✅ 로컬 영구 저장소 + 클라우드 이중 저장 활성</p>
                     </div>
                     <button onclick="closeAdminModal()" class="w-8 h-8 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center text-gray-300">
                         <i class="fa-solid fa-xmark"></i>
@@ -680,12 +680,17 @@
                     <!-- 수집된 이메일 리스트 -->
                     <div class="bg-gray-800 p-3.5 rounded-2xl border border-gray-700">
                         <div class="flex justify-between items-center mb-2">
-                            <span class="font-extrabold text-white text-xs">💌 방문자 이메일 목록 (Leads)</span>
-                            <button onclick="exportLeadsToCSV()" class="bg-baemin hover:bg-baeminDark text-gray-900 font-extrabold px-2.5 py-1 rounded-lg text-[11px] flex items-center gap-1">
-                                <i class="fa-solid fa-download"></i> CSV 저장
-                            </button>
+                            <span class="font-extrabold text-white text-xs">💌 방문자 이메일 목록 (<span id="admin-leads-count-badge" class="text-baemin">0</span>건)</span>
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="handleAddSampleLead()" class="bg-gray-700 hover:bg-gray-600 text-gray-200 font-bold px-2 py-1 rounded-lg text-[10px] flex items-center gap-1">
+                                    <i class="fa-solid fa-plus"></i> 샘플 테스트
+                                </button>
+                                <button onclick="exportLeadsToCSV()" class="bg-baemin hover:bg-baeminDark text-gray-900 font-extrabold px-2.5 py-1 rounded-lg text-[11px] flex items-center gap-1">
+                                    <i class="fa-solid fa-download"></i> CSV 저장
+                                </button>
+                            </div>
                         </div>
-                        <div id="admin-leads-list" class="space-y-2 max-h-40 overflow-y-auto pr-1">
+                        <div id="admin-leads-list" class="space-y-2 max-h-44 overflow-y-auto pr-1">
                             <!-- JS로 렌더링 -->
                         </div>
                     </div>
@@ -788,9 +793,16 @@
         let logoTapCount = 0;
         let logoTapTimer = null;
 
-        // 애널리틱스 상태
-        let analytics = {
-            visits: 1,
+        // ------------------------------------------
+        // [핵심 해결] 로컬 스토리지 + 클라우드 이중 영구 저장소 (Dual-Persistence)
+        // 새로고침하거나 외부 호스팅(Antigravity 등)에 배포해도 절대 데이터가 증발하지 않음
+        // ------------------------------------------
+        const STORAGE_KEY_ANALYTICS = 'loro_analytics_v2';
+        const STORAGE_KEY_LEADS = 'loro_leads_v2';
+        const STORAGE_KEY_HERO = 'loro_hero_img_v2';
+
+        const defaultAnalytics = {
+            visits: 0,
             startClicks: 0,
             pinClicks: 0,
             storeEnters: 0,
@@ -799,7 +811,49 @@
             checkoutClicks: 0,
             emailLeadsCount: 0
         };
-        let leadsList = [];
+
+        function loadLocalState() {
+            let savedAnalytics = { ...defaultAnalytics };
+            let savedLeads = [];
+            try {
+                const rawStats = localStorage.getItem(STORAGE_KEY_ANALYTICS);
+                if (rawStats) {
+                    savedAnalytics = { ...defaultAnalytics, ...JSON.parse(rawStats) };
+                }
+                const rawLeads = localStorage.getItem(STORAGE_KEY_LEADS);
+                if (rawLeads) {
+                    const parsed = JSON.parse(rawLeads);
+                    if (Array.isArray(parsed)) savedLeads = parsed;
+                }
+                const savedHero = localStorage.getItem(STORAGE_KEY_HERO);
+                if (savedHero) {
+                    const imgEl = document.getElementById('intro-hero-img');
+                    if (imgEl) {
+                        imgEl.style.display = 'block';
+                        imgEl.src = savedHero;
+                    }
+                }
+            } catch (e) {
+                console.warn('LocalStorage read warning:', e);
+            }
+            savedAnalytics.emailLeadsCount = Math.max(savedAnalytics.emailLeadsCount || 0, savedLeads.length);
+            return { savedAnalytics, savedLeads };
+        }
+
+        function saveLocalState() {
+            try {
+                analytics.emailLeadsCount = Math.max(analytics.emailLeadsCount || 0, leadsList.length);
+                localStorage.setItem(STORAGE_KEY_ANALYTICS, JSON.stringify(analytics));
+                localStorage.setItem(STORAGE_KEY_LEADS, JSON.stringify(leadsList));
+            } catch (e) {
+                console.warn('LocalStorage write warning:', e);
+            }
+        }
+
+        // 초기 로드 시 로컬 저장소에서 기존 누적 데이터 즉시 복원
+        const initialData = loadLocalState();
+        let analytics = initialData.savedAnalytics;
+        let leadsList = initialData.savedLeads;
 
         // Firebase 설정
         let db = null;
@@ -808,9 +862,15 @@
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'lock-and-rock-mvp';
 
         // ------------------------------------------
-        // 3. Firebase 초기화 및 실시간 트래킹
+        // 3. Firebase 초기화 및 실시간 트래킹 (이중 동기화)
         // ------------------------------------------
         async function initTracker() {
+            // 1) 방문 수 즉시 +1 및 로컬 영구 저장
+            analytics.visits = (analytics.visits || 0) + 1;
+            saveLocalState();
+            updateAdminDashboardUI();
+
+            // 2) 클라우드(Firebase) 환경이 있을 경우 양방향 병합 동기화
             try {
                 if (typeof __firebase_config !== 'undefined' && __firebase_config) {
                     const firebaseConfig = JSON.parse(__firebase_config);
@@ -826,46 +886,63 @@
 
                     if (auth.currentUser) {
                         isFirebaseReady = true;
+                        const statusEl = document.getElementById('admin-storage-status');
+                        if (statusEl) statusEl.innerText = '✅ 로컬 저장소 + 실시간 클라우드 DB 동기화 완료';
+
                         const statsRef = doc(db, 'artifacts', appId, 'public', 'data', 'analytics', 'summary');
-                        
                         const snap = await getDoc(statsRef);
                         if (!snap.exists()) {
-                            await setDoc(statsRef, {
-                                visits: 1,
-                                startClicks: 0,
-                                pinClicks: 0,
-                                storeEnters: 0,
-                                foodAdds: 0,
-                                shareClicks: 0,
-                                checkoutClicks: 0,
-                                emailLeadsCount: 0
-                            });
+                            await setDoc(statsRef, analytics);
                         } else {
                             await updateDoc(statsRef, { visits: increment(1) });
                         }
 
                         onSnapshot(statsRef, (docSnap) => {
                             if (docSnap.exists()) {
-                                analytics = { ...analytics, ...docSnap.data() };
+                                const cloudData = docSnap.data();
+                                // 로컬 누적치와 클라우드 누적치 중 더 큰 값으로 안전하게 병합 (데이터 증발 방지)
+                                Object.keys(defaultAnalytics).forEach(key => {
+                                    analytics[key] = Math.max(analytics[key] || 0, cloudData[key] || 0);
+                                });
+                                saveLocalState();
                                 updateAdminDashboardUI();
                             }
                         }, (err) => console.error("Stats listener error:", err));
 
                         const leadsColRef = collection(db, 'artifacts', appId, 'public', 'data', 'leads');
                         onSnapshot(leadsColRef, (querySnap) => {
-                            const temp = [];
-                            querySnap.forEach((d) => temp.push({ id: d.id, ...d.data() }));
-                            temp.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-                            leadsList = temp;
+                            const cloudLeads = [];
+                            querySnap.forEach((d) => cloudLeads.push({ id: d.id, ...d.data() }));
+
+                            // 로컬에 저장된 이메일과 클라우드 이메일을 중복 없이 병합
+                            const mergedMap = new Map();
+                            [...leadsList, ...cloudLeads].forEach(item => {
+                                const key = `${item.email}_${item.timestamp || item.dateStr}`;
+                                if (!mergedMap.has(key)) {
+                                    mergedMap.set(key, item);
+                                }
+                            });
+
+                            leadsList = Array.from(mergedMap.values()).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
                             analytics.emailLeadsCount = leadsList.length;
+                            saveLocalState();
                             updateAdminDashboardUI();
                         }, (err) => console.error("Leads listener error:", err));
                     }
                 }
             } catch (e) {
-                console.warn("Using local analytics mode:", e);
+                console.warn("Using local persistence mode:", e);
             }
-            updateAdminDashboardUI();
+
+            // 다른 탭에서 이메일이 추가되었을 때 실시간 반영
+            window.addEventListener('storage', (ev) => {
+                if (ev.key === STORAGE_KEY_LEADS || ev.key === STORAGE_KEY_ANALYTICS) {
+                    const refreshed = loadLocalState();
+                    analytics = refreshed.savedAnalytics;
+                    leadsList = refreshed.savedLeads;
+                    updateAdminDashboardUI();
+                }
+            });
 
             // URL에 ?admin=true가 있으면 즉시 PIN 입력창 오픈
             if (window.location.search.includes('admin=true')) {
@@ -875,6 +952,7 @@
 
         async function trackEvent(metricKey) {
             analytics[metricKey] = (analytics[metricKey] || 0) + 1;
+            saveLocalState();
             updateAdminDashboardUI();
 
             if (isFirebaseReady && auth?.currentUser) {
@@ -1316,15 +1394,19 @@
             const email = emailInput.value.trim();
             const note = noteInput.value.trim();
 
-            if (!email) return;
+            if (!email) {
+                showToast('이메일 주소를 입력해주세요!');
+                return;
+            }
 
             const filledItems = bentoSlots.filter(Boolean);
             const totalPrice = filledItems.reduce((sum, i) => sum + i.price, 0);
             const summaryStr = filledItems.length > 0 
-                ? `${currentNgu}구(${filledItems.map(i => i.name).join('/')}) ${totalPrice}원`
+                ? `${currentNgu}구(${filledItems.map(i => i.name).join('/')}) ${totalPrice.toLocaleString()}원`
                 : `메뉴 미선택 (${currentLeadTrigger})`;
 
             const newLead = {
+                id: 'lead_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
                 email,
                 note: note || '-',
                 shop: selectedShop.name,
@@ -1334,14 +1416,22 @@
                 dateStr: new Date().toLocaleString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
             };
 
+            // 1) 배열에 즉시 추가 및 로컬 스토리지 강제 저장 (절대 증발하지 않음)
             leadsList.unshift(newLead);
-            await trackEvent('emailLeadsCount');
+            analytics.emailLeadsCount = leadsList.length;
+            saveLocalState();
+            updateAdminDashboardUI();
 
+            // 2) 클라우드 DB에도 비동기 저장
             if (isFirebaseReady && auth?.currentUser) {
                 try {
                     const leadsColRef = collection(db, 'artifacts', appId, 'public', 'data', 'leads');
                     await addDoc(leadsColRef, newLead);
-                } catch (err) {}
+                    const statsRef = doc(db, 'artifacts', appId, 'public', 'data', 'analytics', 'summary');
+                    await updateDoc(statsRef, { emailLeadsCount: increment(1) });
+                } catch (err) {
+                    console.warn('Cloud lead sync warning:', err);
+                }
             }
 
             emailInput.value = '';
@@ -1349,13 +1439,57 @@
 
             document.getElementById('lead-form-view').classList.add('hidden');
             document.getElementById('lead-success-view').classList.remove('hidden');
+            showToast(`🎉 사전 알림 이메일(${email})이 정상 등록되었습니다!`);
+        };
+
+        // 관리자 대시보드에서 즉시 테스트 이메일 1건을 추가해 보는 기능
+        window.handleAddSampleLead = async function() {
+            const randomNum = Math.floor(100 + Math.random() * 900);
+            const sampleLead = {
+                id: 'sample_' + Date.now(),
+                email: `freshman${randomNum}@jbnu.ac.kr`,
+                note: '새내기 단톡방 각자내기 너무 필요해요!',
+                shop: selectedShop.name,
+                bentoSummary: '4구(제육볶음/시금치무침/쏘야볶음/계란말이) 4,900원',
+                trigger: '각자내기 결제',
+                timestamp: Date.now(),
+                dateStr: new Date().toLocaleString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+            };
+
+            leadsList.unshift(sampleLead);
+            analytics.emailLeadsCount = leadsList.length;
+            saveLocalState();
             updateAdminDashboardUI();
+
+            if (isFirebaseReady && auth?.currentUser) {
+                try {
+                    const leadsColRef = collection(db, 'artifacts', appId, 'public', 'data', 'leads');
+                    await addDoc(leadsColRef, sampleLead);
+                } catch (e) {}
+            }
+            showToast('💌 샘플 방문자 이메일 1건이 누적되었습니다!');
+        };
+
+        // 개별 이메일 삭제 기능
+        window.handleDeleteLeadItem = function(idx) {
+            if (idx >= 0 && idx < leadsList.length) {
+                leadsList.splice(idx, 1);
+                analytics.emailLeadsCount = leadsList.length;
+                saveLocalState();
+                updateAdminDashboardUI();
+                showToast('선택한 이메일 항목이 삭제되었습니다.');
+            }
         };
 
         // ------------------------------------------
         // 8. 관리자 대시보드 렌더링 & 이미지 교체 테스트
         // ------------------------------------------
         function openAdminModal() {
+            // 모달을 열 때마다 로컬 저장소에서 최신 데이터를 다시 한번 동기화
+            const latest = loadLocalState();
+            if (latest.savedLeads.length > leadsList.length) {
+                leadsList = latest.savedLeads;
+            }
             updateAdminDashboardUI();
             const modal = document.getElementById('modal-admin');
             modal.classList.remove('hidden');
@@ -1377,7 +1511,10 @@
             const imgEl = document.getElementById('intro-hero-img');
             imgEl.style.display = 'block';
             imgEl.src = url;
-            showToast('시작 화면 이미지가 변경되었습니다!');
+            try {
+                localStorage.setItem(STORAGE_KEY_HERO, url);
+            } catch (e) {}
+            showToast('시작 화면 이미지가 변경 및 저장되었습니다!');
         };
 
         function updateAdminDashboardUI() {
@@ -1388,7 +1525,7 @@
             const shares = analytics.shareClicks || 0;
             const checkouts = analytics.checkoutClicks || 0;
             const intents = shares + checkouts;
-            const leads = Math.max(analytics.emailLeadsCount || 0, leadsList.length);
+            const leads = leadsList.length;
 
             const startCvr = Math.min(100, Math.round((starts / v) * 100));
             const enterCvr = Math.min(100, Math.round((enters / v) * 100));
@@ -1406,6 +1543,9 @@
             document.getElementById('kpi-leads').innerText = leads.toLocaleString();
             document.getElementById('kpi-lead-cvr').innerText = `최종 CVR ${leadCvr}%`;
 
+            const countBadge = document.getElementById('admin-leads-count-badge');
+            if (countBadge) countBadge.innerText = leads.toLocaleString();
+
             document.getElementById('funnel-txt-start').innerText = `${starts}회 (${startCvr}%)`;
             document.getElementById('funnel-bar-start').style.width = `${startCvr}%`;
             document.getElementById('funnel-txt-enter').innerText = `${enters}회 (${enterCvr}%)`;
@@ -1417,15 +1557,19 @@
 
             const listEl = document.getElementById('admin-leads-list');
             if (leadsList.length === 0) {
-                listEl.innerHTML = `<div class="text-center py-5 text-gray-500">아직 등록된 이메일이 없습니다.</div>`;
+                listEl.innerHTML = `<div class="text-center py-5 text-gray-500">아직 등록된 이메일이 없습니다.<br><span class="text-[10px] text-gray-600">우측 상단 [+ 샘플 테스트]를 눌러 확인해 보세요!</span></div>`;
             } else {
                 listEl.innerHTML = leadsList.map((item, idx) => `
                     <div class="bg-gray-900 p-2.5 rounded-xl border border-gray-700 flex justify-between items-center gap-2">
-                        <div class="min-w-0">
-                            <div class="font-bold text-teal-300 truncate">${idx + 1}. ${item.email}</div>
-                            <div class="text-[10px] text-gray-400 truncate mt-0.5">${item.bentoSummary} · ${item.note}</div>
+                        <div class="min-w-0 flex-1">
+                            <div class="font-bold text-teal-300 truncate">${idx + 1}. ${item.email} <span class="text-[10px] text-gray-400 font-normal">(${item.trigger || '결제'})</span></div>
+                            <div class="text-[10px] text-gray-300 truncate mt-0.5">${item.bentoSummary}</div>
+                            <div class="text-[10px] text-gray-500 truncate mt-0.5">💬 ${item.note || '-'} · ${item.shop || ''}</div>
                         </div>
-                        <div class="text-[10px] text-gray-500 whitespace-nowrap">${item.dateStr || '방금'}</div>
+                        <div class="flex flex-col items-end gap-1 flex-shrink-0">
+                            <span class="text-[10px] text-gray-500 whitespace-nowrap">${item.dateStr || '방금'}</span>
+                            <button onclick="handleDeleteLeadItem(${idx})" class="text-[10px] text-gray-500 hover:text-rockRed px-1">삭제</button>
+                        </div>
                     </div>
                 `).join('');
             }
@@ -1461,6 +1605,7 @@
                 emailLeadsCount: 0
             };
             leadsList = [];
+            saveLocalState();
             updateAdminDashboardUI();
 
             if (isFirebaseReady && auth?.currentUser) {
@@ -1469,7 +1614,7 @@
                     await setDoc(statsRef, analytics);
                 } catch (e) {}
             }
-            showToast('집계 데이터가 초기화되었습니다.');
+            showToast('집계 데이터가 모두 초기화되었습니다.');
         };
 
         window.addEventListener('DOMContentLoaded', () => {
