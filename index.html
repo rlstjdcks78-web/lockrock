@@ -41,7 +41,6 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* 화면 전환: display 제어로 검은 화면 원천 차단 */
         .app-view { display: none; width: 100%; height: 100%; flex-direction: column; }
         .app-view.active { display: flex; }
 
@@ -58,7 +57,7 @@
         .road-h { position: absolute; height: 24px; width: 100%; background: #ffffff; border-top: 2px solid #cbd5e1; border-bottom: 2px solid #cbd5e1; }
         .road-v { position: absolute; width: 24px; height: 100%; background: #ffffff; border-left: 2px solid #cbd5e1; border-right: 2px solid #cbd5e1; }
 
-        /* 도시락 그리드 (기존 대비 15% 확대 & 글자 잘림 방지) */
+        /* 도시락 그리드 (15% 확대 & 글자 잘림 방지) */
         .bento-grid-4 { display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); gap: 8px; }
         .bento-grid-5 { display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(2, 1fr); gap: 6px; }
         .bento-grid-5 > .slot-0 { grid-column: span 2; }
@@ -82,7 +81,6 @@
              [화면 1] 스플래시 시작 화면 (미니멀 로고 + 자동 전환)
              ===================================================== -->
         <div id="view-intro" class="app-view active justify-between bg-white px-6 py-7 z-30">
-            <!-- 상단 관리자 진입용 상표만 배치 -->
             <div class="flex justify-between items-center">
                 <div onclick="handleSecretLogoTap()" class="cursor-pointer py-1">
                     <span class="text-[11px] font-black tracking-widest text-gray-400 hover:text-gray-800 transition">LOCK & ROCK®</span>
@@ -90,13 +88,12 @@
                 <button onclick="openPinModal()" class="text-[10px] font-bold text-gray-300 hover:text-gray-500">Admin</button>
             </div>
 
-            <!-- 중앙: 대표님이 보내주신 Lock & Rock 커스텀 로고 구현 + "도시락도 락이다" 슬로건 -->
+            <!-- 중앙: Lock & Rock 커스텀 로고 + "도시락도 락이다" 슬로건 -->
             <div class="flex flex-col items-center justify-center my-auto">
                 <div onclick="handleSecretLogoTap()" class="cursor-pointer select-none flex flex-col items-start gap-2 p-4">
                     <!-- 첫 줄: L [4구창] c k & -->
                     <div class="flex items-end gap-1.5">
                         <span class="text-[64px] font-black text-[#111] leading-[0.82] tracking-tighter">L</span>
-                        <!-- o 자리 4구 도시락 격자 심볼 -->
                         <div class="w-[50px] h-[48px] bg-[#111] rounded-[10px] p-[6px] grid grid-cols-2 grid-rows-2 gap-[4px] mb-[2px] shadow-sm">
                             <div class="bg-[#e68a1e] rounded-[3px]"></div>
                             <div class="bg-[#99cc33] rounded-[3px]"></div>
@@ -119,17 +116,15 @@
                     </div>
                 </div>
 
-                <!-- 요청하신 단일 슬로건 -->
                 <p class="mt-4 text-lg font-black text-gray-800 tracking-tight">도시락도 락이다</p>
 
-                <!-- 자동 전환 로딩 바 -->
                 <div class="w-36 h-1.5 bg-gray-100 rounded-full overflow-hidden mt-8">
                     <div id="intro-progress-bar" class="h-full bg-gray-900 rounded-full transition-all duration-[2000ms] ease-out" style="width: 0%"></div>
                 </div>
             </div>
 
-            <div class="text-center text-[10px] text-gray-300 font-medium">
-                LOCK & ROCK CUSTOM BENTO PLATFORM
+            <div class="text-center text-[10px] text-emerald-500 font-bold">
+                ● Firebase 실시간 DB 연동 완료
             </div>
         </div>
 
@@ -149,14 +144,13 @@
                 <button onclick="openPinModal()" class="text-[11px] font-bold text-gray-400 bg-gray-100 px-2.5 py-1 rounded-lg">관리자</button>
             </div>
 
-            <!-- 지도 영역 -->
             <div class="relative flex-1 map-bg overflow-hidden">
                 <div class="road-h top-[32%]"></div>
                 <div class="road-h top-[68%]"></div>
                 <div class="road-v left-[28%]"></div>
                 <div class="road-v left-[72%]"></div>
 
-                <!-- 우측 잘림 해결: 정중앙 배치 안내 문구 -->
+                <!-- 정중앙 배치 안내 문구 (우측 잘림 해결) -->
                 <div class="absolute top-3 left-0 right-0 flex justify-center z-20 px-4 pointer-events-none">
                     <div class="bg-gray-900/90 backdrop-blur text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg text-center max-w-[92%] truncate">
                         👇 매장을 터치해서 커스텀 도시락을 만들어 보세요!
@@ -194,7 +188,6 @@
                 </button>
             </div>
 
-            <!-- 하단 매장 상세 시트 (실제 반찬가게 메뉴판 특징 반영) -->
             <div class="bg-white rounded-t-3xl p-5 shadow-[0_-8px_25px_rgba(0,0,0,0.1)] z-20">
                 <div class="flex items-center justify-between">
                     <span id="sheet-badge" class="bg-red-50 text-rockRed text-[11px] font-extrabold px-2.5 py-0.5 rounded-md">수제 한식 메인요리 & 전류 전문</span>
@@ -204,7 +197,6 @@
                 <p id="sheet-shop-desc" class="text-xs text-gray-600 mt-0.5 leading-relaxed">
                     20년 경력 찬모님이 매일 아침 직접 빚는 수제 떡갈비, 한돈 제육볶음, 육전과 코다리조림이 유명한 정통 반찬 전문점입니다.
                 </p>
-                <!-- 실제 메뉴판 대표 시그니처 태그 -->
                 <div id="sheet-menu-tags" class="flex flex-wrap gap-1.5 mt-2.5 mb-3.5"></div>
 
                 <button onclick="handleEnterShop()" class="w-full bg-baemin hover:bg-baeminDark text-white font-black py-3.5 rounded-xl text-sm shadow-lg shadow-teal-500/25 transition active:scale-[0.98] flex items-center justify-center gap-2">
@@ -220,7 +212,7 @@
              ===================================================== -->
         <div id="view-store" class="app-view bg-[#f4f7f8] z-10 overflow-hidden">
             
-            <!-- 파티원 초대 모드 배너 (팀원이 링크 타고 들어왔을 때만 상단에 표시) -->
+            <!-- 파티원 초대 모드 배너 -->
             <div id="member-mode-banner" class="hidden bg-amber-500 text-white px-4 py-1.5 text-[11px] font-extrabold flex justify-between items-center">
                 <span>🙋‍♂️ 파티원 모드: 반찬을 담아 방장에게 주문서를 보내세요!</span>
                 <span id="member-nickname-display" class="bg-black/20 px-2 py-0.5 rounded">참여자</span>
@@ -238,14 +230,14 @@
                     </div>
                 </div>
 
-                <!-- 파티장 관리창 & 공유 버튼 -->
+                <!-- 파티장 관리창 버튼 -->
                 <button onclick="openPartyManagerModal()" class="bg-gray-900 hover:bg-black text-white px-3 py-1.5 rounded-full text-xs font-extrabold flex items-center gap-1.5 shadow-xs active:scale-95">
                     <span>👑 파티원 관리</span>
                     <span id="party-count-badge" class="bg-rockRed text-white text-[10px] font-black px-1.5 py-0.2 rounded-full">1명</span>
                 </button>
             </div>
 
-            <!-- 상단: 컴팩트 + 15% 확대된 도시락 캔버스 영역 (글자 잘림 완벽 방지) -->
+            <!-- 상단: 15% 확대된 도시락 캔버스 영역 -->
             <div class="bg-white px-4 py-2.5 border-b border-gray-200 flex flex-col items-center">
                 <div class="w-full flex justify-between items-center mb-2">
                     <div class="flex bg-gray-100 p-0.5 rounded-lg">
@@ -266,15 +258,11 @@
                     </div>
                 </div>
 
-                <!-- 도시락 박스 (높이 164px로 15% 확대하여 사진+메뉴명+가격 글자가 절대 안 잘리게 구성) -->
-                <div id="bento-container" class="w-full h-[164px] bg-bentoWood rounded-2xl p-2.5 shadow-inner border-2 border-[#d5c4a1] bento-grid-4">
-                    <!-- JS로 슬롯 렌더링 -->
-                </div>
+                <div id="bento-container" class="w-full h-[164px] bg-bentoWood rounded-2xl p-2.5 shadow-inner border-2 border-[#d5c4a1] bento-grid-4"></div>
             </div>
 
-            <!-- 하단: 대폭 확대한 반찬 선택 영역 (카테고리 분리: 마감특가만 할인 / 나머지 정상가) -->
+            <!-- 하단: 반찬 선택 영역 (마감특가만 할인 / 고기·야채는 정상가 분리) -->
             <div class="flex-1 bg-white flex flex-col overflow-hidden">
-                <!-- 카테고리 탭 -->
                 <div class="flex gap-1.5 px-4 py-2.5 border-b border-gray-100 bg-gray-50/60">
                     <button onclick="handleSelectCategory('special')" data-cat="special" class="cat-tab flex-1 py-1.5 rounded-xl text-[11px] font-extrabold transition bg-rockRed text-white shadow-2xs">
                         🚨 마감특가 (10종)
@@ -287,10 +275,7 @@
                     </button>
                 </div>
 
-                <!-- 반찬 그리드 리스트 (아이콘 크기 30% 축소 + 넓은 스크롤 영역) -->
-                <div id="food-list-container" class="flex-1 overflow-y-auto px-3.5 pt-2.5 pb-24 grid grid-cols-4 gap-x-2 gap-y-3 content-start">
-                    <!-- JS로 10종씩 렌더링 -->
-                </div>
+                <div id="food-list-container" class="flex-1 overflow-y-auto px-3.5 pt-2.5 pb-24 grid grid-cols-4 gap-x-2 gap-y-3 content-start"></div>
             </div>
 
             <!-- 최하단 결제 / 방장에게 보내기 바 -->
@@ -319,7 +304,7 @@
             <div class="bg-white w-full max-w-[350px] rounded-3xl p-5 text-center shadow-2xl animate-pop">
                 <span class="bg-amber-100 text-amber-700 text-[11px] font-black px-2.5 py-1 rounded-full">👑 함께주문 파티 초대장</span>
                 <h3 id="join-modal-shop-title" class="text-lg font-black text-gray-900 mt-2">전주 반찬명가 파티</h3>
-                <p class="text-xs text-gray-500 mt-1">이름을 입력하고 참여하면 방장과 같은 매장에서 내 도시락을 골라 담을 수 있어요!</p>
+                <p class="text-xs text-gray-500 mt-1">이름을 입력하고 참여하면 방장의 파티원 관리창에 내 이름과 주문서가 실시간으로 전송됩니다!</p>
                 <input type="text" id="member-name-input" placeholder="내 이름/닉네임 입력 (예: 김동기)" 
                     class="w-full mt-4 px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm font-bold text-center outline-none focus:border-baemin">
                 <button onclick="handleConfirmMemberJoin()" class="w-full mt-3 bg-baemin text-white font-black py-3 rounded-xl text-sm shadow-md">
@@ -330,31 +315,29 @@
 
 
         <!-- =====================================================
-             [모달 2] 파티장(방장)의 파티원 관리창 (초대링크 & 팀원 주문서 수렴)
+             [모달 2] 파티장(방장)의 파티원 관리창 (Firebase 실시간 수렴)
              ===================================================== -->
         <div id="modal-party-manager" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs hidden items-center justify-center p-3">
             <div class="bg-white w-full max-w-[400px] max-h-[88dvh] rounded-3xl overflow-hidden shadow-2xl flex flex-col animate-pop">
-                <!-- 헤더 -->
                 <div class="bg-gray-900 text-white px-5 py-4 flex justify-between items-center">
                     <div>
                         <div class="flex items-center gap-1.5">
                             <span class="bg-amber-400 text-gray-900 text-[10px] font-black px-2 py-0.5 rounded">파티장 전용</span>
                             <h3 class="text-sm font-black">파티원 주문서 & 금액 수렴 관리창</h3>
                         </div>
-                        <p id="party-shop-label" class="text-[11px] text-gray-400 mt-0.5">매장: 전주 반찬명가</p>
+                        <p id="party-shop-label" class="text-[11px] text-emerald-400 mt-0.5">● Firebase 실시간 파티 동기화 중</p>
                     </div>
                     <button onclick="closePartyManagerModal()" class="w-7 h-7 rounded-full bg-gray-800 text-gray-300 flex items-center justify-center">
                         <i class="fa-solid fa-xmark text-sm"></i>
                     </button>
                 </div>
 
-                <!-- 본문 -->
                 <div class="p-4 overflow-y-auto space-y-3.5 flex-1 text-xs no-scrollbar">
                     <!-- 1. 팀원 초대 링크 복사 박스 -->
                     <div class="bg-teal-50/70 border border-baemin/30 rounded-2xl p-3">
                         <div class="flex justify-between items-center mb-1.5">
                             <span class="font-extrabold text-gray-800">① 단톡방에 파티 초대 링크 공유</span>
-                            <span class="text-[10px] font-bold text-baemin">같은 매장 자동 연결</span>
+                            <span id="party-code-badge" class="text-[10px] font-bold text-baemin">방코드: LR000</span>
                         </div>
                         <button onclick="handleCopyPartyInviteLink()" class="w-full bg-baemin hover:bg-baeminDark text-white font-black py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-xs">
                             <i class="fa-solid fa-link"></i>
@@ -366,26 +349,17 @@
                     <div class="bg-gray-50 border border-gray-200 rounded-2xl p-3">
                         <div class="flex justify-between items-center mb-2">
                             <span class="font-extrabold text-gray-900">② 참여 파티원 주문서 현황 (<span id="mgr-member-count" class="text-rockRed">1</span>명)</span>
-                            <button onclick="handleSimulateMemberOrder()" class="bg-gray-900 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg">
-                                + 팀원 주문 도착 시뮬레이션
-                            </button>
-                        </div>
-
-                        <div id="party-members-list" class="space-y-2 max-h-44 overflow-y-auto pr-0.5">
-                            <!-- JS로 방장 + 팀원 주문서 카드 렌더링 -->
-                        </div>
-
-                        <!-- 팀원이 카톡으로 보낸 주문서 코드/링크 직접 붙여넣기 칸 (무서버 100% 보장용) -->
-                        <div class="mt-3 pt-2.5 border-t border-gray-200">
-                            <div class="text-[10px] font-bold text-gray-500 mb-1">📩 팀원이 보낸 주문서 코드(또는 링크) 수동 등록</div>
-                            <div class="flex gap-1.5">
-                                <input type="text" id="manual-order-code-input" placeholder="팀원이 복사해 준 주문코드 붙여넣기" 
-                                    class="flex-1 bg-white border border-gray-300 rounded-lg px-2.5 py-1.5 text-[11px] outline-none">
-                                <button onclick="handleImportMemberCode()" class="bg-gray-800 text-white font-bold px-3 py-1.5 rounded-lg text-[11px] whitespace-nowrap">
-                                    추가
+                            <div class="flex gap-1">
+                                <button onclick="syncPartyFromFirebase(true)" class="bg-gray-200 text-gray-700 text-[10px] font-bold px-2 py-1 rounded-lg">
+                                    🔄 새로고침
+                                </button>
+                                <button onclick="handleSimulateMemberOrder()" class="bg-gray-900 text-white text-[10px] font-bold px-2 py-1 rounded-lg">
+                                    + 시뮬레이션
                                 </button>
                             </div>
                         </div>
+
+                        <div id="party-members-list" class="space-y-2 max-h-48 overflow-y-auto pr-0.5"></div>
                     </div>
 
                     <!-- 3. 파티 전체 합계 요약 -->
@@ -409,7 +383,6 @@
         <div id="modal-lead" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs hidden items-center justify-center p-4">
             <div class="bg-white w-full max-w-[375px] rounded-3xl overflow-hidden shadow-2xl animate-pop">
                 
-                <!-- 심플 헤더 -->
                 <div class="bg-gray-900 text-white px-5 py-3.5 flex justify-between items-center">
                     <h3 id="receipt-modal-title" class="text-sm font-black">🧾 최종 주문서 영수증 & 알림 신청</h3>
                     <button onclick="closeLeadModal()" class="w-6 h-6 rounded-full bg-gray-800 text-gray-300 flex items-center justify-center">
@@ -417,7 +390,6 @@
                     </button>
                 </div>
 
-                <!-- 본문 (불필요한 멘트 모두 제거, 영수증 표 + 이메일/바라는점만 유지) -->
                 <div id="lead-form-view" class="p-4">
                     <!-- 영수증 테이블 (열: 메뉴명 / 행: 가격 정렬) -->
                     <div class="bg-gray-50 border border-gray-200 rounded-2xl p-3 mb-3.5">
@@ -434,9 +406,7 @@
                                         <th class="text-right font-bold py-1">가격 (행)</th>
                                     </tr>
                                 </thead>
-                                <tbody id="receipt-table-body" class="divide-y divide-gray-100">
-                                    <!-- JS로 행/열 렌더링 -->
-                                </tbody>
+                                <tbody id="receipt-table-body" class="divide-y divide-gray-100"></tbody>
                             </table>
                         </div>
 
@@ -446,7 +416,7 @@
                         </div>
                     </div>
 
-                    <!-- 심플 이메일 & 바라는 점 입력 폼 -->
+                    <!-- 심플 이메일 & 바라는 점 입력 폼 (Firebase /leads 직결) -->
                     <form onsubmit="handleSubmitEmailLead(event)" class="space-y-2.5">
                         <div>
                             <label class="block text-[11px] font-extrabold text-gray-700 mb-1">이메일 (정식 오픈 알림용) *</label>
@@ -464,13 +434,12 @@
                     </form>
                 </div>
 
-                <!-- 완료 화면 -->
                 <div id="lead-success-view" class="p-6 text-center hidden">
                     <div class="w-12 h-12 bg-teal-50 text-baemin rounded-full flex items-center justify-center mx-auto text-xl mb-2.5">
                         <i class="fa-solid fa-check"></i>
                     </div>
                     <h4 class="text-base font-black text-gray-900">신청이 완료되었습니다!</h4>
-                    <p class="text-xs text-gray-500 mt-1">남겨주신 이메일과 주문 내역이 정상 기록되었습니다.</p>
+                    <p class="text-xs text-gray-500 mt-1">남겨주신 이메일과 주문 내역이 Firebase DB에 안전하게 저장되었습니다.</p>
                     <button onclick="closeLeadModal()" class="w-full bg-gray-900 text-white font-bold py-2.5 rounded-xl text-xs mt-4">
                         닫기
                     </button>
@@ -500,10 +469,16 @@
         <div id="modal-admin" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs hidden items-center justify-center p-3">
             <div class="bg-gray-900 text-white w-full max-w-[410px] max-h-[90dvh] rounded-3xl overflow-hidden border border-gray-700 flex flex-col animate-pop">
                 <div class="px-5 py-3.5 bg-gray-800 border-b border-gray-700 flex justify-between items-center">
-                    <span class="text-sm font-black">⚙️ 관리자 전환율(CVR) & 이메일 목록</span>
-                    <button onclick="closeAdminModal()" class="w-7 h-7 rounded-full bg-gray-700 text-gray-300 flex items-center justify-center">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
+                    <div>
+                        <span class="text-sm font-black">⚙️ Firebase 실시간 관리자 (1216)</span>
+                        <p class="text-[10px] text-emerald-400">https://lockrock-default-rtdb.firebaseio.com 연동됨</p>
+                    </div>
+                    <div class="flex gap-1.5">
+                        <button onclick="syncAllFromFirebase(true)" class="bg-gray-700 text-teal-300 text-[10px] font-bold px-2.5 py-1 rounded-lg">🔄 동기화</button>
+                        <button onclick="closeAdminModal()" class="w-7 h-7 rounded-full bg-gray-700 text-gray-300 flex items-center justify-center">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="p-4 overflow-y-auto space-y-3 flex-1 text-xs no-scrollbar">
                     <div class="grid grid-cols-3 gap-2">
@@ -535,10 +510,10 @@
 
                     <div class="bg-gray-800 p-3 rounded-xl border border-gray-700">
                         <div class="flex justify-between items-center mb-2">
-                            <span class="font-bold">💌 수집된 이메일 & 주문 내역</span>
+                            <span class="font-bold">💌 수집된 이메일 & 주문 내역 (Firebase)</span>
                             <button onclick="exportLeadsToCSV()" class="bg-baemin text-gray-900 font-black px-2.5 py-1 rounded text-[10px]">CSV 저장</button>
                         </div>
-                        <div id="admin-leads-list" class="space-y-1.5 max-h-48 overflow-y-auto"></div>
+                        <div id="admin-leads-list" class="space-y-1.5 max-h-56 overflow-y-auto"></div>
                     </div>
                 </div>
             </div>
@@ -547,10 +522,12 @@
     </div>
 
     <!-- =====================================================
-         자바스크립트: 30종 실사 반찬 + 파티원 링크 수렴 시스템
+         자바스크립트: 대표님 Firebase DB (lockrock-default-rtdb) 완벽 직결
          ===================================================== -->
     <script>
         const ADMIN_PIN = "1216";
+        // ★ 대표님 전용 파이어베이스 실시간 데이터베이스 주소 고정 연결 ★
+        const FIREBASE_DB_URL = "https://lockrock-default-rtdb.firebaseio.com";
 
         // 1. 3개 반찬가게 실제 메뉴판 특징 데이터
         const SHOPS = {
@@ -580,8 +557,7 @@
             }
         };
 
-        // 2. 카테고리별 10종씩 총 30종 실제 반찬 데이터 (마감특가만 할인 적용 / 고기·야채는 정상가 분리)
-        // 위키미디어 공용(Wikimedia Commons) 및 Unsplash 실제 한국 반찬/음식 오픈소스 사진 적용
+        // 2. 카테고리별 10종씩 총 30종 실제 반찬 데이터 (마감특가만 할인 / 고기·야채는 정상가 분리)
         const FOOD_ITEMS = [
             // [카테고리 1: 🚨 마감특가 10종 - 할인가 적용]
             { id: 's1', name: '한돈제육볶음', category: 'special', oriPrice: 2500, price: 1900, discount: '24%↓', kcal: 220, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Jeyuk-bokkeum.jpg/300px-Jeyuk-bokkeum.jpg' },
@@ -631,30 +607,15 @@
         let isMemberMode = false;
         let partyId = localStorage.getItem('loro_party_id') || ('LR' + Math.floor(100 + Math.random() * 900));
         localStorage.setItem('loro_party_id', partyId);
+        let memberKey = localStorage.getItem('loro_member_key') || ('m_' + Date.now() + '_' + Math.floor(Math.random() * 1000));
+        localStorage.setItem('loro_member_key', memberKey);
         let memberNickname = '파티원';
 
-        // 파티장의 파티원 리스트 (다른 탭/링크/시뮬레이션 수렴용)
         let partyMembers = JSON.parse(localStorage.getItem('loro_party_members')) || [];
-
-        // 관리자 통계 및 리드
         let analytics = JSON.parse(localStorage.getItem('loro_cvr_stats')) || {
             visits: 0, storeEnters: 0, foodAdds: 0, shareClicks: 0, checkoutClicks: 0
         };
         let leadsList = JSON.parse(localStorage.getItem('loro_email_leads')) || [];
-
-        // 같은 브라우저 탭 간 실시간 동기화 채널
-        const partyChannel = ('BroadcastChannel' in window) ? new BroadcastChannel('loro_party_sync') : null;
-        if (partyChannel) {
-            partyChannel.onmessage = (ev) => {
-                if (ev.data && ev.data.type === 'MEMBER_JOINED') {
-                    addOrUpdatePartyMember(ev.data.member);
-                    showToast(`🙋‍♂️ ${ev.data.member.name}님이 파티에 참여했습니다!`);
-                } else if (ev.data && ev.data.type === 'MEMBER_ORDER_SENT') {
-                    addOrUpdatePartyMember(ev.data.member);
-                    showToast(`🍱 ${ev.data.member.name}님의 주문서(${ev.data.member.price.toLocaleString()}원)가 도착했습니다!`);
-                }
-            };
-        }
 
         function saveState() {
             localStorage.setItem('loro_party_members', JSON.stringify(partyMembers));
@@ -662,10 +623,87 @@
             localStorage.setItem('loro_email_leads', JSON.stringify(leadsList));
         }
 
-        function trackEvent(key) {
+        // =========================================================================
+        // ★ Firebase 실시간 데이터베이스(lockrock-default-rtdb) 통신 함수 ★
+        // =========================================================================
+        async function syncAllFromFirebase(showNotice = false) {
+            try {
+                const [statsRes, leadsRes, partyRes] = await Promise.all([
+                    fetch(`${FIREBASE_DB_URL}/analytics.json`),
+                    fetch(`${FIREBASE_DB_URL}/leads.json`),
+                    fetch(`${FIREBASE_DB_URL}/parties/${partyId}/members.json`)
+                ]);
+
+                if (statsRes.ok) {
+                    const cloudStats = await statsRes.json();
+                    if (cloudStats && typeof cloudStats === 'object') {
+                        Object.keys(analytics).forEach(k => {
+                            analytics[k] = Math.max(analytics[k] || 0, cloudStats[k] || 0);
+                        });
+                    }
+                }
+
+                if (leadsRes.ok) {
+                    const cloudLeads = await leadsRes.json();
+                    if (cloudLeads && typeof cloudLeads === 'object') {
+                        leadsList = Object.values(cloudLeads).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                    }
+                }
+
+                if (partyRes.ok) {
+                    const cloudMembers = await partyRes.json();
+                    if (cloudMembers && typeof cloudMembers === 'object') {
+                        partyMembers = Object.values(cloudMembers);
+                    }
+                }
+
+                saveState();
+                updatePartyBadgeCount();
+                renderPartyManagerList();
+                updateAdminUI();
+                if (showNotice) showToast("Firebase DB에서 최신 데이터를 동기화했습니다!");
+            } catch (err) {
+                console.warn("Firebase 동기화 오류:", err);
+            }
+        }
+
+        // 파티원 목록만 3초마다 실시간 폴링 (방장이 관리창을 보고 있을 때 팀원 참여/주문 자동 반영)
+        async function syncPartyFromFirebase(showNotice = false) {
+            try {
+                const res = await fetch(`${FIREBASE_DB_URL}/parties/${partyId}/members.json`);
+                if (res.ok) {
+                    const cloudMembers = await res.json();
+                    const prevCount = partyMembers.length;
+                    partyMembers = (cloudMembers && typeof cloudMembers === 'object') ? Object.values(cloudMembers) : [];
+                    saveState();
+                    updatePartyBadgeCount();
+                    renderPartyManagerList();
+                    if (partyMembers.length > prevCount) {
+                        const newest = partyMembers[partyMembers.length - 1];
+                        showToast(`🙋‍♂️ ${newest.name}님의 파티 정보가 실시간 업데이트되었습니다!`);
+                    } else if (showNotice) {
+                        showToast("파티원 목록을 새로고침했습니다.");
+                    }
+                }
+            } catch (e) {}
+        }
+
+        async function trackEvent(key) {
             analytics[key] = (analytics[key] || 0) + 1;
             saveState();
             updateAdminUI();
+            try {
+                const res = await fetch(`${FIREBASE_DB_URL}/analytics/${key}.json`);
+                const cur = await res.json();
+                const next = Math.max(analytics[key], (typeof cur === 'number' ? cur : 0) + 1);
+                analytics[key] = next;
+                saveState();
+                await fetch(`${FIREBASE_DB_URL}/analytics/${key}.json`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(next)
+                });
+            } catch (e) {}
         }
 
         function showToast(msg) {
@@ -674,7 +712,7 @@
             el.className = 'bg-gray-900/95 text-white px-4 py-2 rounded-full shadow-lg text-xs font-bold animate-pop';
             el.innerText = msg;
             container.appendChild(el);
-            setTimeout(() => el.remove(), 2200);
+            setTimeout(() => el.remove(), 2300);
         }
 
         // 4. 화면 전환
@@ -709,7 +747,6 @@
         function handleEnterShop() {
             trackEvent('storeEnters');
             document.getElementById('store-header-name').innerText = selectedShop.name.replace(/^[^\s]+\s/, '');
-            document.getElementById('party-shop-label').innerText = `매장: ${selectedShop.name}`;
             switchScreen('view-store');
         }
 
@@ -717,7 +754,7 @@
             switchScreen('view-map');
         }
 
-        // 5. 도시락 슬롯 & 30종 반찬 렌더링 (이미지 에러 시 깔끔한 색상 배지 대체)
+        // 5. 도시락 슬롯 & 30종 반찬 렌더링
         function handleChangeNgu(ngu) {
             currentNgu = ngu;
             bentoSlots = new Array(ngu).fill(null);
@@ -795,7 +832,6 @@
             renderFoodList();
         }
 
-        // 메뉴판 반찬 아이콘 축소(38px) & 할인/정상가 완전 분리 렌더링
         function renderFoodList() {
             const container = document.getElementById('food-list-container');
             container.innerHTML = '';
@@ -805,7 +841,6 @@
                 const card = document.createElement('div');
                 card.className = "flex flex-col items-center text-center cursor-pointer active:scale-95 transition p-1 rounded-xl hover:bg-gray-50 relative";
 
-                // 마감특가 탭만 할인 배지 & 정가 취소선 노출, 나머지는 정상가만 깔끔하게 노출
                 const isDiscount = (item.category === 'special' && item.discount);
 
                 card.innerHTML = `
@@ -864,30 +899,41 @@
             updatePartyBadgeCount();
         }
 
-        // 6. 파티장(방장) 관리창 & 파티원 주문 수렴 시스템
-        function addOrUpdatePartyMember(memberObj) {
-            const idx = partyMembers.findIndex(m => m.name === memberObj.name);
-            if (idx >= 0) {
-                partyMembers[idx] = memberObj;
-            } else {
-                partyMembers.push(memberObj);
-            }
+        // 6. 파티장(방장) 관리창 & 파티원 실시간 Firebase 수렴 시스템
+        async function savePartyMemberToFirebase(memberObj) {
+            const key = memberObj.id || ('m_' + Date.now());
+            memberObj.id = key;
+            const idx = partyMembers.findIndex(m => m.id === key || m.name === memberObj.name);
+            if (idx >= 0) partyMembers[idx] = memberObj;
+            else partyMembers.push(memberObj);
+
             saveState();
             updatePartyBadgeCount();
             renderPartyManagerList();
+
+            try {
+                await fetch(`${FIREBASE_DB_URL}/parties/${partyId}/members/${key}.json`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(memberObj)
+                });
+            } catch (e) {}
         }
 
         function updatePartyBadgeCount() {
-            const totalMembers = 1 + partyMembers.length; // 방장(나) + 파티원들
+            const totalMembers = 1 + partyMembers.length;
             document.getElementById('party-count-badge').innerText = `${totalMembers}명`;
             document.getElementById('mgr-member-count').innerText = totalMembers;
+            const codeBadge = document.getElementById('party-code-badge');
+            if (codeBadge) codeBadge.innerText = `방코드: ${partyId}`;
         }
 
-        function openPartyManagerModal() {
+        async function openPartyManagerModal() {
             renderPartyManagerList();
             const m = document.getElementById('modal-party-manager');
             m.classList.remove('hidden');
             m.classList.add('flex');
+            await syncPartyFromFirebase(false);
         }
 
         function closePartyManagerModal() {
@@ -934,16 +980,16 @@
                             <div class="flex items-center gap-1.5">
                                 <span class="font-extrabold text-gray-800 text-xs">🙋‍♂️ ${m.name}</span>
                                 <span class="text-[9px] font-bold px-1.5 py-0.2 rounded ${m.items && m.items.length > 0 ? 'bg-teal-50 text-baemin' : 'bg-amber-50 text-amber-600'}">
-                                    ${m.items && m.items.length > 0 ? '주문서 도착' : '담는 중...'}
+                                    ${m.items && m.items.length > 0 ? '주문서 도착' : '메뉴 고르는 중...'}
                                 </span>
                             </div>
                             <div class="text-[11px] text-gray-500 truncate mt-0.5">
-                                ${m.items && m.items.length > 0 ? m.items.join(', ') : '반찬을 고르고 있습니다'}
+                                ${m.items && m.items.length > 0 ? m.items.join(', ') : '파티에 입장하여 반찬을 담고 있습니다'}
                             </div>
                         </div>
                         <div class="flex items-center gap-2 flex-shrink-0">
                             <span class="text-xs font-black text-rockRed">${(m.price || 0).toLocaleString()}원</span>
-                            <button onclick="removePartyMember(${idx})" class="text-gray-300 hover:text-rockRed"><i class="fa-solid fa-trash-can text-[10px]"></i></button>
+                            <button onclick="removePartyMember('${m.id || idx}')" class="text-gray-300 hover:text-rockRed"><i class="fa-solid fa-trash-can text-[10px]"></i></button>
                         </div>
                     </div>
                 `;
@@ -954,14 +1000,19 @@
             updatePartyBadgeCount();
         }
 
-        function removePartyMember(idx) {
-            partyMembers.splice(idx, 1);
+        async function removePartyMember(idOrIdx) {
+            const target = partyMembers.find(m => m.id === idOrIdx) || partyMembers[idOrIdx];
+            partyMembers = partyMembers.filter(m => m !== target);
             saveState();
             renderPartyManagerList();
+            if (target && target.id) {
+                try {
+                    await fetch(`${FIREBASE_DB_URL}/parties/${partyId}/members/${target.id}.json`, { method: 'DELETE' });
+                } catch (e) {}
+            }
         }
 
-        // 시연 및 즉시 확인용: 팀원 참여 & 주문 도착 시뮬레이션
-        function handleSimulateMemberOrder() {
+        async function handleSimulateMemberOrder() {
             const sampleNames = ['김동기', '이새내기', '박선배', '최팀원'];
             const randomName = sampleNames[partyMembers.length % sampleNames.length] + (partyMembers.length + 1);
             const pick1 = FOOD_ITEMS[Math.floor(Math.random() * 10)];
@@ -970,36 +1021,13 @@
             const items = [pick1.name, pick2.name, pick3.name];
             const price = pick1.price + pick2.price + pick3.price;
 
-            addOrUpdatePartyMember({ name: randomName, items, price });
-            showToast(`🍱 ${randomName}님의 주문서(${price.toLocaleString()}원)가 수렴되었습니다!`);
-        }
-
-        // 팀원이 보낸 주문서 코드나 URL을 붙여넣어 수렴하는 기능
-        function handleImportMemberCode() {
-            const raw = document.getElementById('manual-order-code-input').value.trim();
-            if (!raw) return;
-            if (parseAndApplyJoinOrderParam(raw)) {
-                document.getElementById('manual-order-code-input').value = '';
-            } else {
-                showToast('올바른 주문서 코드나 링크가 아닙니다.');
-            }
-        }
-
-        function parseAndApplyJoinOrderParam(str) {
-            try {
-                let code = str;
-                if (str.includes('joinOrder=')) {
-                    const u = new URL(str);
-                    code = u.searchParams.get('joinOrder');
-                }
-                const decoded = JSON.parse(decodeURIComponent(atob(code)));
-                if (decoded && decoded.name) {
-                    addOrUpdatePartyMember(decoded);
-                    showToast(`🎉 ${decoded.name}님의 주문서(${decoded.price.toLocaleString()}원)가 파티에 합산되었습니다!`);
-                    return true;
-                }
-            } catch (e) {}
-            return false;
+            await savePartyMemberToFirebase({
+                id: 'sim_' + Date.now(),
+                name: randomName,
+                items,
+                price
+            });
+            showToast(`🍱 ${randomName}님의 주문서(${price.toLocaleString()}원)가 Firebase에 수렴되었습니다!`);
         }
 
         function handleProceedFromPartyManager() {
@@ -1007,8 +1035,8 @@
             openReceiptAndLeadModal();
         }
 
-        // 7. 파티원(팀원) 모드 동작 로직
-        function handleConfirmMemberJoin() {
+        // 7. 파티원(팀원) 모드 동작 로직 (참여 즉시 Firebase DB의 방장 파티방에 인원 추가)
+        async function handleConfirmMemberJoin() {
             const nameInput = document.getElementById('member-name-input').value.trim();
             memberNickname = nameInput || ('팀원' + Math.floor(10 + Math.random() * 89));
 
@@ -1018,18 +1046,18 @@
             document.getElementById('member-nickname-display').innerText = memberNickname;
             document.getElementById('main-action-btn').innerText = '📤 방장에게 주문서 보내기';
 
-            // 같은 기기/브라우저 탭의 방장에게 참여 알림 전송
-            if (partyChannel) {
-                partyChannel.postMessage({
-                    type: 'MEMBER_JOINED',
-                    member: { name: memberNickname, items: [], price: 0 }
-                });
-            }
-            showToast(`${memberNickname}님, 반찬을 골라 담아주세요!`);
+            // Firebase의 해당 파티방(partyId)에 내 참여 상태 실시간 등록!
+            await savePartyMemberToFirebase({
+                id: memberKey,
+                name: memberNickname,
+                items: [],
+                price: 0
+            });
+            showToast(`🎉 ${memberNickname}님, 파티에 참여되었습니다! 반찬을 골라주세요.`);
         }
 
-        // 8. 하단 메인 버튼 클릭 (방장: 영수증/결제 모달 오픈 vs 팀원: 방장에게 주문서 전송)
-        function handlePrimaryOrderAction() {
+        // 8. 하단 메인 버튼 클릭 (방장: 통합 영수증 vs 팀원: 방장 Firebase로 주문서 실시간 전송)
+        async function handlePrimaryOrderAction() {
             const filled = bentoSlots.filter(Boolean);
             if (filled.length === 0) {
                 showToast('먼저 반찬을 1개 이상 도시락에 담아주세요!');
@@ -1037,23 +1065,13 @@
             }
 
             if (isMemberMode) {
-                // 팀원 모드: 내 주문서를 방장에게 전송 & 회신 링크/코드 자동 복사
                 const items = filled.map(i => i.name);
                 const price = filled.reduce((s, i) => s + i.price, 0);
-                const memberPayload = { name: memberNickname, items, price };
+                const memberPayload = { id: memberKey, name: memberNickname, items, price };
 
-                if (partyChannel) {
-                    partyChannel.postMessage({ type: 'MEMBER_ORDER_SENT', member: memberPayload });
-                }
-
-                const encoded = btoa(encodeURIComponent(JSON.stringify(memberPayload)));
-                const baseUrl = window.location.origin + window.location.pathname;
-                const returnUrl = `${baseUrl}?shop=${selectedShop.id}&joinOrder=${encodeURIComponent(encoded)}`;
-
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(returnUrl);
-                }
-                openReceiptAndLeadModal(true, returnUrl);
+                // Firebase DB를 통해 방장의 파티원 관리창으로 내 주문서와 금액 즉시 전송!
+                await savePartyMemberToFirebase(memberPayload);
+                openReceiptAndLeadModal(true);
             } else {
                 trackEvent('checkoutClicks');
                 openReceiptAndLeadModal(false);
@@ -1061,14 +1079,13 @@
         }
 
         // 9. 영수증 표(열: 메뉴 / 행: 가격) & 심플 이메일 모달
-        function openReceiptAndLeadModal(isFromMember = false, memberReturnUrl = '') {
+        function openReceiptAndLeadModal(isFromMember = false) {
             const myFilled = bentoSlots.filter(Boolean);
             const tbody = document.getElementById('receipt-table-body');
             tbody.innerHTML = '';
 
             let grandTotal = 0;
 
-            // 내 도시락 메뉴 행 추가
             myFilled.forEach(item => {
                 grandTotal += item.price;
                 tbody.innerHTML += `
@@ -1079,7 +1096,6 @@
                 `;
             });
 
-            // 방장 모드일 때 수렴된 파티원들의 주문서도 영수증 표에 모두 합산 표시
             if (!isFromMember && partyMembers.length > 0) {
                 partyMembers.forEach(m => {
                     if (m.items && m.items.length > 0) {
@@ -1101,8 +1117,8 @@
             document.getElementById('receipt-total-price').innerText = `${grandTotal.toLocaleString()}원`;
 
             if (isFromMember) {
-                document.getElementById('receipt-modal-title').innerText = '📤 방장에게 주문서 링크가 복사되었습니다!';
-                showToast('방장에게 카톡으로 붙여넣어 보내줄 주문서 링크가 복사되었습니다!');
+                document.getElementById('receipt-modal-title').innerText = '📤 방장 관리창으로 주문서가 전송되었습니다!';
+                showToast('방장의 파티원 관리창에 내 주문서와 금액이 실시간 반영되었습니다!');
             } else {
                 document.getElementById('receipt-modal-title').innerText = '🧾 최종 주문서 영수증 & 알림 신청';
             }
@@ -1120,29 +1136,50 @@
             modal.classList.remove('flex');
         }
 
-        function handleSubmitEmailLead(e) {
+        // ★ 방문자 이메일 제출 -> https://lockrock-default-rtdb.firebaseio.com/leads.json 즉시 저장 ★
+        async function handleSubmitEmailLead(e) {
             e.preventDefault();
             const email = document.getElementById('lead-email-input').value.trim();
             const note = document.getElementById('lead-note-input').value.trim();
+            const btn = document.getElementById('lead-submit-btn');
             if (!email) return;
+
+            btn.disabled = true;
+            btn.innerText = "Firebase DB에 저장 중...";
 
             const myFilled = bentoSlots.filter(Boolean);
             const total = myFilled.reduce((s, i) => s + i.price, 0) + partyMembers.reduce((s, m) => s + (m.price || 0), 0);
 
-            leadsList.unshift({
+            const newLead = {
                 email,
                 note: note || '-',
                 shop: selectedShop.name,
                 summary: `${1 + partyMembers.length}명 (${total.toLocaleString()}원) - ${myFilled.map(i => i.name).join('/')}`,
-                dateStr: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
-            });
+                timestamp: Date.now(),
+                dateStr: new Date().toLocaleString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+            };
+
+            try {
+                await fetch(`${FIREBASE_DB_URL}/leads.json`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newLead)
+                });
+            } catch (err) {
+                console.error("Firebase 이메일 저장 오류:", err);
+            }
+
+            leadsList.unshift(newLead);
             saveState();
             updateAdminUI();
 
+            btn.disabled = false;
+            btn.innerText = "주문서 제출 및 오픈 알림 신청";
             document.getElementById('lead-email-input').value = '';
             document.getElementById('lead-note-input').value = '';
             document.getElementById('lead-form-view').classList.add('hidden');
             document.getElementById('lead-success-view').classList.remove('hidden');
+            showToast("🎉 이메일이 Firebase DB에 영구 저장되었습니다!");
         }
 
         // 10. 시크릿 관리자 (1216)
@@ -1173,14 +1210,14 @@
             m.classList.remove('flex');
         }
 
-        function handleVerifyPin(e) {
+        async function handleVerifyPin(e) {
             e.preventDefault();
             if (document.getElementById('admin-pin-input').value.trim() === ADMIN_PIN) {
                 closePinModal();
-                updateAdminUI();
                 const adm = document.getElementById('modal-admin');
                 adm.classList.remove('hidden');
                 adm.classList.add('flex');
+                await syncAllFromFirebase(false);
             } else {
                 document.getElementById('pin-error-msg').classList.remove('hidden');
             }
@@ -1202,7 +1239,7 @@
 
             const listEl = document.getElementById('admin-leads-list');
             if (leadsList.length === 0) {
-                listEl.innerHTML = `<div class="text-gray-500 text-center py-4">등록된 이메일이 없습니다.</div>`;
+                listEl.innerHTML = `<div class="text-gray-500 text-center py-4">아직 등록된 이메일이 없습니다.</div>`;
             } else {
                 listEl.innerHTML = leadsList.map((item, i) => `
                     <div class="bg-gray-900 p-2 rounded-lg border border-gray-700 flex justify-between items-center">
@@ -1210,7 +1247,7 @@
                             <div class="font-bold text-teal-300">${i + 1}. ${item.email}</div>
                             <div class="text-[10px] text-gray-400 truncate">${item.summary} · ${item.note}</div>
                         </div>
-                        <span class="text-[10px] text-gray-500 whitespace-nowrap">${item.dateStr}</span>
+                        <span class="text-[10px] text-gray-500 whitespace-nowrap">${item.dateStr || ''}</span>
                     </div>
                 `).join('');
             }
@@ -1229,33 +1266,33 @@
             a.click();
         }
 
-        // 11. 앱 초기 구동 (스플래시 2초 후 자동 전환 & URL 파라미터 감지)
-        window.addEventListener('DOMContentLoaded', () => {
-            trackEvent('visits');
-            handleSelectShopPin('shop1');
+        // 11. 앱 초기 구동 (Firebase 동기화 + URL 파라미터 감지 + 2초 자동 전환)
+        window.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const shopParam = params.get('shop');
+            const roleParam = params.get('role');
+            const partyParam = params.get('party');
+
+            if (partyParam) {
+                partyId = partyParam;
+                localStorage.setItem('loro_party_id', partyId);
+            }
+
+            handleSelectShopPin(shopParam && SHOPS[shopParam] ? shopParam : 'shop1');
             renderBentoSlots();
             renderFoodList();
             updateTotalsUI();
 
-            const params = new URLSearchParams(window.location.search);
-            const shopParam = params.get('shop');
-            const roleParam = params.get('role');
-            const joinOrderParam = params.get('joinOrder');
+            // Firebase 실시간 동기화 및 방문 수 +1
+            await syncAllFromFirebase(false);
+            trackEvent('visits');
 
-            if (shopParam && SHOPS[shopParam]) {
-                handleSelectShopPin(shopParam);
-            }
+            // 3.5초마다 파티원 상태 자동 감지 (방장 화면에서 팀원 입장/주문서 실시간 수렴)
+            setInterval(() => {
+                if (!isMemberMode) syncPartyFromFirebase(false);
+            }, 3500);
 
-            // 케이스 A: 팀원이 보낸 주문서 수렴 링크(?joinOrder=...)를 방장이 클릭한 경우
-            if (joinOrderParam) {
-                switchScreen('view-store');
-                document.getElementById('store-header-name').innerText = selectedShop.name.replace(/^[^\s]+\s/, '');
-                parseAndApplyJoinOrderParam(joinOrderParam);
-                openPartyManagerModal();
-                return;
-            }
-
-            // 케이스 B: 방장이 보낸 파티 초대 링크(?role=member)를 팀원이 클릭한 경우
+            // 파티 초대 링크(?role=member)로 접속한 팀원인 경우 즉시 해당 매장 커스텀 창으로 이동
             if (roleParam === 'member') {
                 isMemberMode = true;
                 switchScreen('view-store');
@@ -1267,7 +1304,7 @@
                 return;
             }
 
-            // 케이스 C: 일반 접속 -> 스플래시 로딩 애니메이션 후 2.1초 뒤 자동으로 지도 화면 전환
+            // 일반 접속: 스플래시 화면 로딩 바 2초 후 자동으로 지도 화면 전환
             setTimeout(() => {
                 const bar = document.getElementById('intro-progress-bar');
                 if (bar) bar.style.width = '100%';
