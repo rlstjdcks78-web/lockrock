@@ -9,8 +9,11 @@
     <title>도시락도 락이다 (LOCK & ROCK)</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Pretendard Font -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+    <!-- 가독성 높은 고운돋움(Gowun Dodum) & SUIT 폰트 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/static/woff2/SUIT.css" rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -18,12 +21,17 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'] },
+                    fontFamily: {
+                        sans: ['"Gowun Dodum"', 'SUIT', 'sans-serif'],
+                        suit: ['SUIT', 'sans-serif']
+                    },
                     colors: {
                         baemin: '#2ac1bc',
                         baeminDark: '#219a96',
                         rockRed: '#FF5A5F',
-                        bentoWood: '#e6dac3'
+                        bentoWood: '#e6dac3',
+                        logoOrange: '#EE892F',
+                        logoGreen: '#A8CD4A'
                     }
                 }
             }
@@ -32,42 +40,50 @@
 
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
-        input, textarea { user-select: text !important; }
+        input, textarea { user-select: text !important; font-family: 'Gowun Dodum', sans-serif; }
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%; height: 100dvh;
-            background-color: #121518; font-family: 'Pretendard', sans-serif;
+            background-color: #121518; font-family: 'Gowun Dodum', sans-serif;
             overflow: hidden; overscroll-behavior: none;
+            letter-spacing: -0.01em;
         }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        .app-view { display: none; width: 100%; height: 100%; flex-direction: column; }
-        .app-view.active { display: flex; }
+        /* 부드러운 페이지 전환 애니메이션 */
+        .app-view { display: none; width: 100%; height: 100%; flex-direction: column; opacity: 0; }
+        .app-view.active {
+            display: flex;
+            animation: smoothViewEnter 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        @keyframes smoothViewEnter {
+            0% { opacity: 0; transform: translateY(12px) scale(0.99); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.93) translateY(8px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        .animate-pop { animation: popIn 0.26s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
         /* 지도 배경 */
         .map-bg {
-            background-color: #e5efe9;
+            background-color: #e6efe9;
             background-image: 
-                linear-gradient(rgba(255,255,255,0.8) 2px, transparent 2px),
-                linear-gradient(90deg, rgba(255,255,255,0.8) 2px, transparent 2px),
+                linear-gradient(rgba(255,255,255,0.85) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(255,255,255,0.85) 2px, transparent 2px),
                 linear-gradient(rgba(255,255,255,0.35) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255,255,255,0.35) 1px, transparent 1px);
             background-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px;
         }
-        .road-h { position: absolute; height: 24px; width: 100%; background: #ffffff; border-top: 2px solid #cbd5e1; border-bottom: 2px solid #cbd5e1; }
-        .road-v { position: absolute; width: 24px; height: 100%; background: #ffffff; border-left: 2px solid #cbd5e1; border-right: 2px solid #cbd5e1; }
+        .road-h { position: absolute; height: 22px; width: 100%; background: #ffffff; border-top: 2px solid #cbd5e1; border-bottom: 2px solid #cbd5e1; }
+        .road-v { position: absolute; width: 22px; height: 100%; background: #ffffff; border-left: 2px solid #cbd5e1; border-right: 2px solid #cbd5e1; }
 
-        /* 도시락 그리드 (15% 확대 & 글자 잘림 방지) */
+        /* 4구, 6구, 8구 짝수 대칭 도시락 그리드 */
         .bento-grid-4 { display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); gap: 8px; }
-        .bento-grid-5 { display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(2, 1fr); gap: 6px; }
-        .bento-grid-5 > .slot-0 { grid-column: span 2; }
-        .bento-grid-5 > .slot-1 { grid-column: span 2; }
-        .bento-grid-5 > .slot-2 { grid-column: span 2; }
-        .bento-grid-5 > .slot-3 { grid-column: span 3; }
-        .bento-grid-5 > .slot-4 { grid-column: span 3; }
-
-        @keyframes popIn { 0% { transform: scale(0.92); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        .animate-pop { animation: popIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .bento-grid-6 { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 7px; }
+        .bento-grid-8 { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 6px; }
     </style>
 </head>
 <body class="flex justify-center items-center w-full h-full">
@@ -78,298 +94,399 @@
         <div id="toast-container" class="absolute top-12 left-1/2 -translate-x-1/2 z-50 pointer-events-none w-[90%] flex flex-col items-center gap-1.5"></div>
 
         <!-- =====================================================
-             [화면 1] 스플래시 시작 화면 (미니멀 로고 + 자동 전환)
+             [화면 1] 스플래시 시작 화면 (대표님 제작 로고 SVG 완벽 구현)
              ===================================================== -->
         <div id="view-intro" class="app-view active justify-between bg-white px-6 py-7 z-30">
             <div class="flex justify-between items-center">
                 <div onclick="handleSecretLogoTap()" class="cursor-pointer py-1">
-                    <span class="text-[11px] font-black tracking-widest text-gray-400 hover:text-gray-800 transition">LOCK & ROCK®</span>
+                    <span class="text-xs font-bold tracking-widest text-gray-400 hover:text-gray-800 transition">LOCK & ROCK®</span>
                 </div>
-                <button onclick="openPinModal()" class="text-[10px] font-bold text-gray-300 hover:text-gray-500">Admin</button>
+                <button onclick="openPinModal()" class="text-xs font-bold text-gray-300 hover:text-gray-500">Admin</button>
             </div>
 
-            <!-- 중앙: Lock & Rock 커스텀 로고 + "도시락도 락이다" 슬로건 -->
+            <!-- 중앙: 대표님이 만드신 Lock & Rock 로고 완벽 재현 -->
             <div class="flex flex-col items-center justify-center my-auto">
-                <div onclick="handleSecretLogoTap()" class="cursor-pointer select-none flex flex-col items-start gap-2 p-4">
-                    <!-- 첫 줄: L [4구창] c k & -->
-                    <div class="flex items-end gap-1.5">
-                        <span class="text-[64px] font-black text-[#111] leading-[0.82] tracking-tighter">L</span>
-                        <div class="w-[50px] h-[48px] bg-[#111] rounded-[10px] p-[6px] grid grid-cols-2 grid-rows-2 gap-[4px] mb-[2px] shadow-sm">
-                            <div class="bg-[#e68a1e] rounded-[3px]"></div>
-                            <div class="bg-[#99cc33] rounded-[3px]"></div>
-                            <div class="bg-[#99cc33] rounded-[3px]"></div>
-                            <div class="bg-[#e68a1e] rounded-[3px]"></div>
-                        </div>
-                        <span class="text-[64px] font-black text-[#111] leading-[0.82] tracking-tighter">ck</span>
-                        <span class="text-[42px] font-extrabold text-[#111] leading-[0.85] ml-1">&amp;</span>
-                    </div>
-                    <!-- 둘째 줄: R [4구창] c k -->
-                    <div class="flex items-end gap-1.5">
-                        <span class="text-[64px] font-black text-[#111] leading-[0.82] tracking-tighter">R</span>
-                        <div class="w-[50px] h-[48px] bg-[#111] rounded-[10px] p-[6px] grid grid-cols-2 grid-rows-2 gap-[4px] mb-[2px] shadow-sm">
-                            <div class="bg-[#e68a1e] rounded-[3px]"></div>
-                            <div class="bg-[#99cc33] rounded-[3px]"></div>
-                            <div class="bg-[#99cc33] rounded-[3px]"></div>
-                            <div class="bg-[#e68a1e] rounded-[3px]"></div>
-                        </div>
-                        <span class="text-[64px] font-black text-[#111] leading-[0.82] tracking-tighter">ck</span>
-                    </div>
+                <div onclick="handleSecretLogoTap()" class="cursor-pointer select-none p-2 flex flex-col items-center">
+                    <svg viewBox="0 0 460 250" class="w-[260px] h-auto drop-shadow-xs" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- ====== 1행: L [도시락o] c k & ====== -->
+                        <!-- L -->
+                        <path d="M 38 35 V 102 Q 38 112 48 112 H 104" stroke="#080606" stroke-width="19" stroke-linecap="round" stroke-linejoin="round"/>
+                        
+                        <!-- 1행 4구 도시락 심볼 (o) -->
+                        <rect x="122" y="45" width="96" height="75" rx="10" fill="#080606"/>
+                        <rect x="134" y="57" width="32" height="22" rx="4" fill="#EE892F"/>
+                        <rect x="174" y="57" width="32" height="22" rx="4" fill="#A8CD4A"/>
+                        <rect x="134" y="86" width="32" height="22" rx="4" fill="#A8CD4A"/>
+                        <rect x="174" y="86" width="32" height="22" rx="4" fill="#EE892F"/>
+
+                        <!-- c -->
+                        <path d="M 294 53 H 252 Q 240 53 240 65 V 100 Q 240 112 252 112 H 294" stroke="#080606" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+
+                        <!-- k -->
+                        <path d="M 326 28 V 112" stroke="#080606" stroke-width="18" stroke-linecap="round"/>
+                        <path d="M 380 52 L 336 82 L 382 112" stroke="#080606" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+
+                        <!-- & -->
+                        <text x="400" y="122" font-family="SUIT, sans-serif" font-size="68" font-weight="500" fill="#181212">&amp;</text>
+
+                        <!-- ====== 2행: R [도시락o] c k ====== -->
+                        <!-- R -->
+                        <path d="M 38 222 V 142 H 136 Q 150 142 150 156 V 170 Q 150 184 136 184 H 38" stroke="#080606" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M 118 184 L 152 222" stroke="#080606" stroke-width="18" stroke-linecap="round"/>
+
+                        <!-- 2행 4구 도시락 심볼 (o) -->
+                        <rect x="166" y="156" width="96" height="75" rx="10" fill="#080606"/>
+                        <rect x="178" y="168" width="32" height="22" rx="4" fill="#EE892F"/>
+                        <rect x="218" y="168" width="32" height="22" rx="4" fill="#A8CD4A"/>
+                        <rect x="178" y="197" width="32" height="22" rx="4" fill="#A8CD4A"/>
+                        <rect x="218" y="197" width="32" height="22" rx="4" fill="#EE892F"/>
+
+                        <!-- c -->
+                        <path d="M 340 165 H 298 Q 286 165 286 177 V 212 Q 286 224 298 224 H 340" stroke="#080606" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+
+                        <!-- k -->
+                        <path d="M 372 150 V 224" stroke="#080606" stroke-width="18" stroke-linecap="round"/>
+                        <path d="M 428 164 L 382 194 L 428 224" stroke="#080606" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                 </div>
 
-                <p class="mt-4 text-lg font-black text-gray-800 tracking-tight">도시락도 락이다</p>
+                <p class="mt-3 text-xl font-bold text-gray-900 tracking-tight">도시락도 락이다</p>
 
-                <div class="w-36 h-1.5 bg-gray-100 rounded-full overflow-hidden mt-8">
-                    <div id="intro-progress-bar" class="h-full bg-gray-900 rounded-full transition-all duration-[2000ms] ease-out" style="width: 0%"></div>
+                <div class="w-36 h-1.5 bg-gray-100 rounded-full overflow-hidden mt-7">
+                    <div id="intro-progress-bar" class="h-full bg-gray-900 rounded-full transition-all duration-[1800ms] ease-out" style="width: 0%"></div>
                 </div>
             </div>
 
-            <div class="text-center text-[10px] text-emerald-500 font-bold">
-                ● Firebase 실시간 DB 연동 완료
+            <div class="text-center text-xs text-emerald-600 font-bold">
+                ● 실시간 주문 서버 연동 완료
             </div>
         </div>
 
 
         <!-- =====================================================
-             [화면 2] 지도 탐색 화면 (중앙 안내문구 + 매장별 실제 메뉴판 특징)
+             [화면 2] 지도 탐색 화면 (수월한 매장 비교 & 상황별 빠른 필터)
              ===================================================== -->
         <div id="view-map" class="app-view bg-white z-20">
-            <div class="bg-white px-5 pt-4 pb-3 shadow-xs z-10 border-b border-gray-100 flex items-center justify-between">
-                <div>
-                    <div onclick="handleSecretLogoTap()" class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <span class="bg-gray-900 text-white text-[10px] font-black px-2 py-0.5 rounded tracking-wider">LOCK & ROCK</span>
-                        <span class="text-xs font-extrabold text-gray-600">도시락도 락이다</span>
+            <!-- 상단 헤더 & 상황별 빠른 필터 칩 -->
+            <div class="bg-white px-5 pt-4 pb-3 shadow-xs z-10 border-b border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div onclick="handleSecretLogoTap()" class="flex items-center gap-2 cursor-pointer">
+                        <span class="bg-gray-900 text-white text-xs font-bold px-2.5 py-0.5 rounded-md">LOCK & ROCK</span>
+                        <h2 class="text-lg font-bold text-gray-900">어느 가게 반찬으로 담을까요?</h2>
                     </div>
-                    <h2 class="text-base font-black text-gray-900 mt-0.5">내 주변 제휴 반찬가게 선택</h2>
+                    <button onclick="openPinModal()" class="text-xs font-bold text-gray-400 bg-gray-100 px-2.5 py-1 rounded-lg">관리자</button>
                 </div>
-                <button onclick="openPinModal()" class="text-[11px] font-bold text-gray-400 bg-gray-100 px-2.5 py-1 rounded-lg">관리자</button>
+
+                <!-- 소비자가 고민 없이 고르는 상황별 빠른 추천 탭 -->
+                <div class="flex gap-1.5 mt-2.5 overflow-x-auto no-scrollbar">
+                    <button onclick="handleQuickFilter('all')" id="filter-all" class="filter-chip whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-bold bg-gray-900 text-white transition">
+                        전체 매장 (3)
+                    </button>
+                    <button onclick="handleQuickFilter('shop1')" id="filter-shop1" class="filter-chip whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-bold bg-gray-100 text-gray-700 transition">
+                        🥩 든든한 고기·집밥
+                    </button>
+                    <button onclick="handleQuickFilter('shop2')" id="filter-shop2" class="filter-chip whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-bold bg-gray-100 text-gray-700 transition">
+                        💰 자취생 가성비 백반
+                    </button>
+                    <button onclick="handleQuickFilter('shop3')" id="filter-shop3" class="filter-chip whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-bold bg-gray-100 text-gray-700 transition">
+                        🥗 고단백 식단관리
+                    </button>
+                </div>
             </div>
 
+            <!-- 중앙 지도 영역 -->
             <div class="relative flex-1 map-bg overflow-hidden">
                 <div class="road-h top-[32%]"></div>
                 <div class="road-h top-[68%]"></div>
                 <div class="road-v left-[28%]"></div>
                 <div class="road-v left-[72%]"></div>
 
-                <!-- 정중앙 배치 안내 문구 (우측 잘림 해결) -->
+                <!-- 정중앙 안내 문구 -->
                 <div class="absolute top-3 left-0 right-0 flex justify-center z-20 px-4 pointer-events-none">
-                    <div class="bg-gray-900/90 backdrop-blur text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg text-center max-w-[92%] truncate">
-                        👇 매장을 터치해서 커스텀 도시락을 만들어 보세요!
+                    <div class="bg-gray-900/90 backdrop-blur text-white text-sm font-bold px-4 py-2 rounded-full shadow-lg text-center">
+                        👇 매장을 터치하면 오늘 반찬을 볼 수 있어요
                     </div>
                 </div>
 
                 <!-- 핀 1: 전주 반찬명가 -->
-                <button onclick="handleSelectShopPin('shop1')" id="pin-shop1" class="shop-pin absolute top-[30%] left-[36%] -translate-x-1/2 -translate-y-1/2 bg-white p-2.5 rounded-2xl shadow-xl border-2 border-baemin transition transform active:scale-95 text-left z-10 w-44">
+                <button onclick="handleSelectShopPin('shop1')" id="pin-shop1" class="shop-pin absolute top-[29%] left-[37%] -translate-x-1/2 -translate-y-1/2 bg-white p-3 rounded-2xl shadow-xl border-2 border-baemin transition transform active:scale-95 text-left z-10 w-48">
                     <div class="flex items-center justify-between">
-                        <span class="bg-rockRed text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded">수제 메인·명절반찬</span>
-                        <span class="text-[11px] font-bold text-amber-500">⭐ 4.9</span>
+                        <span class="bg-rockRed text-white text-[11px] font-bold px-2 py-0.5 rounded">특가 10종</span>
+                        <span class="text-xs font-bold text-gray-600">도보 5분</span>
                     </div>
-                    <div class="font-black text-gray-900 text-xs mt-1">🍱 전주 반찬명가</div>
-                    <div class="text-[10px] text-gray-500 font-semibold mt-0.5 truncate">떡갈비·제육·동그랑땡·간장새우</div>
+                    <div class="font-bold text-gray-900 text-sm mt-1">🍱 전주 반찬명가</div>
+                    <div class="text-xs text-gray-500 mt-0.5 truncate">떡갈비 · 제육 · 코다리조림</div>
                 </button>
 
                 <!-- 핀 2: 엄마손 대학로백반 -->
-                <button onclick="handleSelectShopPin('shop2')" id="pin-shop2" class="shop-pin absolute top-[54%] left-[27%] -translate-x-1/2 -translate-y-1/2 bg-white p-2.5 rounded-2xl shadow-xl border-2 border-transparent transition transform active:scale-95 text-left z-10 w-44">
+                <button onclick="handleSelectShopPin('shop2')" id="pin-shop2" class="shop-pin absolute top-[55%] left-[28%] -translate-x-1/2 -translate-y-1/2 bg-white p-3 rounded-2xl shadow-xl border-2 border-transparent transition transform active:scale-95 text-left z-10 w-48">
                     <div class="flex items-center justify-between">
-                        <span class="bg-amber-500 text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded">자취생 가성비 백반</span>
-                        <span class="text-[11px] font-bold text-amber-500">⭐ 4.9</span>
+                        <span class="bg-amber-500 text-white text-[11px] font-bold px-2 py-0.5 rounded">자취 가성비</span>
+                        <span class="text-xs font-bold text-gray-600">도보 3분</span>
                     </div>
-                    <div class="font-black text-gray-900 text-xs mt-1">🍲 엄마손 대학로백반</div>
-                    <div class="text-[10px] text-gray-500 font-semibold mt-0.5 truncate">분홍소시지·스팸·김치제육·계란말이</div>
+                    <div class="font-bold text-gray-900 text-sm mt-1">🍲 엄마손 대학로백반</div>
+                    <div class="text-xs text-gray-500 mt-0.5 truncate">분홍소시지 · 스팸 · 계란말이</div>
                 </button>
 
                 <!-- 핀 3: 바른식단 효자점 -->
-                <button onclick="handleSelectShopPin('shop3')" id="pin-shop3" class="shop-pin absolute top-[63%] left-[68%] -translate-x-1/2 -translate-y-1/2 bg-white p-2.5 rounded-2xl shadow-xl border-2 border-transparent transition transform active:scale-95 text-left z-10 w-44">
+                <button onclick="handleSelectShopPin('shop3')" id="pin-shop3" class="shop-pin absolute top-[64%] left-[68%] -translate-x-1/2 -translate-y-1/2 bg-white p-3 rounded-2xl shadow-xl border-2 border-transparent transition transform active:scale-95 text-left z-10 w-48">
                     <div class="flex items-center justify-between">
-                        <span class="bg-baemin text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded">고단백·저탄수 식단</span>
-                        <span class="text-[11px] font-bold text-amber-500">⭐ 4.8</span>
+                        <span class="bg-baemin text-white text-[11px] font-bold px-2 py-0.5 rounded">고단백 식단</span>
+                        <span class="text-xs font-bold text-gray-600">도보 7분</span>
                     </div>
-                    <div class="font-black text-gray-900 text-xs mt-1">🥗 바른식단 효자점</div>
-                    <div class="text-[10px] text-gray-500 font-semibold mt-0.5 truncate">수비드닭가슴살·연어구이·두부구이</div>
+                    <div class="font-bold text-gray-900 text-sm mt-1">🥗 바른식단 효자점</div>
+                    <div class="text-xs text-gray-500 mt-0.5 truncate">닭가슴살 · 연어 · 두부조림</div>
                 </button>
             </div>
 
-            <div class="bg-white rounded-t-3xl p-5 shadow-[0_-8px_25px_rgba(0,0,0,0.1)] z-20">
+            <!-- 하단 매장 요약 시트 (헛걸음 방지를 위한 픽업/최소주문 정보 사전 명시) -->
+            <div class="bg-white rounded-t-3xl p-5 shadow-[0_-8px_25px_rgba(0,0,0,0.08)] z-20">
                 <div class="flex items-center justify-between">
-                    <span id="sheet-badge" class="bg-red-50 text-rockRed text-[11px] font-extrabold px-2.5 py-0.5 rounded-md">수제 한식 메인요리 & 전류 전문</span>
-                    <span id="sheet-rating" class="text-xs font-bold text-gray-500">⭐ 4.9 · 최소주문 7,000원</span>
+                    <span id="sheet-badge" class="bg-red-50 text-rockRed text-xs font-bold px-2.5 py-1 rounded-md">수제 메인요리 전문</span>
+                    <span id="sheet-rating" class="text-xs font-bold text-gray-600">🏃 픽업 0원 · 배달 가능</span>
                 </div>
-                <h3 id="sheet-shop-name" class="text-lg font-black text-gray-900 mt-1">🍱 전주 반찬명가</h3>
-                <p id="sheet-shop-desc" class="text-xs text-gray-600 mt-0.5 leading-relaxed">
-                    20년 경력 찬모님이 매일 아침 직접 빚는 수제 떡갈비, 한돈 제육볶음, 육전과 코다리조림이 유명한 정통 반찬 전문점입니다.
-                </p>
-                <div id="sheet-menu-tags" class="flex flex-wrap gap-1.5 mt-2.5 mb-3.5"></div>
 
-                <button onclick="handleEnterShop()" class="w-full bg-baemin hover:bg-baeminDark text-white font-black py-3.5 rounded-xl text-sm shadow-lg shadow-teal-500/25 transition active:scale-[0.98] flex items-center justify-center gap-2">
-                    <span>이 매장 메뉴판으로 도시락 조립하기</span>
-                    <i class="fa-solid fa-arrow-right"></i>
+                <div class="flex items-baseline justify-between mt-1.5">
+                    <h3 id="sheet-shop-name" class="text-xl font-bold text-gray-900">🍱 전주 반찬명가</h3>
+                    <span id="sheet-min-order" class="text-xs font-bold text-baemin">1칸 500원~1,600원대</span>
+                </div>
+
+                <p id="sheet-shop-desc" class="text-sm text-gray-600 mt-1">
+                    매일 아침 직접 빚는 떡갈비와 한돈 제육볶음이 인기예요.
+                </p>
+
+                <div id="sheet-menu-tags" class="flex flex-wrap gap-1.5 mt-2.5 mb-4"></div>
+
+                <button onclick="openStep2SetupModal()" class="w-full bg-baemin hover:bg-baeminDark text-white font-bold py-3.5 rounded-xl text-base shadow-lg shadow-teal-500/25 transition active:scale-[0.98] flex items-center justify-center gap-2">
+                    <span>이 매장 반찬 담으러 가기</span>
+                    <i class="fa-solid fa-arrow-right text-sm"></i>
                 </button>
             </div>
         </div>
 
 
         <!-- =====================================================
-             [화면 3] 매장 커스텀 창 (도시락 15% 확대 + 메뉴 아이콘 축소 + 30종 실사)
+             [모달 Step 2] 이용 방식 설정 (혼자/파티 + 픽업 달력/배달 주소)
+             ===================================================== -->
+        <div id="modal-step2-setup" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs hidden items-center justify-center p-4">
+            <div class="bg-white w-full max-w-[370px] rounded-3xl p-5 shadow-2xl animate-pop">
+                <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+                    <div>
+                        <span class="text-xs font-bold text-baemin">STEP 2 · 주문 설정</span>
+                        <h3 id="setup-shop-title" class="text-lg font-bold text-gray-900">전주 반찬명가</h3>
+                    </div>
+                    <button onclick="closeStep2SetupModal()" class="w-8 h-8 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div class="space-y-4 my-4">
+                    <!-- 1. 누구와 드시나요? (혼자 먹기 선택 시 파티 버튼 완전 숨김) -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-800 mb-2">1. 누구와 함께 드시나요?</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button type="button" id="mode-btn-solo" onclick="selectDiningMode('solo')" class="py-3 px-3 rounded-xl border-2 border-baemin bg-teal-50/70 text-gray-900 font-bold text-sm text-center transition">
+                                🙋‍♂️ 혼자 먹어요
+                            </button>
+                            <button type="button" id="mode-btn-party" onclick="selectDiningMode('party')" class="py-3 px-3 rounded-xl border-2 border-gray-200 bg-white text-gray-500 font-bold text-sm text-center transition">
+                                👑 친구와 파티주문
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 2. 어떻게 받으시나요? (픽업 0원 vs 배달비 부담) -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-800 mb-2">2. 수령 방법을 골라주세요</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button type="button" id="recv-btn-pickup" onclick="selectReceiveType('pickup')" class="py-3 px-3 rounded-xl border-2 border-baemin bg-teal-50/70 text-gray-900 font-bold text-sm text-center transition">
+                                🏃 직접 픽업 (0원)
+                            </button>
+                            <button type="button" id="recv-btn-delivery" onclick="selectReceiveType('delivery')" class="py-3 px-3 rounded-xl border-2 border-gray-200 bg-white text-gray-500 font-bold text-sm text-center transition">
+                                🛵 배달 (배달비 부담)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 3-A. 직접 픽업 선택 시: 달력 위젯 노출 -->
+                    <div id="pickup-date-box" class="bg-gray-50 p-3.5 rounded-2xl border border-gray-200">
+                        <label class="block text-sm font-bold text-gray-800 mb-1.5">📅 언제 찾으러 오시나요?</label>
+                        <input type="datetime-local" id="pickup-datetime-input" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 bg-white text-sm font-bold text-gray-900 outline-none focus:border-baemin">
+                    </div>
+
+                    <!-- 3-B. 배달 선택 시: 배달 받을 장소 입력칸 노출 -->
+                    <div id="delivery-address-box" class="hidden bg-gray-50 p-3.5 rounded-2xl border border-gray-200">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label class="text-sm font-bold text-gray-800">📍 배달 받을 장소</label>
+                            <span class="text-xs font-bold text-rockRed">배달비 부담</span>
+                        </div>
+                        <input type="text" id="delivery-address-input" placeholder="예: 공대 3호관 과방 / 효자동 자취방 상세주소" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 bg-white text-sm font-bold text-gray-900 outline-none focus:border-baemin">
+                    </div>
+                </div>
+
+                <button onclick="handleConfirmStep2AndEnter()" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-3.5 rounded-xl text-base shadow-md transition active:scale-95">
+                    반찬 고르러 들어가기
+                </button>
+            </div>
+        </div>
+
+
+        <!-- =====================================================
+             [화면 3] 매장 커스텀 창 (4·6·8구 대칭 용기 + 현실화 가격 + 불 이모지 제거)
              ===================================================== -->
         <div id="view-store" class="app-view bg-[#f4f7f8] z-10 overflow-hidden">
             
             <!-- 파티원 초대 모드 배너 -->
-            <div id="member-mode-banner" class="hidden bg-amber-500 text-white px-4 py-1.5 text-[11px] font-extrabold flex justify-between items-center">
-                <span>🙋‍♂️ 파티원 모드: 반찬을 담아 방장에게 주문서를 보내세요!</span>
+            <div id="member-mode-banner" class="hidden bg-amber-500 text-white px-4 py-1.5 text-xs font-bold flex justify-between items-center">
+                <span>🙋‍♂️ 파티원 모드: 반찬을 담아 방장에게 보내세요!</span>
                 <span id="member-nickname-display" class="bg-black/20 px-2 py-0.5 rounded">참여자</span>
             </div>
 
             <!-- 상점 헤더 -->
             <div class="bg-white px-4 py-2.5 shadow-2xs z-10 flex items-center justify-between border-b border-gray-100">
-                <div class="flex items-center gap-2">
-                    <button onclick="handleBackToMap()" class="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-gray-700 font-bold">
-                        <i class="fa-solid fa-arrow-left text-xs"></i>
+                <div class="flex items-center gap-2.5">
+                    <button onclick="handleBackToMap()" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-700 font-bold">
+                        <i class="fa-solid fa-arrow-left text-sm"></i>
                     </button>
                     <div>
-                        <h2 id="store-header-name" onclick="handleSecretLogoTap()" class="text-sm font-black text-gray-900 leading-tight cursor-pointer">전주 반찬명가</h2>
-                        <p id="store-header-sub" class="text-[10px] text-gray-400 font-semibold">카테고리별 10종 · 총 30종 실제 반찬</p>
+                        <h2 id="store-header-name" onclick="handleSecretLogoTap()" class="text-base font-bold text-gray-900 leading-tight cursor-pointer">전주 반찬명가</h2>
+                        <p id="store-header-sub" class="text-xs text-baemin font-bold">🏃 직접 픽업 (0원)</p>
                     </div>
                 </div>
 
-                <!-- 파티장 관리창 버튼 -->
-                <button onclick="openPartyManagerModal()" class="bg-gray-900 hover:bg-black text-white px-3 py-1.5 rounded-full text-xs font-extrabold flex items-center gap-1.5 shadow-xs active:scale-95">
+                <!-- 파티원 관리 버튼 ('혼자 먹어요' 선택 시 자동으로 hidden 처리됨) -->
+                <button id="party-manager-top-btn" onclick="openPartyManagerModal()" class="hidden bg-gray-900 hover:bg-black text-white px-3 py-1.5 rounded-full text-xs font-bold items-center gap-1.5 shadow-xs active:scale-95">
                     <span>👑 파티원 관리</span>
-                    <span id="party-count-badge" class="bg-rockRed text-white text-[10px] font-black px-1.5 py-0.2 rounded-full">1명</span>
+                    <span id="party-count-badge" class="bg-rockRed text-white text-[11px] font-bold px-1.5 py-0.2 rounded-full">1명</span>
                 </button>
             </div>
 
-            <!-- 상단: 15% 확대된 도시락 캔버스 영역 -->
+            <!-- 상단: 4구 / 6구 / 8구 대칭 도시락 캔버스 영역 -->
             <div class="bg-white px-4 py-2.5 border-b border-gray-200 flex flex-col items-center">
                 <div class="w-full flex justify-between items-center mb-2">
-                    <div class="flex bg-gray-100 p-0.5 rounded-lg">
-                        <button id="ngu-btn-4" onclick="handleChangeNgu(4)" class="px-3 py-1 text-[11px] font-extrabold rounded-md transition bg-gray-900 text-white">
-                            4구 LOCK
+                    <div class="flex bg-gray-100 p-1 rounded-xl gap-1">
+                        <button id="ngu-btn-4" onclick="handleChangeNgu(4)" class="px-3 py-1 text-xs font-bold rounded-lg transition bg-gray-900 text-white">
+                            4구 (2x2)
                         </button>
-                        <button id="ngu-btn-5" onclick="handleChangeNgu(5)" class="px-3 py-1 text-[11px] font-extrabold rounded-md transition text-gray-600">
-                            5구 LOCK
+                        <button id="ngu-btn-6" onclick="handleChangeNgu(6)" class="px-3 py-1 text-xs font-bold rounded-lg transition text-gray-600">
+                            6구 (3x2)
+                        </button>
+                        <button id="ngu-btn-8" onclick="handleChangeNgu(8)" class="px-3 py-1 text-xs font-bold rounded-lg transition text-gray-600">
+                            8구 (4x2)
                         </button>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span id="discount-saved-badge" class="hidden bg-red-50 text-rockRed border border-red-200 text-[10px] font-extrabold px-2 py-0.5 rounded">
+                        <span id="discount-saved-badge" class="hidden bg-red-50 text-rockRed border border-red-200 text-xs font-bold px-2 py-0.5 rounded-md">
                             특가 0원 절약
                         </span>
-                        <button onclick="handleResetBento()" class="text-[11px] font-bold text-gray-400 hover:text-gray-700 bg-gray-100 px-2 py-1 rounded">
-                            초기화
+                        <button onclick="handleResetBento()" class="text-xs font-bold text-gray-500 hover:text-gray-800 bg-gray-100 px-2.5 py-1 rounded-lg">
+                            비우기
                         </button>
                     </div>
                 </div>
 
-                <div id="bento-container" class="w-full h-[164px] bg-bentoWood rounded-2xl p-2.5 shadow-inner border-2 border-[#d5c4a1] bento-grid-4"></div>
+                <!-- 대칭형 도시락 그리드 컨테이너 -->
+                <div id="bento-container" class="w-full h-[168px] bg-bentoWood rounded-2xl p-2.5 shadow-inner border-2 border-[#d5c4a1] bento-grid-4"></div>
             </div>
 
-            <!-- 하단: 반찬 선택 영역 (마감특가만 할인 / 고기·야채는 정상가 분리) -->
+            <!-- 하단: 반찬 선택 영역 (1칸 소분 기준 현실적인 가격 & 칼로리 표기) -->
             <div class="flex-1 bg-white flex flex-col overflow-hidden">
-                <div class="flex gap-1.5 px-4 py-2.5 border-b border-gray-100 bg-gray-50/60">
-                    <button onclick="handleSelectCategory('special')" data-cat="special" class="cat-tab flex-1 py-1.5 rounded-xl text-[11px] font-extrabold transition bg-rockRed text-white shadow-2xs">
-                        🚨 마감특가 (10종)
+                <div class="flex gap-1.5 px-4 py-2.5 border-b border-gray-100 bg-gray-50/70">
+                    <button onclick="handleSelectCategory('special')" data-cat="special" class="cat-tab flex-1 py-2 rounded-xl text-xs font-bold transition bg-rockRed text-white shadow-2xs">
+                        🚨 마감특가
                     </button>
-                    <button onclick="handleSelectCategory('meat')" data-cat="meat" class="cat-tab flex-1 py-1.5 rounded-xl text-[11px] font-bold transition bg-white text-gray-600 border border-gray-200">
-                        🥩 고기·메인 (10종)
+                    <button onclick="handleSelectCategory('meat')" data-cat="meat" class="cat-tab flex-1 py-2 rounded-xl text-xs font-bold transition bg-white text-gray-700 border border-gray-200">
+                        🥩 고기·메인
                     </button>
-                    <button onclick="handleSelectCategory('veggie')" data-cat="veggie" class="cat-tab flex-1 py-1.5 rounded-xl text-[11px] font-bold transition bg-white text-gray-600 border border-gray-200">
-                        🥬 야채·나물 (10종)
+                    <button onclick="handleSelectCategory('veggie')" data-cat="veggie" class="cat-tab flex-1 py-2 rounded-xl text-xs font-bold transition bg-white text-gray-700 border border-gray-200">
+                        🥬 야채·나물
                     </button>
                 </div>
 
-                <div id="food-list-container" class="flex-1 overflow-y-auto px-3.5 pt-2.5 pb-24 grid grid-cols-4 gap-x-2 gap-y-3 content-start"></div>
+                <div id="food-list-container" class="flex-1 overflow-y-auto px-3.5 pt-3 pb-24 grid grid-cols-4 gap-x-2 gap-y-3.5 content-start"></div>
             </div>
 
-            <!-- 최하단 결제 / 방장에게 보내기 바 -->
+            <!-- 최하단 결제 바 (이메일 허들 없이 즉시 주문서 전송) -->
             <div class="absolute bottom-0 inset-x-0 bg-baemin text-white px-4 py-3 flex justify-between items-center z-30 shadow-[0_-4px_15px_rgba(42,193,188,0.3)]">
                 <div>
-                    <div class="text-base font-black leading-tight">
-                        내 도시락 <span id="total-price-text">0</span>원
+                    <div class="text-lg font-bold leading-tight">
+                        합계 <span id="total-price-text">0</span>원
                     </div>
-                    <div class="text-[11px] text-teal-50 font-medium">
-                        <span id="filled-count-text">0/4칸 담김</span> · <span id="stat-kcal">0</span> kcal
+                    <div class="text-xs text-teal-50 font-bold mt-0.5">
+                        <span id="filled-count-text">0/4칸</span> · 총 <span id="stat-kcal">0</span>kcal
                     </div>
                 </div>
-                <div class="flex gap-1.5">
-                    <button id="main-action-btn" onclick="handlePrimaryOrderAction()" class="bg-white text-baemin font-black px-4 py-2.5 rounded-xl text-xs shadow-md active:scale-95">
-                        주문서 확인 & 결제
-                    </button>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- =====================================================
-             [모달 1] 파티원 입장 환영 팝업 (공유 링크로 접속 시 자동 오픈)
-             ===================================================== -->
-        <div id="modal-member-join" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs hidden items-center justify-center p-4">
-            <div class="bg-white w-full max-w-[350px] rounded-3xl p-5 text-center shadow-2xl animate-pop">
-                <span class="bg-amber-100 text-amber-700 text-[11px] font-black px-2.5 py-1 rounded-full">👑 함께주문 파티 초대장</span>
-                <h3 id="join-modal-shop-title" class="text-lg font-black text-gray-900 mt-2">전주 반찬명가 파티</h3>
-                <p class="text-xs text-gray-500 mt-1">이름을 입력하고 참여하면 방장의 파티원 관리창에 내 이름과 주문서가 실시간으로 전송됩니다!</p>
-                <input type="text" id="member-name-input" placeholder="내 이름/닉네임 입력 (예: 김동기)" 
-                    class="w-full mt-4 px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm font-bold text-center outline-none focus:border-baemin">
-                <button onclick="handleConfirmMemberJoin()" class="w-full mt-3 bg-baemin text-white font-black py-3 rounded-xl text-sm shadow-md">
-                    🙋‍♂️ 파티에 참여하고 도시락 담기
+                <button id="main-action-btn" onclick="handlePrimaryOrderAction()" class="bg-white text-baemin font-bold px-4 py-2.5 rounded-xl text-sm shadow-md active:scale-95 transition">
+                    주문서 바로 보내기
                 </button>
             </div>
         </div>
 
 
         <!-- =====================================================
-             [모달 2] 파티장(방장)의 파티원 관리창 (Firebase 실시간 수렴)
+             [모달 1] 파티원 입장 환영 팝업 (공유 링크 접속 시)
+             ===================================================== -->
+        <div id="modal-member-join" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs hidden items-center justify-center p-4">
+            <div class="bg-white w-full max-w-[350px] rounded-3xl p-5 text-center shadow-2xl animate-pop">
+                <span class="bg-amber-100 text-amber-700 text-xs font-bold px-3 py-1 rounded-full">👑 함께주문 파티 초대장</span>
+                <h3 id="join-modal-shop-title" class="text-lg font-bold text-gray-900 mt-2">전주 반찬명가 파티</h3>
+                <p class="text-sm text-gray-600 mt-1">이름을 입력하고 반찬을 담으면 방장에게 내 주문서가 실시간으로 전달됩니다.</p>
+                <input type="text" id="member-name-input" placeholder="내 이름 입력 (예: 김동기)" 
+                    class="w-full mt-4 px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm font-bold text-center outline-none focus:border-baemin">
+                <button onclick="handleConfirmMemberJoin()" class="w-full mt-3 bg-baemin text-white font-bold py-3 rounded-xl text-sm shadow-md">
+                    파티 참여하고 반찬 담기
+                </button>
+            </div>
+        </div>
+
+
+        <!-- =====================================================
+             [모달 2] 파티장(방장)의 파티원 관리창
              ===================================================== -->
         <div id="modal-party-manager" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs hidden items-center justify-center p-3">
             <div class="bg-white w-full max-w-[400px] max-h-[88dvh] rounded-3xl overflow-hidden shadow-2xl flex flex-col animate-pop">
                 <div class="bg-gray-900 text-white px-5 py-4 flex justify-between items-center">
                     <div>
                         <div class="flex items-center gap-1.5">
-                            <span class="bg-amber-400 text-gray-900 text-[10px] font-black px-2 py-0.5 rounded">파티장 전용</span>
-                            <h3 class="text-sm font-black">파티원 주문서 & 금액 수렴 관리창</h3>
+                            <span class="bg-amber-400 text-gray-900 text-xs font-bold px-2 py-0.5 rounded">방장 전용</span>
+                            <h3 class="text-base font-bold">파티원 주문 수렴 관리창</h3>
                         </div>
-                        <p id="party-shop-label" class="text-[11px] text-emerald-400 mt-0.5">● Firebase 실시간 파티 동기화 중</p>
+                        <p class="text-xs text-emerald-400 mt-0.5">● 실시간 동기화 중</p>
                     </div>
                     <button onclick="closePartyManagerModal()" class="w-7 h-7 rounded-full bg-gray-800 text-gray-300 flex items-center justify-center">
                         <i class="fa-solid fa-xmark text-sm"></i>
                     </button>
                 </div>
 
-                <div class="p-4 overflow-y-auto space-y-3.5 flex-1 text-xs no-scrollbar">
-                    <!-- 1. 팀원 초대 링크 복사 박스 -->
+                <div class="p-4 overflow-y-auto space-y-3.5 flex-1 text-sm no-scrollbar">
                     <div class="bg-teal-50/70 border border-baemin/30 rounded-2xl p-3">
-                        <div class="flex justify-between items-center mb-1.5">
-                            <span class="font-extrabold text-gray-800">① 단톡방에 파티 초대 링크 공유</span>
-                            <span id="party-code-badge" class="text-[10px] font-bold text-baemin">방코드: LR000</span>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold text-gray-800">① 단톡방에 초대 링크 공유</span>
+                            <span id="party-code-badge" class="text-xs font-bold text-baemin">방코드: LR000</span>
                         </div>
-                        <button onclick="handleCopyPartyInviteLink()" class="w-full bg-baemin hover:bg-baeminDark text-white font-black py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-xs">
+                        <button onclick="handleCopyPartyInviteLink()" class="w-full bg-baemin hover:bg-baeminDark text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-xs">
                             <i class="fa-solid fa-link"></i>
-                            <span>팀원 초대 링크 복사하기</span>
+                            <span>파티 초대 링크 복사하기</span>
                         </button>
                     </div>
 
-                    <!-- 2. 현재 수렴된 파티원 주문 현황 -->
                     <div class="bg-gray-50 border border-gray-200 rounded-2xl p-3">
                         <div class="flex justify-between items-center mb-2">
-                            <span class="font-extrabold text-gray-900">② 참여 파티원 주문서 현황 (<span id="mgr-member-count" class="text-rockRed">1</span>명)</span>
+                            <span class="font-bold text-gray-900">② 참여 파티원 현황 (<span id="mgr-member-count" class="text-rockRed">1</span>명)</span>
                             <div class="flex gap-1">
-                                <button onclick="syncPartyFromFirebase(true)" class="bg-gray-200 text-gray-700 text-[10px] font-bold px-2 py-1 rounded-lg">
-                                    🔄 새로고침
-                                </button>
-                                <button onclick="handleSimulateMemberOrder()" class="bg-gray-900 text-white text-[10px] font-bold px-2 py-1 rounded-lg">
-                                    + 시뮬레이션
-                                </button>
+                                <button onclick="syncPartyFromFirebase(true)" class="bg-gray-200 text-gray-700 text-xs font-bold px-2 py-1 rounded-lg">🔄 새로고침</button>
+                                <button onclick="handleSimulateMemberOrder()" class="bg-gray-900 text-white text-xs font-bold px-2 py-1 rounded-lg">+ 테스트 추가</button>
                             </div>
                         </div>
-
                         <div id="party-members-list" class="space-y-2 max-h-48 overflow-y-auto pr-0.5"></div>
                     </div>
 
-                    <!-- 3. 파티 전체 합계 요약 -->
                     <div class="bg-gray-900 text-white rounded-2xl p-3.5 flex justify-between items-center">
                         <div>
-                            <div class="text-[11px] text-gray-400 font-bold">파티원 전체 합산 금액</div>
-                            <div id="party-grand-total" class="text-lg font-black text-amber-400">0원</div>
+                            <div class="text-xs text-gray-400 font-bold">파티 전체 합계</div>
+                            <div id="party-grand-total" class="text-lg font-bold text-amber-400">0원</div>
                         </div>
-                        <button onclick="handleProceedFromPartyManager()" class="bg-rockRed hover:bg-red-600 text-white font-black px-4 py-2.5 rounded-xl text-xs shadow-md">
-                            통합 주문서 영수증 보기
+                        <button onclick="handleProceedFromPartyManager()" class="bg-rockRed hover:bg-red-600 text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow-md">
+                            통합 주문서 접수하기
                         </button>
                     </div>
                 </div>
@@ -378,32 +495,41 @@
 
 
         <!-- =====================================================
-             [모달 3] 마지막 주문서 영수증(열:메뉴 / 행:가격) & 심플 이메일 창
+             [모달 3] 선(先) 주문서 접수 완료 영수증 ➡️ 후(後) 이메일 알림 신청
              ===================================================== -->
         <div id="modal-lead" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs hidden items-center justify-center p-4">
-            <div class="bg-white w-full max-w-[375px] rounded-3xl overflow-hidden shadow-2xl animate-pop">
+            <div class="bg-white w-full max-w-[380px] max-h-[90dvh] rounded-3xl overflow-hidden shadow-2xl flex flex-col animate-pop">
                 
+                <!-- 상단: 주문서가 이미 성공적으로 전송되었음을 명확히 안내 -->
                 <div class="bg-gray-900 text-white px-5 py-3.5 flex justify-between items-center">
-                    <h3 id="receipt-modal-title" class="text-sm font-black">🧾 최종 주문서 영수증 & 알림 신청</h3>
-                    <button onclick="closeLeadModal()" class="w-6 h-6 rounded-full bg-gray-800 text-gray-300 flex items-center justify-center">
+                    <div class="flex items-center gap-2">
+                        <span class="w-5 h-5 rounded-full bg-baemin text-gray-900 flex items-center justify-center text-xs font-bold">✓</span>
+                        <h3 id="receipt-modal-title" class="text-base font-bold">주문서가 먼저 접수되었습니다!</h3>
+                    </div>
+                    <button onclick="closeLeadModal()" class="w-7 h-7 rounded-full bg-gray-800 text-gray-300 flex items-center justify-center">
                         <i class="fa-solid fa-xmark text-xs"></i>
                     </button>
                 </div>
 
-                <div id="lead-form-view" class="p-4">
-                    <!-- 영수증 테이블 (열: 메뉴명 / 행: 가격 정렬) -->
-                    <div class="bg-gray-50 border border-gray-200 rounded-2xl p-3 mb-3.5">
-                        <div class="flex justify-between items-center border-b border-gray-200 pb-1.5 mb-2">
-                            <span id="receipt-shop-name" class="text-xs font-black text-gray-900">전주 반찬명가</span>
-                            <span id="receipt-party-badge" class="text-[10px] font-extrabold text-baemin bg-teal-50 px-2 py-0.5 rounded">1인 주문</span>
+                <div class="p-4 overflow-y-auto no-scrollbar space-y-3.5">
+                    <!-- 1단계: 이미 서버에 기록된 주문 영수증 확인 (열: 메뉴 / 행: 가격) -->
+                    <div class="bg-gray-50 border border-gray-200 rounded-2xl p-3.5">
+                        <div class="flex justify-between items-center border-b border-gray-200 pb-2 mb-2">
+                            <span id="receipt-shop-name" class="text-sm font-bold text-gray-900">전주 반찬명가</span>
+                            <span id="receipt-party-badge" class="text-xs font-bold text-baemin bg-teal-50 px-2 py-0.5 rounded">주문 접수 완료</span>
                         </div>
 
-                        <div class="max-h-36 overflow-y-auto no-scrollbar">
-                            <table class="w-full text-xs border-collapse">
+                        <!-- 수령 방식 & 픽업일시/배달장소 표시 -->
+                        <div id="receipt-receive-info" class="text-xs font-bold text-gray-600 bg-white px-2.5 py-1.5 rounded-lg border border-gray-200 mb-2">
+                            🏃 직접 픽업 (0원)
+                        </div>
+
+                        <div class="max-h-32 overflow-y-auto no-scrollbar">
+                            <table class="w-full text-sm border-collapse">
                                 <thead>
-                                    <tr class="border-b border-gray-200 text-[10px] text-gray-400">
-                                        <th class="text-left font-bold py-1">선택 메뉴 (열)</th>
-                                        <th class="text-right font-bold py-1">가격 (행)</th>
+                                    <tr class="border-b border-gray-200 text-xs text-gray-400">
+                                        <th class="text-left font-bold py-1">담은 반찬 (40~50g 기준)</th>
+                                        <th class="text-right font-bold py-1">가격</th>
                                     </tr>
                                 </thead>
                                 <tbody id="receipt-table-body" class="divide-y divide-gray-100"></tbody>
@@ -411,56 +537,60 @@
                         </div>
 
                         <div class="flex justify-between items-center mt-2.5 pt-2 border-t-2 border-gray-800">
-                            <span class="text-xs font-extrabold text-gray-900">총 결제 금액</span>
-                            <span id="receipt-total-price" class="text-base font-black text-rockRed">0원</span>
+                            <span class="text-sm font-bold text-gray-900">총 주문 금액</span>
+                            <span id="receipt-total-price" class="text-lg font-bold text-rockRed">0원</span>
                         </div>
                     </div>
 
-                    <!-- 심플 이메일 & 바라는 점 입력 폼 (Firebase /leads 직결) -->
-                    <form onsubmit="handleSubmitEmailLead(event)" class="space-y-2.5">
-                        <div>
-                            <label class="block text-[11px] font-extrabold text-gray-700 mb-1">이메일 (정식 오픈 알림용) *</label>
-                            <input type="email" id="lead-email-input" required placeholder="example@univ.ac.kr" 
-                                class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:border-baemin outline-none text-xs font-medium">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-extrabold text-gray-700 mb-1">바라는 점 / 학과 (선택)</label>
-                            <input type="text" id="lead-note-input" placeholder="서비스에 바라는 점을 자유롭게 적어주세요" 
-                                class="w-full px-3 py-2 rounded-xl border border-gray-200 focus:border-baemin outline-none text-xs">
-                        </div>
-                        <button type="submit" id="lead-submit-btn" class="w-full bg-rockRed hover:bg-red-600 text-white font-black py-3 rounded-xl text-sm shadow-md transition active:scale-95">
-                            주문서 제출 및 오픈 알림 신청
+                    <!-- 2단계: 주문이 끝난 뒤 부담 없이 남기는 이메일 (선택 단계) -->
+                    <div id="lead-form-view" class="bg-teal-50/60 border border-baemin/30 rounded-2xl p-3.5">
+                        <div class="text-sm font-bold text-gray-900">💌 정식 오픈 알림도 받아보실래요?</div>
+                        <p class="text-xs text-gray-600 mt-0.5 mb-2.5">위 주문 내역은 이미 저장되었습니다! 이메일을 추가로 남겨주시면 오픈 소식을 가장 먼저 보내드려요.</p>
+
+                        <form onsubmit="handleSubmitEmailLead(event)" class="space-y-2">
+                            <input type="email" id="lead-email-input" required placeholder="이메일 주소 입력 (예: student@univ.ac.kr)" 
+                                class="w-full px-3 py-2.5 rounded-xl border border-gray-300 bg-white focus:border-baemin outline-none text-sm font-bold">
+                            <input type="text" id="lead-note-input" placeholder="바라는 점이나 학과를 적어주세요 (선택)" 
+                                class="w-full px-3 py-2 rounded-xl border border-gray-200 bg-white focus:border-baemin outline-none text-xs font-bold">
+                            <button type="submit" id="lead-submit-btn" class="w-full bg-rockRed hover:bg-red-600 text-white font-bold py-3 rounded-xl text-sm shadow-md transition active:scale-95">
+                                이메일 남기고 알림 신청하기
+                            </button>
+                        </form>
+                        <button type="button" onclick="closeLeadModal()" class="w-full text-center text-xs text-gray-400 font-bold mt-2 py-1">
+                            괜찮아요, 주문서만 보낼게요 (닫기)
                         </button>
-                    </form>
-                </div>
-
-                <div id="lead-success-view" class="p-6 text-center hidden">
-                    <div class="w-12 h-12 bg-teal-50 text-baemin rounded-full flex items-center justify-center mx-auto text-xl mb-2.5">
-                        <i class="fa-solid fa-check"></i>
                     </div>
-                    <h4 class="text-base font-black text-gray-900">신청이 완료되었습니다!</h4>
-                    <p class="text-xs text-gray-500 mt-1">남겨주신 이메일과 주문 내역이 Firebase DB에 안전하게 저장되었습니다.</p>
-                    <button onclick="closeLeadModal()" class="w-full bg-gray-900 text-white font-bold py-2.5 rounded-xl text-xs mt-4">
-                        닫기
-                    </button>
+
+                    <!-- 이메일 제출 완료 시 화면 -->
+                    <div id="lead-success-view" class="p-4 text-center hidden bg-teal-50 rounded-2xl border border-baemin/30">
+                        <div class="w-10 h-10 bg-baemin text-white rounded-full flex items-center justify-center mx-auto text-lg mb-2">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                        <h4 class="text-base font-bold text-gray-900">이메일 알림 신청까지 완료!</h4>
+                        <p class="text-xs text-gray-600 mt-1">정식 오픈 때 가장 먼저 연락드릴게요.</p>
+                        <button onclick="closeLeadModal()" class="w-full bg-gray-900 text-white font-bold py-2.5 rounded-xl text-xs mt-3">
+                            확인
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
 
         <!-- =====================================================
-             [모달 4] 관리자 비밀번호(1216) 입력 & 대시보드
+             [모달 4] 관리자 인증창 (비밀번호 숫자 노출 제거) & 대시보드
              ===================================================== -->
         <div id="modal-pin" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs hidden items-center justify-center p-4">
             <div class="bg-gray-900 text-white w-full max-w-[300px] rounded-3xl p-5 border border-gray-700 text-center animate-pop">
-                <h3 class="text-sm font-black">관리자 인증 (1216)</h3>
+                <h3 class="text-base font-bold">🔒 관리자 인증</h3>
+                <p class="text-xs text-gray-400 mt-1">관리자 전용 보안코드를 입력하세요.</p>
                 <form onsubmit="handleVerifyPin(event)" class="mt-3">
                     <input type="password" id="admin-pin-input" maxlength="4" inputmode="numeric" placeholder="••••"
-                        class="w-full bg-gray-800 border border-gray-600 rounded-xl py-2.5 text-center text-xl font-black tracking-[10px] text-white outline-none">
-                    <p id="pin-error-msg" class="text-[11px] text-rockRed font-bold mt-1.5 hidden">비밀번호가 틀렸습니다.</p>
+                        class="w-full bg-gray-800 border border-gray-600 rounded-xl py-2.5 text-center text-xl font-bold tracking-[10px] text-white outline-none">
+                    <p id="pin-error-msg" class="text-xs text-rockRed font-bold mt-1.5 hidden">비밀번호가 일치하지 않습니다.</p>
                     <div class="flex gap-2 mt-3">
-                        <button type="button" onclick="closePinModal()" class="flex-1 bg-gray-800 text-gray-300 font-bold py-2 rounded-xl text-xs">취소</button>
-                        <button type="submit" class="flex-1 bg-baemin text-gray-900 font-black py-2 rounded-xl text-xs">확인</button>
+                        <button type="button" onclick="closePinModal()" class="flex-1 bg-gray-800 text-gray-300 font-bold py-2.5 rounded-xl text-xs">취소</button>
+                        <button type="submit" class="flex-1 bg-baemin text-gray-900 font-bold py-2.5 rounded-xl text-xs">확인</button>
                     </div>
                 </form>
             </div>
@@ -470,11 +600,11 @@
             <div class="bg-gray-900 text-white w-full max-w-[410px] max-h-[90dvh] rounded-3xl overflow-hidden border border-gray-700 flex flex-col animate-pop">
                 <div class="px-5 py-3.5 bg-gray-800 border-b border-gray-700 flex justify-between items-center">
                     <div>
-                        <span class="text-sm font-black">⚙️ Firebase 실시간 관리자 (1216)</span>
-                        <p class="text-[10px] text-emerald-400">https://lockrock-default-rtdb.firebaseio.com 연동됨</p>
+                        <span class="text-sm font-bold">⚙️ 실시간 주문서 & 이메일 대시보드</span>
+                        <p class="text-[11px] text-emerald-400">Firebase DB 실시간 연동됨</p>
                     </div>
                     <div class="flex gap-1.5">
-                        <button onclick="syncAllFromFirebase(true)" class="bg-gray-700 text-teal-300 text-[10px] font-bold px-2.5 py-1 rounded-lg">🔄 동기화</button>
+                        <button onclick="syncAllFromFirebase(true)" class="bg-gray-700 text-teal-300 text-xs font-bold px-2.5 py-1 rounded-lg">🔄 동기화</button>
                         <button onclick="closeAdminModal()" class="w-7 h-7 rounded-full bg-gray-700 text-gray-300 flex items-center justify-center">
                             <i class="fa-solid fa-xmark"></i>
                         </button>
@@ -483,37 +613,37 @@
                 <div class="p-4 overflow-y-auto space-y-3 flex-1 text-xs no-scrollbar">
                     <div class="grid grid-cols-3 gap-2">
                         <div class="bg-gray-800 p-2.5 rounded-xl border border-gray-700">
-                            <div class="text-gray-400 text-[10px]">방문 수</div>
-                            <div id="kpi-visits" class="text-base font-black mt-0.5">0</div>
+                            <div class="text-gray-400 text-[11px]">방문 수</div>
+                            <div id="kpi-visits" class="text-base font-bold mt-0.5">0</div>
                         </div>
                         <div class="bg-gray-800 p-2.5 rounded-xl border border-gray-700">
-                            <div class="text-gray-400 text-[10px]">매장 진입</div>
-                            <div id="kpi-enters" class="text-base font-black text-baemin mt-0.5">0</div>
+                            <div class="text-gray-400 text-[11px]">매장 진입</div>
+                            <div id="kpi-enters" class="text-base font-bold text-baemin mt-0.5">0</div>
                         </div>
                         <div class="bg-gray-800 p-2.5 rounded-xl border border-gray-700">
-                            <div class="text-gray-400 text-[10px]">반찬 담기</div>
-                            <div id="kpi-adds" class="text-base font-black mt-0.5">0</div>
+                            <div class="text-gray-400 text-[11px]">반찬 담기</div>
+                            <div id="kpi-adds" class="text-base font-bold mt-0.5">0</div>
                         </div>
                         <div class="bg-gray-800 p-2.5 rounded-xl border border-gray-700">
-                            <div class="text-gray-400 text-[10px]">파티 공유</div>
-                            <div id="kpi-shares" class="text-base font-black text-amber-400 mt-0.5">0</div>
+                            <div class="text-gray-400 text-[11px]">파티 공유</div>
+                            <div id="kpi-shares" class="text-base font-bold text-amber-400 mt-0.5">0</div>
                         </div>
-                        <div class="bg-gray-800 p-2.5 rounded-xl border border-gray-700">
-                            <div class="text-gray-400 text-[10px]">결제 클릭</div>
-                            <div id="kpi-checkouts" class="text-base font-black mt-0.5">0</div>
+                        <div class="bg-gray-800 p-2.5 rounded-xl border border-baemin/60">
+                            <div class="text-teal-300 text-[11px] font-bold">접수된 주문서</div>
+                            <div id="kpi-checkouts" class="text-base font-bold text-baemin mt-0.5">0</div>
                         </div>
                         <div class="bg-gray-800 p-2.5 rounded-xl border border-rockRed/60">
-                            <div class="text-red-300 text-[10px] font-bold">이메일 등록</div>
-                            <div id="kpi-leads" class="text-base font-black text-rockRed mt-0.5">0</div>
+                            <div class="text-red-300 text-[11px] font-bold">이메일 등록</div>
+                            <div id="kpi-leads" class="text-base font-bold text-rockRed mt-0.5">0</div>
                         </div>
                     </div>
 
                     <div class="bg-gray-800 p-3 rounded-xl border border-gray-700">
                         <div class="flex justify-between items-center mb-2">
-                            <span class="font-bold">💌 수집된 이메일 & 주문 내역 (Firebase)</span>
-                            <button onclick="exportLeadsToCSV()" class="bg-baemin text-gray-900 font-black px-2.5 py-1 rounded text-[10px]">CSV 저장</button>
+                            <span class="font-bold">🧾 접수된 주문서 & 이메일 목록</span>
+                            <button onclick="exportLeadsToCSV()" class="bg-baemin text-gray-900 font-bold px-2.5 py-1 rounded text-xs">CSV 저장</button>
                         </div>
-                        <div id="admin-leads-list" class="space-y-1.5 max-h-56 overflow-y-auto"></div>
+                        <div id="admin-leads-list" class="space-y-1.5 max-h-60 overflow-y-auto"></div>
                     </div>
                 </div>
             </div>
@@ -522,86 +652,94 @@
     </div>
 
     <!-- =====================================================
-         자바스크립트: 대표님 Firebase DB (lockrock-default-rtdb) 완벽 직결
+         자바스크립트: 4/6/8구 대칭, 선 주문서 저장, 현실적 반찬가 반영
          ===================================================== -->
     <script>
         const ADMIN_PIN = "1216";
-        // ★ 대표님 전용 파이어베이스 실시간 데이터베이스 주소 고정 연결 ★
         const FIREBASE_DB_URL = "https://lockrock-default-rtdb.firebaseio.com";
 
-        // 1. 3개 반찬가게 실제 메뉴판 특징 데이터
+        // 1. 3개 반찬가게 데이터 (텍스트는 간결하고 핵심만 직관적으로)
         const SHOPS = {
             shop1: {
                 id: 'shop1',
                 name: '🍱 전주 반찬명가',
-                badge: '수제 한식 메인요리 & 전류 전문',
-                rating: '⭐ 4.9 · 최소주문 7,000원',
-                desc: '20년 경력 찬모님이 매일 아침 직접 빚는 수제 떡갈비, 한돈 제육볶음, 동그랑땡과 코다리조림이 유명한 정통 반찬가게입니다.',
-                tags: ['#수제떡갈비', '#한돈제육볶음', '#수제동그랑땡', '#코다리강정', '#간장새우장']
+                badge: '수제 고기반찬 & 명절 전류 특화',
+                rating: '🏃 직접 픽업 0원 · 🛵 배달 가능',
+                minOrder: '1칸(50g) 600원 ~ 1,600원',
+                desc: '매일 아침 직접 빚는 수제 떡갈비와 한돈 제육볶음이 가장 인기 있는 반찬가게예요.',
+                tags: ['#수제떡갈비_1400원', '#한돈제육_1300원', '#수제동그랑땡']
             },
             shop2: {
                 id: 'shop2',
                 name: '🍲 엄마손 대학로백반',
-                badge: '학교 앞 가성비 자취생 백반·볶음 특화',
-                rating: '⭐ 4.9 · 최소주문 6,500원',
-                desc: '대학생 자취생들이 가장 좋아하는 옛날 분홍소시지전, 스팸구이, 김치제육볶음, 두툼 계란말이를 푸짐하게 담아주는 백반 반찬집입니다.',
-                tags: ['#옛날분홍소시지', '#스팸노릇구이', '#김치제육볶음', '#두툼계란말이', '#메추리알장조림']
+                badge: '자취생 가성비 집밥 반찬 전문',
+                rating: '🏃 직접 픽업 0원 · 🛵 배달 가능',
+                minOrder: '1칸(50g) 500원 ~ 1,300원',
+                desc: '옛날 분홍소시지전, 스팸구이, 두툼 계란말이처럼 자취생이 좋아하는 반찬을 푸짐하게 담아요.',
+                tags: ['#분홍소시지_900원', '#스팸구이_1100원', '#두툼계란말이']
             },
             shop3: {
                 id: 'shop3',
                 name: '🥗 바른식단 효자점',
-                badge: '고단백·저탄수 다이어트 반찬 전문',
-                rating: '⭐ 4.8 · 최소주문 7,000원',
-                desc: '식단 관리와 운동을 하는 학생들을 위해 수비드 닭가슴살, 오븐 연어구이, 두부스테이크, 우둔살 장조림을 당일 조리합니다.',
-                tags: ['#수비드닭가슴살', '#오븐연어구이', '#두부스테이크', '#우둔살장조림', '#단호박구이']
+                badge: '고단백 · 저탄수 식단관리 전문',
+                rating: '🏃 직접 픽업 0원 · 🛵 배달 가능',
+                minOrder: '1칸(50g) 600원 ~ 1,600원',
+                desc: '수비드 닭가슴살, 두부조림, 소고기장조림 등 운동·식단 관리에 딱 맞는 반찬을 당일 조리해요.',
+                tags: ['#수비드닭가슴살_1400원', '#소고기장조림', '#두부양념조림']
             }
         };
 
-        // 2. 카테고리별 10종씩 총 30종 실제 반찬 데이터 (마감특가만 할인 / 고기·야채는 정상가 분리)
+        // 2. 시중 반찬가게 100g 단가 기준 -> 도시락 1칸 소분(40~50g)에 맞춘 현실적인 가격 책정 (총 30종)
         const FOOD_ITEMS = [
-            // [카테고리 1: 🚨 마감특가 10종 - 할인가 적용]
-            { id: 's1', name: '한돈제육볶음', category: 'special', oriPrice: 2500, price: 1900, discount: '24%↓', kcal: 220, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Jeyuk-bokkeum.jpg/300px-Jeyuk-bokkeum.jpg' },
-            { id: 's2', name: '수제떡갈비', category: 'special', oriPrice: 2800, price: 2000, discount: '28%↓', kcal: 240, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Tteokgalbi.jpg/300px-Tteokgalbi.jpg' },
-            { id: 's3', name: '쏘야볶음', category: 'special', oriPrice: 1600, price: 1200, discount: '25%↓', kcal: 180, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Sausage_vegetable_stir_fry.jpg/300px-Sausage_vegetable_stir_fry.jpg' },
-            { id: 's4', name: '두부양념조림', category: 'special', oriPrice: 1300, price: 900, discount: '30%↓', kcal: 110, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Dubu-jorim.jpg/300px-Dubu-jorim.jpg' },
-            { id: 's5', name: '삼색어묵볶음', category: 'special', oriPrice: 1200, price: 900, discount: '25%↓', kcal: 130, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Eomuk-bokkeum.jpg/300px-Eomuk-bokkeum.jpg' },
-            { id: 's6', name: '시금치나물', category: 'special', oriPrice: 1000, price: 700, discount: '30%↓', kcal: 45, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Sigeumchi-namul.jpg/300px-Sigeumchi-namul.jpg' },
-            { id: 's7', name: '매콤코다리조림', category: 'special', oriPrice: 2500, price: 1800, discount: '28%↓', kcal: 165, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Kodari-jjim.jpg/300px-Kodari-jjim.jpg' },
-            { id: 's8', name: '메추리알장조림', category: 'special', oriPrice: 1500, price: 1100, discount: '26%↓', kcal: 125, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Jangjorim.jpg/300px-Jangjorim.jpg' },
-            { id: 's9', name: '감자채볶음', category: 'special', oriPrice: 1100, price: 800, discount: '27%↓', kcal: 95, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Gamja-bokkeum.jpg/300px-Gamja-bokkeum.jpg' },
-            { id: 's10', name: '바삭김치전', category: 'special', oriPrice: 1500, price: 1000, discount: '33%↓', kcal: 155, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Kimchijeon.jpg/300px-Kimchijeon.jpg' },
+            // [🚨 마감특가 10종 - 1칸(45~50g) 기준 할인가 500원 ~ 1,400원]
+            { id: 's1', name: '한돈제육볶음', category: 'special', oriPrice: 1700, price: 1300, discount: '24%↓', kcal: 115, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Jeyuk-bokkeum.jpg/300px-Jeyuk-bokkeum.jpg' },
+            { id: 's2', name: '수제떡갈비', category: 'special', oriPrice: 1900, price: 1400, discount: '26%↓', kcal: 135, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Tteokgalbi.jpg/300px-Tteokgalbi.jpg' },
+            { id: 's3', name: '쏘야볶음', category: 'special', oriPrice: 1200, price: 900, discount: '25%↓', kcal: 105, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Sausage_vegetable_stir_fry.jpg/300px-Sausage_vegetable_stir_fry.jpg' },
+            { id: 's4', name: '두부양념조림', category: 'special', oriPrice: 900, price: 650, discount: '28%↓', kcal: 75, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Dubu-jorim.jpg/300px-Dubu-jorim.jpg' },
+            { id: 's5', name: '삼색어묵볶음', category: 'special', oriPrice: 900, price: 650, discount: '28%↓', kcal: 80, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Eomuk-bokkeum.jpg/300px-Eomuk-bokkeum.jpg' },
+            { id: 's6', name: '시금치나물', category: 'special', oriPrice: 700, price: 500, discount: '28%↓', kcal: 30, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Sigeumchi-namul.jpg/300px-Sigeumchi-namul.jpg' },
+            { id: 's7', name: '매콤코다리조림', category: 'special', oriPrice: 1800, price: 1300, discount: '28%↓', kcal: 110, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Kodari-jjim.jpg/300px-Kodari-jjim.jpg' },
+            { id: 's8', name: '메추리알장조림', category: 'special', oriPrice: 1100, price: 800, discount: '27%↓', kcal: 85, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Jangjorim.jpg/300px-Jangjorim.jpg' },
+            { id: 's9', name: '감자채볶음', category: 'special', oriPrice: 800, price: 600, discount: '25%↓', kcal: 65, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Gamja-bokkeum.jpg/300px-Gamja-bokkeum.jpg' },
+            { id: 's10', name: '바삭김치전', category: 'special', oriPrice: 1000, price: 700, discount: '30%↓', kcal: 95, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Kimchijeon.jpg/300px-Kimchijeon.jpg' },
 
-            // [카테고리 2: 🥩 고기·메인 10종 - 할인 없는 정상가]
-            { id: 'm1', name: '언양식소불고기', category: 'meat', oriPrice: null, price: 2600, discount: null, kcal: 230, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Bulgogi_2.jpg/300px-Bulgogi_2.jpg' },
-            { id: 'm2', name: '두툼계란말이', category: 'meat', oriPrice: null, price: 1300, discount: null, kcal: 150, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Gyeran-mari.jpg/300px-Gyeran-mari.jpg' },
-            { id: 'm3', name: '수비드닭가슴살', category: 'meat', oriPrice: null, price: 1900, discount: null, kcal: 145, img: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=300&q=80' },
-            { id: 'm4', name: '수제동그랑땡', category: 'meat', oriPrice: null, price: 1800, discount: null, kcal: 190, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Dongeurangttaeng.jpg/300px-Dongeurangttaeng.jpg' },
-            { id: 'm5', name: '옛날분홍소시지', category: 'meat', oriPrice: null, price: 1200, discount: null, kcal: 160, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Korean_sausage_pancake.jpg/300px-Korean_sausage_pancake.jpg' },
-            { id: 'm6', name: '스팸노릇구이', category: 'meat', oriPrice: null, price: 1500, discount: null, kcal: 210, img: 'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?auto=format&fit=crop&w=300&q=80' },
-            { id: 'm7', name: '매콤오징어볶음', category: 'meat', oriPrice: null, price: 2300, discount: null, kcal: 175, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Ojingeo-bokkeum.jpg/300px-Ojingeo-bokkeum.jpg' },
-            { id: 'm8', name: '소고기장조림', category: 'meat', oriPrice: null, price: 2200, discount: null, kcal: 160, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Jangjorim.jpg/300px-Jangjorim.jpg' },
-            { id: 'm9', name: '고추장진미채', category: 'meat', oriPrice: null, price: 1600, discount: null, kcal: 120, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Jinmichae-bokkeum.jpg/300px-Jinmichae-bokkeum.jpg' },
-            { id: 'm10', name: '견과류멸치볶음', category: 'meat', oriPrice: null, price: 1300, discount: null, kcal: 110, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Myeolchi-bokkeum.jpg/300px-Myeolchi-bokkeum.jpg' },
+            // [🥩 고기·메인 10종 - 1칸(50g) 기준 현실적 정상가 900원 ~ 1,600원]
+            { id: 'm1', name: '언양식소불고기', category: 'meat', oriPrice: null, price: 1600, discount: null, kcal: 130, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Bulgogi_2.jpg/300px-Bulgogi_2.jpg' },
+            { id: 'm2', name: '두툼계란말이', category: 'meat', oriPrice: null, price: 1000, discount: null, kcal: 95, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Gyeran-mari.jpg/300px-Gyeran-mari.jpg' },
+            { id: 'm3', name: '수비드닭가슴살', category: 'meat', oriPrice: null, price: 1400, discount: null, kcal: 90, img: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=300&q=80' },
+            { id: 'm4', name: '수제동그랑땡', category: 'meat', oriPrice: null, price: 1300, discount: null, kcal: 120, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Dongeurangttaeng.jpg/300px-Dongeurangttaeng.jpg' },
+            { id: 'm5', name: '옛날분홍소시지', category: 'meat', oriPrice: null, price: 900, discount: null, kcal: 105, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Korean_sausage_pancake.jpg/300px-Korean_sausage_pancake.jpg' },
+            { id: 'm6', name: '스팸노릇구이', category: 'meat', oriPrice: null, price: 1100, discount: null, kcal: 140, img: 'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?auto=format&fit=crop&w=300&q=80' },
+            { id: 'm7', name: '매콤오징어볶음', category: 'meat', oriPrice: null, price: 1500, discount: null, kcal: 110, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Ojingeo-bokkeum.jpg/300px-Ojingeo-bokkeum.jpg' },
+            { id: 'm8', name: '소고기장조림', category: 'meat', oriPrice: null, price: 1500, discount: null, kcal: 105, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Jangjorim.jpg/300px-Jangjorim.jpg' },
+            { id: 'm9', name: '고추장진미채', category: 'meat', oriPrice: null, price: 1200, discount: null, kcal: 85, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Jinmichae-bokkeum.jpg/300px-Jinmichae-bokkeum.jpg' },
+            { id: 'm10', name: '견과류멸치볶음', category: 'meat', oriPrice: null, price: 1000, discount: null, kcal: 80, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Myeolchi-bokkeum.jpg/300px-Myeolchi-bokkeum.jpg' },
 
-            // [카테고리 3: 🥬 야채·나물 10종 - 할인 없는 정상가]
-            { id: 'v1', name: '아삭콩나물무침', category: 'veggie', oriPrice: null, price: 900, discount: null, kcal: 45, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Kongnamul-muchim.jpg/300px-Kongnamul-muchim.jpg' },
-            { id: 'v2', name: '새콤달콤무생채', category: 'veggie', oriPrice: null, price: 900, discount: null, kcal: 35, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Musaengchae.jpg/300px-Musaengchae.jpg' },
-            { id: 'v3', name: '들깨고사리나물', category: 'veggie', oriPrice: null, price: 1200, discount: null, kcal: 60, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Gosari-namul.jpg/300px-Gosari-namul.jpg' },
-            { id: 'v4', name: '표고버섯볶음', category: 'veggie', oriPrice: null, price: 1300, discount: null, kcal: 55, img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=300&q=80' },
-            { id: 'v5', name: '오이부추무침', category: 'veggie', oriPrice: null, price: 1000, discount: null, kcal: 30, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Oi-muchim.jpg/300px-Oi-muchim.jpg' },
-            { id: 'v6', name: '쫀득연근조림', category: 'veggie', oriPrice: null, price: 1200, discount: null, kcal: 85, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Yeongeun-jorim.jpg/300px-Yeongeun-jorim.jpg' },
-            { id: 'v7', name: '윤기검은콩조림', category: 'veggie', oriPrice: null, price: 1100, discount: null, kcal: 95, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Kongjaban.jpg/300px-Kongjaban.jpg' },
-            { id: 'v8', name: '도라지오이초무침', category: 'veggie', oriPrice: null, price: 1300, discount: null, kcal: 50, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Doraji-muchim.jpg/300px-Doraji-muchim.jpg' },
-            { id: 'v9', name: '부드러운가지나물', category: 'veggie', oriPrice: null, price: 1000, discount: null, kcal: 40, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Gaji-namul.jpg/300px-Gaji-namul.jpg' },
-            { id: 'v10', name: '참기름볶음김치', category: 'veggie', oriPrice: null, price: 1000, discount: null, kcal: 65, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Kimchi_01.jpg/300px-Kimchi_01.jpg' }
+            // [🥬 야채·나물 10종 - 1칸(40g) 기준 현실적 정상가 600원 ~ 900원]
+            { id: 'v1', name: '아삭콩나물무침', category: 'veggie', oriPrice: null, price: 600, discount: null, kcal: 30, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Kongnamul-muchim.jpg/300px-Kongnamul-muchim.jpg' },
+            { id: 'v2', name: '새콤달콤무생채', category: 'veggie', oriPrice: null, price: 600, discount: null, kcal: 25, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Musaengchae.jpg/300px-Musaengchae.jpg' },
+            { id: 'v3', name: '들깨고사리나물', category: 'veggie', oriPrice: null, price: 800, discount: null, kcal: 45, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Gosari-namul.jpg/300px-Gosari-namul.jpg' },
+            { id: 'v4', name: '표고버섯볶음', category: 'veggie', oriPrice: null, price: 900, discount: null, kcal: 40, img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=300&q=80' },
+            { id: 'v5', name: '오이부추무침', category: 'veggie', oriPrice: null, price: 700, discount: null, kcal: 20, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Oi-muchim.jpg/300px-Oi-muchim.jpg' },
+            { id: 'v6', name: '쫀득연근조림', category: 'veggie', oriPrice: null, price: 800, discount: null, kcal: 60, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Yeongeun-jorim.jpg/300px-Yeongeun-jorim.jpg' },
+            { id: 'v7', name: '윤기검은콩조림', category: 'veggie', oriPrice: null, price: 800, discount: null, kcal: 70, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Kongjaban.jpg/300px-Kongjaban.jpg' },
+            { id: 'v8', name: '도라지오이무침', category: 'veggie', oriPrice: null, price: 900, discount: null, kcal: 35, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Doraji-muchim.jpg/300px-Doraji-muchim.jpg' },
+            { id: 'v9', name: '부드러운가지나물', category: 'veggie', oriPrice: null, price: 700, discount: null, kcal: 30, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Gaji-namul.jpg/300px-Gaji-namul.jpg' },
+            { id: 'v10', name: '참기름볶음김치', category: 'veggie', oriPrice: null, price: 700, discount: null, kcal: 45, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Kimchi_01.jpg/300px-Kimchi_01.jpg' }
         ];
 
         // 3. 앱 상태 변수
         let selectedShop = SHOPS.shop1;
-        let currentNgu = 4;
+        let diningMode = 'solo';       // 'solo' (혼자) | 'party' (파티)
+        let receiveType = 'pickup';    // 'pickup' (직접픽업 0원) | 'delivery' (배달비 부담)
+        let pickupDateTime = '';
+        let deliveryAddress = '';
+
+        let currentNgu = 4;            // 4구, 6구, 8구
         let bentoSlots = [null, null, null, null];
         let activeSlotIndex = 0;
         let currentCategory = 'special';
+        let lastSubmittedOrderKey = null; // 선 주문서 저장 후 이메일 연결용 키
 
         // 파티장 vs 파티원 상태
         let isMemberMode = false;
@@ -624,7 +762,7 @@
         }
 
         // =========================================================================
-        // ★ Firebase 실시간 데이터베이스(lockrock-default-rtdb) 통신 함수 ★
+        // Firebase 실시간 데이터베이스 연동
         // =========================================================================
         async function syncAllFromFirebase(showNotice = false) {
             try {
@@ -661,13 +799,12 @@
                 updatePartyBadgeCount();
                 renderPartyManagerList();
                 updateAdminUI();
-                if (showNotice) showToast("Firebase DB에서 최신 데이터를 동기화했습니다!");
+                if (showNotice) showToast("최신 데이터를 동기화했습니다!");
             } catch (err) {
                 console.warn("Firebase 동기화 오류:", err);
             }
         }
 
-        // 파티원 목록만 3초마다 실시간 폴링 (방장이 관리창을 보고 있을 때 팀원 참여/주문 자동 반영)
         async function syncPartyFromFirebase(showNotice = false) {
             try {
                 const res = await fetch(`${FIREBASE_DB_URL}/parties/${partyId}/members.json`);
@@ -680,7 +817,7 @@
                     renderPartyManagerList();
                     if (partyMembers.length > prevCount) {
                         const newest = partyMembers[partyMembers.length - 1];
-                        showToast(`🙋‍♂️ ${newest.name}님의 파티 정보가 실시간 업데이트되었습니다!`);
+                        showToast(`🙋‍♂️ ${newest.name}님의 주문서가 업데이트되었습니다!`);
                     } else if (showNotice) {
                         showToast("파티원 목록을 새로고침했습니다.");
                     }
@@ -715,38 +852,158 @@
             setTimeout(() => el.remove(), 2300);
         }
 
-        // 4. 화면 전환
+        // 화면 전환 (부드러운 애니메이션 자동 적용)
         function switchScreen(viewId) {
             document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
-            document.getElementById(viewId).classList.add('active');
+            const nextView = document.getElementById(viewId);
+            void nextView.offsetWidth; // 리플로우 강제로 애니메이션 재실행 보장
+            nextView.classList.add('active');
+        }
+
+        // 상황별 빠른 추천 필터
+        function handleQuickFilter(filterKey) {
+            document.querySelectorAll('.filter-chip').forEach(c => {
+                c.className = "filter-chip whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-bold bg-gray-100 text-gray-700 transition";
+            });
+            const activeChip = document.getElementById(`filter-${filterKey}`);
+            if (activeChip) {
+                activeChip.className = "filter-chip whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-bold bg-gray-900 text-white transition";
+            }
+
+            if (filterKey === 'all') {
+                document.querySelectorAll('.shop-pin').forEach(p => p.style.opacity = '1');
+                handleSelectShopPin('shop1');
+            } else {
+                document.querySelectorAll('.shop-pin').forEach(p => {
+                    p.style.opacity = (p.id === `pin-${filterKey}`) ? '1' : '0.4';
+                });
+                handleSelectShopPin(filterKey);
+            }
         }
 
         function handleSelectShopPin(shopKey) {
             selectedShop = SHOPS[shopKey];
             document.querySelectorAll('.shop-pin').forEach(p => {
-                p.classList.remove('border-baemin');
+                p.classList.remove('border-baemin', 'scale-105');
                 p.classList.add('border-transparent');
             });
             const pin = document.getElementById(`pin-${shopKey}`);
             if (pin) {
                 pin.classList.remove('border-transparent');
-                pin.classList.add('border-baemin');
+                pin.classList.add('border-baemin', 'scale-105');
             }
 
             document.getElementById('sheet-shop-name').innerText = selectedShop.name;
             document.getElementById('sheet-badge').innerText = selectedShop.badge;
             document.getElementById('sheet-rating').innerText = selectedShop.rating;
+            document.getElementById('sheet-min-order').innerText = selectedShop.minOrder;
             document.getElementById('sheet-shop-desc').innerText = selectedShop.desc;
 
             const tagsBox = document.getElementById('sheet-menu-tags');
             tagsBox.innerHTML = selectedShop.tags.map(t => 
-                `<span class="bg-gray-100 text-gray-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md">${t}</span>`
+                `<span class="bg-gray-100 text-gray-800 text-xs font-bold px-2.5 py-1 rounded-lg">${t}</span>`
             ).join('');
         }
 
-        function handleEnterShop() {
+        // =========================================================================
+        // Step 2: 주문 설정 모달 (혼자/파티, 직접픽업 달력/배달 장소)
+        // =========================================================================
+        function setDefaultPickupDateTime() {
+            const input = document.getElementById('pickup-datetime-input');
+            if (!input.value) {
+                const now = new Date();
+                now.setMinutes(now.getMinutes() + 30 - (now.getMinutes() % 10));
+                const tzOffset = now.getTimezoneOffset() * 60000;
+                input.value = new Date(now - tzOffset).toISOString().slice(0, 16);
+            }
+        }
+
+        function openStep2SetupModal() {
+            document.getElementById('setup-shop-title').innerText = selectedShop.name;
+            setDefaultPickupDateTime();
+            const modal = document.getElementById('modal-step2-setup');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeStep2SetupModal() {
+            const modal = document.getElementById('modal-step2-setup');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function selectDiningMode(mode) {
+            diningMode = mode;
+            const soloBtn = document.getElementById('mode-btn-solo');
+            const partyBtn = document.getElementById('mode-btn-party');
+            if (mode === 'solo') {
+                soloBtn.className = "py-3 px-3 rounded-xl border-2 border-baemin bg-teal-50/70 text-gray-900 font-bold text-sm text-center transition";
+                partyBtn.className = "py-3 px-3 rounded-xl border-2 border-gray-200 bg-white text-gray-500 font-bold text-sm text-center transition";
+            } else {
+                partyBtn.className = "py-3 px-3 rounded-xl border-2 border-baemin bg-teal-50/70 text-gray-900 font-bold text-sm text-center transition";
+                soloBtn.className = "py-3 px-3 rounded-xl border-2 border-gray-200 bg-white text-gray-500 font-bold text-sm text-center transition";
+            }
+        }
+
+        function selectReceiveType(type) {
+            receiveType = type;
+            const pickupBtn = document.getElementById('recv-btn-pickup');
+            const delivBtn = document.getElementById('recv-btn-delivery');
+            const pickupBox = document.getElementById('pickup-date-box');
+            const delivBox = document.getElementById('delivery-address-box');
+
+            if (type === 'pickup') {
+                pickupBtn.className = "py-3 px-3 rounded-xl border-2 border-baemin bg-teal-50/70 text-gray-900 font-bold text-sm text-center transition";
+                delivBtn.className = "py-3 px-3 rounded-xl border-2 border-gray-200 bg-white text-gray-500 font-bold text-sm text-center transition";
+                pickupBox.classList.remove('hidden');
+                delivBox.classList.add('hidden');
+            } else {
+                delivBtn.className = "py-3 px-3 rounded-xl border-2 border-baemin bg-teal-50/70 text-gray-900 font-bold text-sm text-center transition";
+                pickupBtn.className = "py-3 px-3 rounded-xl border-2 border-gray-200 bg-white text-gray-500 font-bold text-sm text-center transition";
+                pickupBox.classList.add('hidden');
+                delivBox.classList.remove('hidden');
+            }
+        }
+
+        function handleConfirmStep2AndEnter() {
+            if (receiveType === 'pickup') {
+                pickupDateTime = document.getElementById('pickup-datetime-input').value;
+                if (!pickupDateTime) {
+                    showToast("픽업 날짜와 시간을 선택해주세요!");
+                    return;
+                }
+            } else {
+                deliveryAddress = document.getElementById('delivery-address-input').value.trim();
+                if (!deliveryAddress) {
+                    showToast("배달 받을 장소를 입력해주세요!");
+                    document.getElementById('delivery-address-input').focus();
+                    return;
+                }
+            }
+
+            closeStep2SetupModal();
             trackEvent('storeEnters');
+
+            // 상점 헤더 업데이트
             document.getElementById('store-header-name').innerText = selectedShop.name.replace(/^[^\s]+\s/, '');
+            const subLabel = document.getElementById('store-header-sub');
+            if (receiveType === 'pickup') {
+                const formattedDate = pickupDateTime.replace('T', ' ');
+                subLabel.innerText = `🏃 직접 픽업 (0원) · ${formattedDate}`;
+            } else {
+                subLabel.innerText = `🛵 배달 (${deliveryAddress}) · 배달비 부담`;
+            }
+
+            // '혼자 먹어요' 선택 시 파티원 관리 버튼 완전히 숨김 처리
+            const partyBtn = document.getElementById('party-manager-top-btn');
+            if (diningMode === 'solo') {
+                partyBtn.classList.add('hidden');
+                partyBtn.classList.remove('flex');
+            } else {
+                partyBtn.classList.remove('hidden');
+                partyBtn.classList.add('flex');
+            }
+
             switchScreen('view-store');
         }
 
@@ -754,21 +1011,25 @@
             switchScreen('view-map');
         }
 
-        // 5. 도시락 슬롯 & 30종 반찬 렌더링
+        // =========================================================================
+        // 4구 · 6구 · 8구 짝수 대칭 용기 & 30종 반찬 렌더링 (불 이모지 제거)
+        // =========================================================================
         function handleChangeNgu(ngu) {
             currentNgu = ngu;
             bentoSlots = new Array(ngu).fill(null);
             activeSlotIndex = 0;
 
-            document.getElementById('ngu-btn-4').className = ngu === 4
-                ? "px-3 py-1 text-[11px] font-extrabold rounded-md transition bg-gray-900 text-white"
-                : "px-3 py-1 text-[11px] font-extrabold rounded-md transition text-gray-600";
-            document.getElementById('ngu-btn-5').className = ngu === 5
-                ? "px-3 py-1 text-[11px] font-extrabold rounded-md transition bg-gray-900 text-white"
-                : "px-3 py-1 text-[11px] font-extrabold rounded-md transition text-gray-600";
+            [4, 6, 8].forEach(n => {
+                const btn = document.getElementById(`ngu-btn-${n}`);
+                if (btn) {
+                    btn.className = (n === ngu)
+                        ? "px-3 py-1 text-xs font-bold rounded-lg transition bg-gray-900 text-white"
+                        : "px-3 py-1 text-xs font-bold rounded-lg transition text-gray-600";
+                }
+            });
 
             const box = document.getElementById('bento-container');
-            box.className = `w-full h-[164px] bg-bentoWood rounded-2xl p-2.5 shadow-inner border-2 border-[#d5c4a1] bento-grid-${ngu}`;
+            box.className = `w-full h-[168px] bg-bentoWood rounded-2xl p-2.5 shadow-inner border-2 border-[#d5c4a1] bento-grid-${ngu}`;
             renderBentoSlots();
             updateTotalsUI();
         }
@@ -780,22 +1041,24 @@
             bentoSlots.forEach((food, idx) => {
                 const isTarget = (idx === activeSlotIndex && !food);
                 const slot = document.createElement('div');
-                slot.className = `slot-${idx} relative rounded-xl flex flex-col items-center justify-center p-1 cursor-pointer transition overflow-hidden ${
+                slot.className = `relative rounded-xl flex flex-col items-center justify-center p-1 cursor-pointer transition overflow-hidden ${
                     food ? 'bg-white shadow-xs border border-baemin/50' 
                          : isTarget ? 'bg-teal-50/90 border-2 border-dashed border-baemin' 
                                     : 'bg-white/85 border border-dashed border-gray-300'
                 }`;
 
+                const imgSizeClass = currentNgu === 8 ? 'w-7 h-7' : 'w-8 h-8';
+
                 if (food) {
                     slot.innerHTML = `
-                        <div class="w-9 h-9 rounded-full overflow-hidden border border-gray-200 flex-shrink-0 bg-amber-50 flex items-center justify-center">
-                            <img src="${food.img}" alt="${food.name}" class="w-full h-full object-cover" onerror="this.outerHTML='<span class=\\'text-xs font-black text-gray-700\\'>${food.name.slice(0,2)}</span>'">
+                        <div class="${imgSizeClass} rounded-full overflow-hidden border border-gray-200 flex-shrink-0 bg-amber-50 flex items-center justify-center">
+                            <img src="${food.img}" alt="${food.name}" class="w-full h-full object-cover" onerror="this.outerHTML='<span class=\\'text-xs font-bold text-gray-700\\'>${food.name.slice(0,2)}</span>'">
                         </div>
-                        <div class="text-[11px] font-extrabold text-gray-900 leading-tight mt-1 max-w-full px-1 text-center break-keep">${food.name}</div>
-                        <div class="text-[10px] font-black text-rockRed leading-none mt-0.5">${food.price.toLocaleString()}원</div>
+                        <div class="text-[11px] font-bold text-gray-900 leading-tight mt-0.5 max-w-full px-0.5 text-center truncate">${food.name}</div>
+                        <div class="text-[10px] font-bold text-rockRed leading-none mt-0.5">${food.price.toLocaleString()}원</div>
                     `;
                 } else {
-                    slot.innerHTML = `<span class="text-[11px] font-bold ${isTarget ? 'text-baemin' : 'text-gray-400'}">${idx + 1}번 칸</span>`;
+                    slot.innerHTML = `<span class="text-xs font-bold ${isTarget ? 'text-baemin' : 'text-gray-400'}">${idx + 1}번 칸</span>`;
                 }
 
                 slot.onclick = () => {
@@ -824,14 +1087,15 @@
             currentCategory = cat;
             document.querySelectorAll('.cat-tab').forEach(btn => {
                 if (btn.dataset.cat === cat) {
-                    btn.className = "cat-tab flex-1 py-1.5 rounded-xl text-[11px] font-extrabold transition bg-rockRed text-white shadow-2xs";
+                    btn.className = "cat-tab flex-1 py-2 rounded-xl text-xs font-bold transition bg-rockRed text-white shadow-2xs";
                 } else {
-                    btn.className = "cat-tab flex-1 py-1.5 rounded-xl text-[11px] font-bold transition bg-white text-gray-600 border border-gray-200";
+                    btn.className = "cat-tab flex-1 py-2 rounded-xl text-xs font-bold transition bg-white text-gray-700 border border-gray-200";
                 }
             });
             renderFoodList();
         }
 
+        // 반찬 카드 렌더링 (불 이모지 없이 깔끔한 칼로리 표시)
         function renderFoodList() {
             const container = document.getElementById('food-list-container');
             container.innerHTML = '';
@@ -844,13 +1108,14 @@
                 const isDiscount = (item.category === 'special' && item.discount);
 
                 card.innerHTML = `
-                    ${isDiscount ? `<span class="absolute top-0 right-1 bg-rockRed text-white text-[9px] font-black px-1.5 py-0.2 rounded-full z-10 shadow-2xs">${item.discount}</span>` : ''}
-                    <div class="w-10 h-10 rounded-full overflow-hidden shadow-xs border border-gray-200 bg-amber-50 flex items-center justify-center">
-                        <img src="${item.img}" alt="${item.name}" loading="lazy" class="w-full h-full object-cover" onerror="this.outerHTML='<span class=\\'text-[11px] font-black text-gray-700\\'>${item.name.slice(0,2)}</span>'">
+                    ${isDiscount ? `<span class="absolute top-0 right-0.5 bg-rockRed text-white text-[9px] font-bold px-1.5 py-0.2 rounded-full z-10 shadow-2xs">${item.discount}</span>` : ''}
+                    <div class="w-11 h-11 rounded-full overflow-hidden shadow-xs border border-gray-200 bg-amber-50 flex items-center justify-center">
+                        <img src="${item.img}" alt="${item.name}" loading="lazy" class="w-full h-full object-cover" onerror="this.outerHTML='<span class=\\'text-xs font-bold text-gray-700\\'>${item.name.slice(0,2)}</span>'">
                     </div>
-                    <div class="text-[11px] font-extrabold text-gray-800 mt-1 leading-tight break-keep line-clamp-1">${item.name}</div>
-                    ${isDiscount ? `<div class="text-[9px] text-gray-400 line-through leading-none">${item.oriPrice.toLocaleString()}원</div>` : ''}
-                    <div class="text-[11px] font-black ${isDiscount ? 'text-rockRed' : 'text-gray-900'} leading-tight mt-0.5">${item.price.toLocaleString()}원</div>
+                    <div class="text-xs font-bold text-gray-900 mt-1 leading-tight break-keep line-clamp-1">${item.name}</div>
+                    ${isDiscount ? `<div class="text-[10px] text-gray-400 line-through leading-none mt-0.5">${item.oriPrice.toLocaleString()}원</div>` : ''}
+                    <div class="text-xs font-bold ${isDiscount ? 'text-rockRed' : 'text-gray-900'} leading-tight mt-0.5">${item.price.toLocaleString()}원</div>
+                    <div class="text-[10px] text-gray-400 font-bold leading-none mt-0.5">${item.kcal}kcal</div>
                 `;
 
                 card.onclick = () => addFoodToSlot(item.id);
@@ -864,7 +1129,7 @@
 
             let target = bentoSlots[activeSlotIndex] === null ? activeSlotIndex : bentoSlots.findIndex(s => s === null);
             if (target === -1) {
-                showToast(`${currentNgu}구 용기가 모두 찼습니다! 칸을 터치해 비우거나 5구로 변경하세요.`);
+                showToast(`${currentNgu}구 용기가 모두 찼어요! 칸을 터치해 비우거나 6구·8구로 바꿔보세요.`);
                 return;
             }
 
@@ -885,7 +1150,7 @@
             const kcal = filled.reduce((s, i) => s + i.kcal, 0);
 
             document.getElementById('total-price-text').innerText = total.toLocaleString();
-            document.getElementById('filled-count-text').innerText = `${filled.length}/${currentNgu}칸 담김`;
+            document.getElementById('filled-count-text').innerText = `${filled.length}/${currentNgu}칸`;
             document.getElementById('stat-kcal').innerText = kcal.toLocaleString();
 
             const saved = oriTotal - total;
@@ -899,7 +1164,9 @@
             updatePartyBadgeCount();
         }
 
-        // 6. 파티장(방장) 관리창 & 파티원 실시간 Firebase 수렴 시스템
+        // =========================================================================
+        // 파티원 관리 및 수렴 시스템
+        // =========================================================================
         async function savePartyMemberToFirebase(memberObj) {
             const key = memberObj.id || ('m_' + Date.now());
             memberObj.id = key;
@@ -961,11 +1228,11 @@
             let html = `
                 <div class="bg-white p-2.5 rounded-xl border-2 border-baemin flex justify-between items-center">
                     <div>
-                        <div class="font-black text-gray-900 text-xs">👑 나 (파티장)</div>
-                        <div class="text-[11px] text-gray-500 mt-0.5">${myItems.length > 0 ? myItems.map(i => i.name).join(', ') : '아직 반찬을 담지 않음'}</div>
+                        <div class="font-bold text-gray-900 text-xs">👑 나 (방장)</div>
+                        <div class="text-xs text-gray-500 mt-0.5">${myItems.length > 0 ? myItems.map(i => i.name).join(', ') : '아직 반찬을 담지 않음'}</div>
                     </div>
                     <div class="text-right">
-                        <span class="text-xs font-black text-baemin">${myPrice.toLocaleString()}원</span>
+                        <span class="text-xs font-bold text-baemin">${myPrice.toLocaleString()}원</span>
                     </div>
                 </div>
             `;
@@ -978,18 +1245,18 @@
                     <div class="bg-white p-2.5 rounded-xl border border-gray-200 flex justify-between items-center">
                         <div class="min-w-0 pr-2">
                             <div class="flex items-center gap-1.5">
-                                <span class="font-extrabold text-gray-800 text-xs">🙋‍♂️ ${m.name}</span>
-                                <span class="text-[9px] font-bold px-1.5 py-0.2 rounded ${m.items && m.items.length > 0 ? 'bg-teal-50 text-baemin' : 'bg-amber-50 text-amber-600'}">
-                                    ${m.items && m.items.length > 0 ? '주문서 도착' : '메뉴 고르는 중...'}
+                                <span class="font-bold text-gray-800 text-xs">🙋‍♂️ ${m.name}</span>
+                                <span class="text-[10px] font-bold px-1.5 py-0.2 rounded ${m.items && m.items.length > 0 ? 'bg-teal-50 text-baemin' : 'bg-amber-50 text-amber-600'}">
+                                    ${m.items && m.items.length > 0 ? '주문서 도착' : '고르는 중'}
                                 </span>
                             </div>
-                            <div class="text-[11px] text-gray-500 truncate mt-0.5">
-                                ${m.items && m.items.length > 0 ? m.items.join(', ') : '파티에 입장하여 반찬을 담고 있습니다'}
+                            <div class="text-xs text-gray-500 truncate mt-0.5">
+                                ${m.items && m.items.length > 0 ? m.items.join(', ') : '반찬을 고르고 있습니다'}
                             </div>
                         </div>
                         <div class="flex items-center gap-2 flex-shrink-0">
-                            <span class="text-xs font-black text-rockRed">${(m.price || 0).toLocaleString()}원</span>
-                            <button onclick="removePartyMember('${m.id || idx}')" class="text-gray-300 hover:text-rockRed"><i class="fa-solid fa-trash-can text-[10px]"></i></button>
+                            <span class="text-xs font-bold text-rockRed">${(m.price || 0).toLocaleString()}원</span>
+                            <button onclick="removePartyMember('${m.id || idx}')" class="text-gray-300 hover:text-rockRed"><i class="fa-solid fa-trash-can text-xs"></i></button>
                         </div>
                     </div>
                 `;
@@ -1027,15 +1294,14 @@
                 items,
                 price
             });
-            showToast(`🍱 ${randomName}님의 주문서(${price.toLocaleString()}원)가 Firebase에 수렴되었습니다!`);
+            showToast(`🍱 ${randomName}님의 주문서(${price.toLocaleString()}원)가 추가되었습니다!`);
         }
 
-        function handleProceedFromPartyManager() {
+        async function handleProceedFromPartyManager() {
             closePartyManagerModal();
-            openReceiptAndLeadModal();
+            await submitOrderFirstAndShowReceipt(false);
         }
 
-        // 7. 파티원(팀원) 모드 동작 로직 (참여 즉시 Firebase DB의 방장 파티방에 인원 추가)
         async function handleConfirmMemberJoin() {
             const nameInput = document.getElementById('member-name-input').value.trim();
             memberNickname = nameInput || ('팀원' + Math.floor(10 + Math.random() * 89));
@@ -1046,17 +1312,18 @@
             document.getElementById('member-nickname-display').innerText = memberNickname;
             document.getElementById('main-action-btn').innerText = '📤 방장에게 주문서 보내기';
 
-            // Firebase의 해당 파티방(partyId)에 내 참여 상태 실시간 등록!
             await savePartyMemberToFirebase({
                 id: memberKey,
                 name: memberNickname,
                 items: [],
                 price: 0
             });
-            showToast(`🎉 ${memberNickname}님, 파티에 참여되었습니다! 반찬을 골라주세요.`);
+            showToast(`🎉 ${memberNickname}님, 반찬을 골라주세요!`);
         }
 
-        // 8. 하단 메인 버튼 클릭 (방장: 통합 영수증 vs 팀원: 방장 Firebase로 주문서 실시간 전송)
+        // =========================================================================
+        // ★ 핵심 개선: [주문서 바로 보내기] 클릭 시 선(先) 주문서 Firebase 저장 -> 후(後) 이메일 수집
+        // =========================================================================
         async function handlePrimaryOrderAction() {
             const filled = bentoSlots.filter(Boolean);
             if (filled.length === 0) {
@@ -1067,19 +1334,16 @@
             if (isMemberMode) {
                 const items = filled.map(i => i.name);
                 const price = filled.reduce((s, i) => s + i.price, 0);
-                const memberPayload = { id: memberKey, name: memberNickname, items, price };
-
-                // Firebase DB를 통해 방장의 파티원 관리창으로 내 주문서와 금액 즉시 전송!
-                await savePartyMemberToFirebase(memberPayload);
-                openReceiptAndLeadModal(true);
+                await savePartyMemberToFirebase({ id: memberKey, name: memberNickname, items, price });
+                await submitOrderFirstAndShowReceipt(true);
             } else {
-                trackEvent('checkoutClicks');
-                openReceiptAndLeadModal(false);
+                await submitOrderFirstAndShowReceipt(false);
             }
         }
 
-        // 9. 영수증 표(열: 메뉴 / 행: 가격) & 심플 이메일 모달
-        function openReceiptAndLeadModal(isFromMember = false) {
+        async function submitOrderFirstAndShowReceipt(isFromMember = false) {
+            trackEvent('checkoutClicks');
+
             const myFilled = bentoSlots.filter(Boolean);
             const tbody = document.getElementById('receipt-table-body');
             tbody.innerHTML = '';
@@ -1090,38 +1354,65 @@
                 grandTotal += item.price;
                 tbody.innerHTML += `
                     <tr>
-                        <td class="py-1.5 font-bold text-gray-800">${isFromMember ? `[${memberNickname}] ` : '[나] '}${item.name}</td>
-                        <td class="py-1.5 text-right font-extrabold text-gray-900">${item.price.toLocaleString()}원</td>
+                        <td class="py-1.5 font-bold text-gray-800">${isFromMember ? `[${memberNickname}] ` : ''}${item.name}</td>
+                        <td class="py-1.5 text-right font-bold text-gray-900">${item.price.toLocaleString()}원</td>
                     </tr>
                 `;
             });
 
-            if (!isFromMember && partyMembers.length > 0) {
+            if (!isFromMember && diningMode === 'party' && partyMembers.length > 0) {
                 partyMembers.forEach(m => {
                     if (m.items && m.items.length > 0) {
                         grandTotal += (m.price || 0);
                         tbody.innerHTML += `
                             <tr class="bg-teal-50/50">
                                 <td class="py-1.5 font-bold text-teal-900">[${m.name}] ${m.items.join(', ')}</td>
-                                <td class="py-1.5 text-right font-extrabold text-baemin">${(m.price || 0).toLocaleString()}원</td>
+                                <td class="py-1.5 text-right font-bold text-baemin">${(m.price || 0).toLocaleString()}원</td>
                             </tr>
                         `;
                     }
                 });
             }
 
+            // 수령 방식 요약 문자열
+            const receiveSummary = receiveType === 'pickup'
+                ? `🏃 직접 픽업 (0원) · ${pickupDateTime ? pickupDateTime.replace('T', ' ') : '오늘 방문'}`
+                : `🛵 배달 (${deliveryAddress || '주소 입력됨'}) · 배달비 부담`;
+
+            document.getElementById('receipt-receive-info').innerText = receiveSummary;
             document.getElementById('receipt-shop-name').innerText = selectedShop.name;
             document.getElementById('receipt-party-badge').innerText = isFromMember 
-                ? `${memberNickname}님의 주문서` 
-                : `총 ${1 + partyMembers.length}명 합산 영수증`;
+                ? `${memberNickname}님 주문서 전송됨` 
+                : (diningMode === 'party' ? `파티 ${1 + partyMembers.length}명 주문 접수됨` : `1인 ${currentNgu}구 주문 접수됨`);
             document.getElementById('receipt-total-price').innerText = `${grandTotal.toLocaleString()}원`;
 
-            if (isFromMember) {
-                document.getElementById('receipt-modal-title').innerText = '📤 방장 관리창으로 주문서가 전송되었습니다!';
-                showToast('방장의 파티원 관리창에 내 주문서와 금액이 실시간 반영되었습니다!');
-            } else {
-                document.getElementById('receipt-modal-title').innerText = '🧾 최종 주문서 영수증 & 알림 신청';
-            }
+            // ★ 이메일을 입력하기 전에 먼저 주문서 데이터를 Firebase DB (/leads)에 즉시 기록 ★
+            const orderRecord = {
+                email: '(주문서 선접수 - 이메일 미입력)',
+                note: receiveSummary,
+                shop: selectedShop.name,
+                summary: `${ currentNgu }구 (${grandTotal.toLocaleString()}원) - ${myFilled.map(i => i.name).join('/')}`,
+                timestamp: Date.now(),
+                dateStr: new Date().toLocaleString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+            };
+
+            leadsList.unshift(orderRecord);
+            saveState();
+            updateAdminUI();
+
+            try {
+                const res = await fetch(`${FIREBASE_DB_URL}/leads.json`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderRecord)
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    lastSubmittedOrderKey = data.name; // 이후 이메일을 입력하면 이 주문서에 이메일을 업데이트
+                }
+            } catch (e) {}
+
+            showToast("🎉 주문서가 먼저 성공적으로 접수되었습니다!");
 
             document.getElementById('lead-form-view').classList.remove('hidden');
             document.getElementById('lead-success-view').classList.add('hidden');
@@ -1136,7 +1427,7 @@
             modal.classList.remove('flex');
         }
 
-        // ★ 방문자 이메일 제출 -> https://lockrock-default-rtdb.firebaseio.com/leads.json 즉시 저장 ★
+        // 주문 완료 후 이메일 추가 입력 시 -> 방금 저장된 주문서에 이메일 정보 업데이트
         async function handleSubmitEmailLead(e) {
             e.preventDefault();
             const email = document.getElementById('lead-email-input').value.trim();
@@ -1145,44 +1436,46 @@
             if (!email) return;
 
             btn.disabled = true;
-            btn.innerText = "Firebase DB에 저장 중...";
+            btn.innerText = "알림 정보 저장 중...";
 
-            const myFilled = bentoSlots.filter(Boolean);
-            const total = myFilled.reduce((s, i) => s + i.price, 0) + partyMembers.reduce((s, m) => s + (m.price || 0), 0);
-
-            const newLead = {
-                email,
-                note: note || '-',
-                shop: selectedShop.name,
-                summary: `${1 + partyMembers.length}명 (${total.toLocaleString()}원) - ${myFilled.map(i => i.name).join('/')}`,
-                timestamp: Date.now(),
-                dateStr: new Date().toLocaleString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
-            };
-
-            try {
-                await fetch(`${FIREBASE_DB_URL}/leads.json`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newLead)
-                });
-            } catch (err) {
-                console.error("Firebase 이메일 저장 오류:", err);
+            if (leadsList.length > 0) {
+                leadsList[0].email = email;
+                if (note) leadsList[0].note += ` / 의견: ${note}`;
+                saveState();
+                updateAdminUI();
             }
 
-            leadsList.unshift(newLead);
-            saveState();
-            updateAdminUI();
+            try {
+                if (lastSubmittedOrderKey) {
+                    await fetch(`${FIREBASE_DB_URL}/leads/${lastSubmittedOrderKey}.json`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            email,
+                            note: leadsList[0] ? leadsList[0].note : (note || '-')
+                        })
+                    });
+                } else {
+                    await fetch(`${FIREBASE_DB_URL}/leads.json`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(leadsList[0])
+                    });
+                }
+            } catch (err) {}
 
             btn.disabled = false;
-            btn.innerText = "주문서 제출 및 오픈 알림 신청";
+            btn.innerText = "이메일 남기고 알림 신청하기";
             document.getElementById('lead-email-input').value = '';
             document.getElementById('lead-note-input').value = '';
             document.getElementById('lead-form-view').classList.add('hidden');
             document.getElementById('lead-success-view').classList.remove('hidden');
-            showToast("🎉 이메일이 Firebase DB에 영구 저장되었습니다!");
+            showToast("💌 오픈 알림 이메일이 등록되었습니다!");
         }
 
-        // 10. 시크릿 관리자 (1216)
+        // =========================================================================
+        // 관리자 인증창 (비밀번호 1216 노출 텍스트 제거)
+        // =========================================================================
         let logoTapCount = 0;
         let logoTapTimer = null;
         function handleSecretLogoTap() {
@@ -1235,17 +1528,19 @@
             document.getElementById('kpi-adds').innerText = analytics.foodAdds || 0;
             document.getElementById('kpi-shares').innerText = analytics.shareClicks || 0;
             document.getElementById('kpi-checkouts').innerText = analytics.checkoutClicks || 0;
-            document.getElementById('kpi-leads').innerText = leadsList.length;
+            const emailCount = leadsList.filter(l => l.email && !l.email.includes('미입력')).length;
+            document.getElementById('kpi-leads').innerText = emailCount;
 
             const listEl = document.getElementById('admin-leads-list');
             if (leadsList.length === 0) {
-                listEl.innerHTML = `<div class="text-gray-500 text-center py-4">아직 등록된 이메일이 없습니다.</div>`;
+                listEl.innerHTML = `<div class="text-gray-500 text-center py-4">아직 접수된 주문서가 없습니다.</div>`;
             } else {
                 listEl.innerHTML = leadsList.map((item, i) => `
-                    <div class="bg-gray-900 p-2 rounded-lg border border-gray-700 flex justify-between items-center">
+                    <div class="bg-gray-900 p-2.5 rounded-lg border border-gray-700 flex justify-between items-center">
                         <div class="truncate pr-2">
-                            <div class="font-bold text-teal-300">${i + 1}. ${item.email}</div>
-                            <div class="text-[10px] text-gray-400 truncate">${item.summary} · ${item.note}</div>
+                            <div class="font-bold ${item.email && !item.email.includes('미입력') ? 'text-teal-300' : 'text-amber-300'}">${i + 1}. ${item.email}</div>
+                            <div class="text-[11px] text-gray-300 truncate mt-0.5">${item.summary}</div>
+                            <div class="text-[10px] text-gray-400 truncate">${item.note}</div>
                         </div>
                         <span class="text-[10px] text-gray-500 whitespace-nowrap">${item.dateStr || ''}</span>
                     </div>
@@ -1255,18 +1550,18 @@
 
         function exportLeadsToCSV() {
             if (leadsList.length === 0) return showToast('저장할 데이터가 없습니다.');
-            let csv = '\uFEFF번호,이메일,바라는점,매장,주문내역,시간\n';
+            let csv = '\uFEFF번호,이메일,수령정보_및_의견,매장,주문내역,시간\n';
             leadsList.forEach((r, i) => {
                 csv += `${i + 1},"${r.email}","${r.note}","${r.shop}","${r.summary}","${r.dateStr}"\n`;
             });
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = 'lock_and_rock_leads.csv';
+            a.download = 'lock_and_rock_orders_leads.csv';
             a.click();
         }
 
-        // 11. 앱 초기 구동 (Firebase 동기화 + URL 파라미터 감지 + 2초 자동 전환)
+        // 초기 구동
         window.addEventListener('DOMContentLoaded', async () => {
             const params = new URLSearchParams(window.location.search);
             const shopParam = params.get('shop');
@@ -1279,22 +1574,21 @@
             }
 
             handleSelectShopPin(shopParam && SHOPS[shopParam] ? shopParam : 'shop1');
+            setDefaultPickupDateTime();
             renderBentoSlots();
             renderFoodList();
             updateTotalsUI();
 
-            // Firebase 실시간 동기화 및 방문 수 +1
             await syncAllFromFirebase(false);
             trackEvent('visits');
 
-            // 3.5초마다 파티원 상태 자동 감지 (방장 화면에서 팀원 입장/주문서 실시간 수렴)
             setInterval(() => {
-                if (!isMemberMode) syncPartyFromFirebase(false);
+                if (!isMemberMode && diningMode === 'party') syncPartyFromFirebase(false);
             }, 3500);
 
-            // 파티 초대 링크(?role=member)로 접속한 팀원인 경우 즉시 해당 매장 커스텀 창으로 이동
             if (roleParam === 'member') {
                 isMemberMode = true;
+                diningMode = 'party';
                 switchScreen('view-store');
                 document.getElementById('store-header-name').innerText = selectedShop.name.replace(/^[^\s]+\s/, '');
                 document.getElementById('join-modal-shop-title').innerText = `${selectedShop.name} 파티 초대`;
@@ -1304,7 +1598,6 @@
                 return;
             }
 
-            // 일반 접속: 스플래시 화면 로딩 바 2초 후 자동으로 지도 화면 전환
             setTimeout(() => {
                 const bar = document.getElementById('intro-progress-bar');
                 if (bar) bar.style.width = '100%';
@@ -1312,7 +1605,7 @@
 
             setTimeout(() => {
                 switchScreen('view-map');
-            }, 2100);
+            }, 1950);
         });
     </script>
 </body>
