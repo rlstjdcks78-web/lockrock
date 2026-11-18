@@ -109,7 +109,6 @@
                 <div onclick="handleSecretLogoTap()" class="cursor-pointer select-none p-2 flex flex-col items-center">
                     <svg viewBox="0 0 460 250" class="w-[260px] h-auto drop-shadow-xs" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <!-- ====== 1행: L [도시락o] c k & ====== -->
-                        <!-- L -->
                         <path d="M 38 35 V 102 Q 38 112 48 112 H 104" stroke="#080606" stroke-width="19" stroke-linecap="round" stroke-linejoin="round"/>
                         
                         <!-- 1행 4구 도시락 심볼 (o) -->
@@ -130,7 +129,6 @@
                         <text x="400" y="122" font-family="SUIT, sans-serif" font-size="68" font-weight="500" fill="#181212">&amp;</text>
 
                         <!-- ====== 2행: R [도시락o] c k ====== -->
-                        <!-- R -->
                         <path d="M 38 222 V 142 H 136 Q 150 142 150 156 V 170 Q 150 184 136 184 H 38" stroke="#080606" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
                         <path d="M 118 184 L 152 222" stroke="#080606" stroke-width="18" stroke-linecap="round"/>
 
@@ -167,7 +165,6 @@
              [화면 2] 지도 탐색 화면 (수월한 매장 비교 & 상황별 빠른 필터)
              ===================================================== -->
         <div id="view-map" class="app-view bg-white z-20">
-            <!-- 상단 헤더 & 상황별 빠른 필터 칩 -->
             <div class="bg-white px-5 pt-4 pb-3 shadow-xs z-10 border-b border-gray-100">
                 <div class="flex items-center justify-between">
                     <div onclick="handleSecretLogoTap()" class="flex items-center gap-2 cursor-pointer">
@@ -177,7 +174,7 @@
                     <button onclick="openPinModal()" class="text-xs font-bold text-gray-400 bg-gray-100 px-2.5 py-1 rounded-lg">관리자</button>
                 </div>
 
-                <!-- 소비자가 고민 없이 고르는 상황별 빠른 추천 탭 -->
+                <!-- 상황별 빠른 추천 탭 -->
                 <div class="flex gap-1.5 mt-2.5 overflow-x-auto no-scrollbar">
                     <button onclick="handleQuickFilter('all')" id="filter-all" class="filter-chip whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-bold bg-gray-900 text-white transition">
                         전체 매장 (3)
@@ -201,7 +198,6 @@
                 <div class="road-v left-[28%]"></div>
                 <div class="road-v left-[72%]"></div>
 
-                <!-- 정중앙 안내 문구 -->
                 <div class="absolute top-3 left-0 right-0 flex justify-center z-20 px-4 pointer-events-none">
                     <div class="bg-gray-900/90 backdrop-blur text-white text-sm font-bold px-4 py-2 rounded-full shadow-lg text-center">
                         👇 매장을 터치하면 오늘 반찬을 볼 수 있어요
@@ -239,7 +235,7 @@
                 </button>
             </div>
 
-            <!-- 하단 매장 요약 시트 (헛걸음 방지를 위한 픽업/최소주문 정보 사전 명시) -->
+            <!-- 하단 매장 요약 시트 -->
             <div class="bg-white rounded-t-3xl p-5 shadow-[0_-8px_25px_rgba(0,0,0,0.08)] z-20">
                 <div class="flex items-center justify-between">
                     <span id="sheet-badge" class="bg-red-50 text-rockRed text-xs font-bold px-2.5 py-1 rounded-md">수제 메인요리 전문</span>
@@ -281,7 +277,6 @@
                 </div>
 
                 <div class="space-y-4 my-4">
-                    <!-- 1. 누구와 드시나요? (혼자 먹기 선택 시 파티 버튼 완전 숨김) -->
                     <div>
                         <label class="block text-sm font-bold text-gray-800 mb-2">1. 누구와 함께 드시나요?</label>
                         <div class="grid grid-cols-2 gap-2">
@@ -294,7 +289,6 @@
                         </div>
                     </div>
 
-                    <!-- 2. 어떻게 받으시나요? (픽업 0원 vs 배달비 부담) -->
                     <div>
                         <label class="block text-sm font-bold text-gray-800 mb-2">2. 수령 방법을 골라주세요</label>
                         <div class="grid grid-cols-2 gap-2">
@@ -307,13 +301,13 @@
                         </div>
                     </div>
 
-                    <!-- 3-A. 직접 픽업 선택 시: 달력 위젯 노출 -->
+                    <!-- 직접 픽업 선택 시: 달력 위젯 노출 -->
                     <div id="pickup-date-box" class="bg-gray-50 p-3.5 rounded-2xl border border-gray-200">
                         <label class="block text-sm font-bold text-gray-800 mb-1.5">📅 언제 찾으러 오시나요?</label>
                         <input type="datetime-local" id="pickup-datetime-input" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 bg-white text-sm font-bold text-gray-900 outline-none focus:border-baemin">
                     </div>
 
-                    <!-- 3-B. 배달 선택 시: 배달 받을 장소 입력칸 노출 -->
+                    <!-- 배달 선택 시: 배달 받을 장소 입력칸 노출 -->
                     <div id="delivery-address-box" class="hidden bg-gray-50 p-3.5 rounded-2xl border border-gray-200">
                         <div class="flex justify-between items-center mb-1.5">
                             <label class="text-sm font-bold text-gray-800">📍 배달 받을 장소</label>
@@ -331,13 +325,13 @@
 
 
         <!-- =====================================================
-             [화면 3] 매장 커스텀 창 (4·6·8구 대칭 용기 + 현실화 가격 + 불 이모지 제거)
+             [화면 3] 매장 커스텀 창 (4·6·8구 대칭 용기 + 현실화 가격)
              ===================================================== -->
         <div id="view-store" class="app-view bg-[#f4f7f8] z-10 overflow-hidden">
             
             <!-- 파티원 초대 모드 배너 -->
             <div id="member-mode-banner" class="hidden bg-amber-500 text-white px-4 py-1.5 text-xs font-bold flex justify-between items-center">
-                <span>🙋‍♂️ 파티원 모드: 반찬을 담아 방장에게 보내세요!</span>
+                <span>🙋‍♂️ 파티원 모드: 내 반찬과 부담 금액 영수증을 방장에게 보내세요!</span>
                 <span id="member-nickname-display" class="bg-black/20 px-2 py-0.5 rounded">참여자</span>
             </div>
 
@@ -353,7 +347,7 @@
                     </div>
                 </div>
 
-                <!-- 파티원 관리 버튼 ('혼자 먹어요' 선택 시 자동으로 hidden 처리됨) -->
+                <!-- 파티원 관리 버튼 ('혼자 먹어요' 선택 시 hidden) -->
                 <button id="party-manager-top-btn" onclick="openPartyManagerModal()" class="hidden bg-gray-900 hover:bg-black text-white px-3 py-1.5 rounded-full text-xs font-bold items-center gap-1.5 shadow-xs active:scale-95">
                     <span>👑 파티원 관리</span>
                     <span id="party-count-badge" class="bg-rockRed text-white text-[11px] font-bold px-1.5 py-0.2 rounded-full">1명</span>
@@ -388,7 +382,7 @@
                 <div id="bento-container" class="w-full h-[168px] bg-bentoWood rounded-2xl p-2.5 shadow-inner border-2 border-[#d5c4a1] bento-grid-4"></div>
             </div>
 
-            <!-- 하단: 반찬 선택 영역 (1칸 소분 기준 현실적인 가격 & 칼로리 표기) -->
+            <!-- 하단: 반찬 선택 영역 -->
             <div class="flex-1 bg-white flex flex-col overflow-hidden">
                 <div class="flex gap-1.5 px-4 py-2.5 border-b border-gray-100 bg-gray-50/70">
                     <button onclick="handleSelectCategory('special')" data-cat="special" class="cat-tab flex-1 py-2 rounded-xl text-xs font-bold transition bg-rockRed text-white shadow-2xs">
@@ -405,11 +399,11 @@
                 <div id="food-list-container" class="flex-1 overflow-y-auto px-3.5 pt-3 pb-24 grid grid-cols-4 gap-x-2 gap-y-3.5 content-start"></div>
             </div>
 
-            <!-- 최하단 결제 바 (이메일 허들 없이 즉시 주문서 전송) -->
+            <!-- 최하단 결제 바 -->
             <div class="absolute bottom-0 inset-x-0 bg-baemin text-white px-4 py-3 flex justify-between items-center z-30 shadow-[0_-4px_15px_rgba(42,193,188,0.3)]">
                 <div>
                     <div class="text-lg font-bold leading-tight">
-                        합계 <span id="total-price-text">0</span>원
+                        내 부담액 <span id="total-price-text">0</span>원
                     </div>
                     <div class="text-xs text-teal-50 font-bold mt-0.5">
                         <span id="filled-count-text">0/4칸</span> · 총 <span id="stat-kcal">0</span>kcal
@@ -429,9 +423,10 @@
             <div class="bg-white w-full max-w-[350px] rounded-3xl p-5 text-center shadow-2xl animate-pop">
                 <span class="bg-amber-100 text-amber-700 text-xs font-bold px-3 py-1 rounded-full">👑 함께주문 파티 초대장</span>
                 <h3 id="join-modal-shop-title" class="text-lg font-bold text-gray-900 mt-2">전주 반찬명가 파티</h3>
-                <p class="text-sm text-gray-600 mt-1">이름을 입력하고 반찬을 담으면 방장에게 내 주문서가 실시간으로 전달됩니다.</p>
+                <p id="join-modal-recv-info" class="text-xs font-bold text-baemin bg-teal-50 py-1.5 px-3 rounded-lg mt-2">🏃 직접 픽업 (0원)</p>
+                <p class="text-sm text-gray-600 mt-2">이름을 입력하고 반찬을 담으면, 내 주문 영수증과 부담할 금액이 방장에게 전송됩니다.</p>
                 <input type="text" id="member-name-input" placeholder="내 이름 입력 (예: 김동기)" 
-                    class="w-full mt-4 px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm font-bold text-center outline-none focus:border-baemin">
+                    class="w-full mt-3.5 px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm font-bold text-center outline-none focus:border-baemin">
                 <button onclick="handleConfirmMemberJoin()" class="w-full mt-3 bg-baemin text-white font-bold py-3 rounded-xl text-sm shadow-md">
                     파티 참여하고 반찬 담기
                 </button>
@@ -440,50 +435,133 @@
 
 
         <!-- =====================================================
-             [모달 2] 파티장(방장)의 파티원 관리창
+             [모달: 팀원 전용] 내 영수증 & 본인 부담 비용 방장에게 전송하기 (방안 B)
+             ===================================================== -->
+        <div id="modal-member-receipt-send" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs hidden items-center justify-center p-4">
+            <div class="bg-white w-full max-w-[380px] max-h-[90dvh] rounded-3xl overflow-hidden shadow-2xl flex flex-col animate-pop">
+                <div class="bg-gray-900 text-white px-5 py-3.5 flex justify-between items-center">
+                    <div>
+                        <span class="text-xs font-bold text-amber-400">파티원 개별 정산서</span>
+                        <h3 class="text-base font-bold">🧾 방장에게 보낼 내 영수증</h3>
+                    </div>
+                    <button onclick="closeMemberReceiptModal()" class="w-7 h-7 rounded-full bg-gray-800 text-gray-300 flex items-center justify-center">
+                        <i class="fa-solid fa-xmark text-xs"></i>
+                    </button>
+                </div>
+
+                <div class="p-4 overflow-y-auto no-scrollbar space-y-3.5">
+                    <!-- 1. 팀원 본인의 반찬 상세 영수증 표 -->
+                    <div class="bg-gray-50 border border-gray-200 rounded-2xl p-3.5">
+                        <div class="flex justify-between items-center border-b border-gray-200 pb-2 mb-2">
+                            <span id="member-receipt-name-badge" class="text-sm font-bold text-gray-900">🙋‍♂️ 참여자님의 도시락</span>
+                            <span id="member-receipt-ngu-badge" class="text-xs font-bold text-baemin bg-teal-50 px-2 py-0.5 rounded">4구 선택</span>
+                        </div>
+
+                        <div class="max-h-36 overflow-y-auto no-scrollbar">
+                            <table class="w-full text-sm border-collapse">
+                                <thead>
+                                    <tr class="border-b border-gray-200 text-xs text-gray-400">
+                                        <th class="text-left font-bold py-1">선택한 반찬</th>
+                                        <th class="text-right font-bold py-1">단가</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="member-receipt-tbody" class="divide-y divide-gray-100"></tbody>
+                            </table>
+                        </div>
+
+                        <div class="mt-2.5 pt-2.5 border-t-2 border-gray-800 flex justify-between items-center">
+                            <span class="text-sm font-bold text-gray-900">내가 감당할 반찬 금액</span>
+                            <span id="member-receipt-total-price" class="text-lg font-bold text-rockRed">0원</span>
+                        </div>
+
+                        <!-- 방안 B 적용: 배달 파티인 경우 배달비 1/N 별도 정산 예정 고지 -->
+                        <div id="member-delivery-notice" class="hidden mt-2 bg-amber-50 border border-amber-200 text-amber-800 text-xs font-bold px-2.5 py-2 rounded-xl">
+                            🛵 배달 파티입니다! 반찬값 선전송 후 배달비 1/N은 방장과 별도 정산 예정입니다.
+                        </div>
+                    </div>
+
+                    <!-- 2. 방장 정산 계좌 안내 (방장이 계좌를 입력해둔 경우 자동 표시) -->
+                    <div id="member-host-account-box" class="hidden bg-teal-50/70 border border-baemin/30 rounded-2xl p-3">
+                        <div class="text-xs font-bold text-gray-600 mb-1">💳 방장 정산 계좌 (터치해서 복사)</div>
+                        <div class="flex items-center justify-between bg-white px-3 py-2 rounded-xl border border-gray-200">
+                            <span id="member-host-account-text" class="text-xs font-bold text-gray-900 truncate pr-2">-</span>
+                            <button type="button" onclick="copyHostAccountToClipboard()" class="bg-baemin text-white text-xs font-bold px-2.5 py-1 rounded-lg whitespace-nowrap">
+                                계좌 복사
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 3. 송금 상태 선택 후 방장에게 최종 전송 -->
+                    <div class="space-y-2">
+                        <button type="button" onclick="submitMemberReceiptToHost('paid')" class="w-full bg-baemin hover:bg-baeminDark text-white font-bold py-3.5 rounded-xl text-sm shadow-md transition active:scale-95 flex items-center justify-center gap-1.5">
+                            <span>💸 송금 완료 표시하고 영수증 보내기</span>
+                        </button>
+                        <button type="button" onclick="submitMemberReceiptToHost('pending')" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-3 rounded-xl text-xs transition active:scale-95">
+                            🧾 주문 영수증 & 부담금액 먼저 보내기 (나중에 송금)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- =====================================================
+             [모달 2] 파티장(방장)의 파티원 관리창 (계좌 등록 + 팀원 영수증 상세 + 송금확인 체크)
              ===================================================== -->
         <div id="modal-party-manager" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs hidden items-center justify-center p-3">
-            <div class="bg-white w-full max-w-[400px] max-h-[88dvh] rounded-3xl overflow-hidden shadow-2xl flex flex-col animate-pop">
+            <div class="bg-white w-full max-w-[405px] max-h-[90dvh] rounded-3xl overflow-hidden shadow-2xl flex flex-col animate-pop">
                 <div class="bg-gray-900 text-white px-5 py-4 flex justify-between items-center">
                     <div>
                         <div class="flex items-center gap-1.5">
                             <span class="bg-amber-400 text-gray-900 text-xs font-bold px-2 py-0.5 rounded">방장 전용</span>
-                            <h3 class="text-base font-bold">파티원 주문 수렴 관리창</h3>
+                            <h3 class="text-base font-bold">파티원 영수증 & 정산 관리창</h3>
                         </div>
-                        <p class="text-xs text-emerald-400 mt-0.5">● 실시간 동기화 중</p>
+                        <p class="text-xs text-emerald-400 mt-0.5">● 팀원 영수증·부담액 실시간 수렴 중</p>
                     </div>
                     <button onclick="closePartyManagerModal()" class="w-7 h-7 rounded-full bg-gray-800 text-gray-300 flex items-center justify-center">
                         <i class="fa-solid fa-xmark text-sm"></i>
                     </button>
                 </div>
 
-                <div class="p-4 overflow-y-auto space-y-3.5 flex-1 text-sm no-scrollbar">
-                    <div class="bg-teal-50/70 border border-baemin/30 rounded-2xl p-3">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="font-bold text-gray-800">① 단톡방에 초대 링크 공유</span>
+                <div class="p-4 overflow-y-auto space-y-3 flex-1 text-sm no-scrollbar">
+                    <!-- ① 방장 정산 계좌 입력 & 초대 링크 공유 -->
+                    <div class="bg-teal-50/70 border border-baemin/30 rounded-2xl p-3 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-gray-800 text-xs">① 정산 받을 내 계좌 (팀원 영수증에 표시)</span>
                             <span id="party-code-badge" class="text-xs font-bold text-baemin">방코드: LR000</span>
+                        </div>
+                        <div class="flex gap-1.5">
+                            <input type="text" id="host-account-input" placeholder="예: 카카오뱅크 3333-00-0000000 홍길동" 
+                                class="flex-1 px-3 py-2 rounded-xl border border-gray-300 bg-white text-xs font-bold text-gray-900 outline-none focus:border-baemin">
+                            <button type="button" onclick="saveHostAccountInfo()" class="bg-gray-900 text-white font-bold px-3 py-2 rounded-xl text-xs whitespace-nowrap">
+                                저장
+                            </button>
                         </div>
                         <button onclick="handleCopyPartyInviteLink()" class="w-full bg-baemin hover:bg-baeminDark text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-xs">
                             <i class="fa-solid fa-link"></i>
-                            <span>파티 초대 링크 복사하기</span>
+                            <span>단톡방에 파티 초대 링크 복사하기</span>
                         </button>
                     </div>
 
+                    <!-- ② 참여 파티원 영수증 & 부담액 현황 (카드 터치 시 상세 메뉴 펼침 / 뱃지 터치 시 정산완료 토글) -->
                     <div class="bg-gray-50 border border-gray-200 rounded-2xl p-3">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="font-bold text-gray-900">② 참여 파티원 현황 (<span id="mgr-member-count" class="text-rockRed">1</span>명)</span>
+                        <div class="flex justify-between items-center mb-1.5">
+                            <span class="font-bold text-gray-900 text-xs">② 팀원별 영수증 & 부담액 (<span id="mgr-member-count" class="text-rockRed">1</span>명)</span>
                             <div class="flex gap-1">
-                                <button onclick="syncPartyFromFirebase(true)" class="bg-gray-200 text-gray-700 text-xs font-bold px-2 py-1 rounded-lg">🔄 새로고침</button>
-                                <button onclick="handleSimulateMemberOrder()" class="bg-gray-900 text-white text-xs font-bold px-2 py-1 rounded-lg">+ 테스트 추가</button>
+                                <button onclick="syncPartyFromFirebase(true)" class="bg-gray-200 text-gray-700 text-[11px] font-bold px-2 py-1 rounded-lg">🔄 새로고침</button>
+                                <button onclick="handleSimulateMemberOrder()" class="bg-gray-900 text-white text-[11px] font-bold px-2 py-1 rounded-lg">+ 테스트 팀원</button>
                             </div>
                         </div>
-                        <div id="party-members-list" class="space-y-2 max-h-48 overflow-y-auto pr-0.5"></div>
+                        <p class="text-[11px] text-gray-500 mb-2">💡 팀원 카드를 누르면 상세 영수증 표를 볼 수 있고, 송금 뱃지를 누르면 정산 완료로 체크됩니다.</p>
+                        <div id="party-members-list" class="space-y-2 max-h-56 overflow-y-auto pr-0.5"></div>
                     </div>
 
+                    <!-- ③ 파티 전체 합계 및 정산 요약 -->
                     <div class="bg-gray-900 text-white rounded-2xl p-3.5 flex justify-between items-center">
                         <div>
-                            <div class="text-xs text-gray-400 font-bold">파티 전체 합계</div>
+                            <div class="text-xs text-gray-400 font-bold">파티 전체 반찬 합계</div>
                             <div id="party-grand-total" class="text-lg font-bold text-amber-400">0원</div>
+                            <div id="party-settled-summary" class="text-[11px] text-emerald-400 font-bold mt-0.5">팀원 정산 현황: 0원 수령 완료</div>
                         </div>
                         <button onclick="handleProceedFromPartyManager()" class="bg-rockRed hover:bg-red-600 text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow-md">
                             통합 주문서 접수하기
@@ -500,7 +578,6 @@
         <div id="modal-lead" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs hidden items-center justify-center p-4">
             <div class="bg-white w-full max-w-[380px] max-h-[90dvh] rounded-3xl overflow-hidden shadow-2xl flex flex-col animate-pop">
                 
-                <!-- 상단: 주문서가 이미 성공적으로 전송되었음을 명확히 안내 -->
                 <div class="bg-gray-900 text-white px-5 py-3.5 flex justify-between items-center">
                     <div class="flex items-center gap-2">
                         <span class="w-5 h-5 rounded-full bg-baemin text-gray-900 flex items-center justify-center text-xs font-bold">✓</span>
@@ -512,19 +589,17 @@
                 </div>
 
                 <div class="p-4 overflow-y-auto no-scrollbar space-y-3.5">
-                    <!-- 1단계: 이미 서버에 기록된 주문 영수증 확인 (열: 메뉴 / 행: 가격) -->
                     <div class="bg-gray-50 border border-gray-200 rounded-2xl p-3.5">
                         <div class="flex justify-between items-center border-b border-gray-200 pb-2 mb-2">
                             <span id="receipt-shop-name" class="text-sm font-bold text-gray-900">전주 반찬명가</span>
                             <span id="receipt-party-badge" class="text-xs font-bold text-baemin bg-teal-50 px-2 py-0.5 rounded">주문 접수 완료</span>
                         </div>
 
-                        <!-- 수령 방식 & 픽업일시/배달장소 표시 -->
                         <div id="receipt-receive-info" class="text-xs font-bold text-gray-600 bg-white px-2.5 py-1.5 rounded-lg border border-gray-200 mb-2">
                             🏃 직접 픽업 (0원)
                         </div>
 
-                        <div class="max-h-32 overflow-y-auto no-scrollbar">
+                        <div class="max-h-36 overflow-y-auto no-scrollbar">
                             <table class="w-full text-sm border-collapse">
                                 <thead>
                                     <tr class="border-b border-gray-200 text-xs text-gray-400">
@@ -542,7 +617,7 @@
                         </div>
                     </div>
 
-                    <!-- 2단계: 주문이 끝난 뒤 부담 없이 남기는 이메일 (선택 단계) -->
+                    <!-- 주문이 끝난 뒤 부담 없이 남기는 이메일 (선택 단계) -->
                     <div id="lead-form-view" class="bg-teal-50/60 border border-baemin/30 rounded-2xl p-3.5">
                         <div class="text-sm font-bold text-gray-900">💌 정식 오픈 알림도 받아보실래요?</div>
                         <p class="text-xs text-gray-600 mt-0.5 mb-2.5">위 주문 내역은 이미 저장되었습니다! 이메일을 추가로 남겨주시면 오픈 소식을 가장 먼저 보내드려요.</p>
@@ -578,7 +653,7 @@
 
 
         <!-- =====================================================
-             [모달 4] 관리자 인증창 (비밀번호 숫자 노출 제거) & 대시보드
+             [모달 4] 관리자 인증창 (비밀번호 노출 제거) & 대시보드
              ===================================================== -->
         <div id="modal-pin" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs hidden items-center justify-center p-4">
             <div class="bg-gray-900 text-white w-full max-w-[300px] rounded-3xl p-5 border border-gray-700 text-center animate-pop">
@@ -652,13 +727,13 @@
     </div>
 
     <!-- =====================================================
-         자바스크립트: 4/6/8구 대칭, 선 주문서 저장, 현실적 반찬가 반영
+         자바스크립트: 팀원별 영수증·부담액 전송(방안 B) & 실시간 정산 관리
          ===================================================== -->
     <script>
         const ADMIN_PIN = "1216";
         const FIREBASE_DB_URL = "https://lockrock-default-rtdb.firebaseio.com";
 
-        // 1. 3개 반찬가게 데이터 (텍스트는 간결하고 핵심만 직관적으로)
+        // 1. 3개 반찬가게 데이터
         const SHOPS = {
             shop1: {
                 id: 'shop1',
@@ -689,9 +764,9 @@
             }
         };
 
-        // 2. 시중 반찬가게 100g 단가 기준 -> 도시락 1칸 소분(40~50g)에 맞춘 현실적인 가격 책정 (총 30종)
+        // 2. 현실적인 1칸(40~50g) 기준 반찬 30종
         const FOOD_ITEMS = [
-            // [🚨 마감특가 10종 - 1칸(45~50g) 기준 할인가 500원 ~ 1,400원]
+            // [🚨 마감특가 10종]
             { id: 's1', name: '한돈제육볶음', category: 'special', oriPrice: 1700, price: 1300, discount: '24%↓', kcal: 115, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Jeyuk-bokkeum.jpg/300px-Jeyuk-bokkeum.jpg' },
             { id: 's2', name: '수제떡갈비', category: 'special', oriPrice: 1900, price: 1400, discount: '26%↓', kcal: 135, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Tteokgalbi.jpg/300px-Tteokgalbi.jpg' },
             { id: 's3', name: '쏘야볶음', category: 'special', oriPrice: 1200, price: 900, discount: '25%↓', kcal: 105, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Sausage_vegetable_stir_fry.jpg/300px-Sausage_vegetable_stir_fry.jpg' },
@@ -703,7 +778,7 @@
             { id: 's9', name: '감자채볶음', category: 'special', oriPrice: 800, price: 600, discount: '25%↓', kcal: 65, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Gamja-bokkeum.jpg/300px-Gamja-bokkeum.jpg' },
             { id: 's10', name: '바삭김치전', category: 'special', oriPrice: 1000, price: 700, discount: '30%↓', kcal: 95, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Kimchijeon.jpg/300px-Kimchijeon.jpg' },
 
-            // [🥩 고기·메인 10종 - 1칸(50g) 기준 현실적 정상가 900원 ~ 1,600원]
+            // [🥩 고기·메인 10종]
             { id: 'm1', name: '언양식소불고기', category: 'meat', oriPrice: null, price: 1600, discount: null, kcal: 130, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Bulgogi_2.jpg/300px-Bulgogi_2.jpg' },
             { id: 'm2', name: '두툼계란말이', category: 'meat', oriPrice: null, price: 1000, discount: null, kcal: 95, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Gyeran-mari.jpg/300px-Gyeran-mari.jpg' },
             { id: 'm3', name: '수비드닭가슴살', category: 'meat', oriPrice: null, price: 1400, discount: null, kcal: 90, img: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=300&q=80' },
@@ -715,7 +790,7 @@
             { id: 'm9', name: '고추장진미채', category: 'meat', oriPrice: null, price: 1200, discount: null, kcal: 85, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Jinmichae-bokkeum.jpg/300px-Jinmichae-bokkeum.jpg' },
             { id: 'm10', name: '견과류멸치볶음', category: 'meat', oriPrice: null, price: 1000, discount: null, kcal: 80, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Myeolchi-bokkeum.jpg/300px-Myeolchi-bokkeum.jpg' },
 
-            // [🥬 야채·나물 10종 - 1칸(40g) 기준 현실적 정상가 600원 ~ 900원]
+            // [🥬 야채·나물 10종]
             { id: 'v1', name: '아삭콩나물무침', category: 'veggie', oriPrice: null, price: 600, discount: null, kcal: 30, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Kongnamul-muchim.jpg/300px-Kongnamul-muchim.jpg' },
             { id: 'v2', name: '새콤달콤무생채', category: 'veggie', oriPrice: null, price: 600, discount: null, kcal: 25, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Musaengchae.jpg/300px-Musaengchae.jpg' },
             { id: 'v3', name: '들깨고사리나물', category: 'veggie', oriPrice: null, price: 800, discount: null, kcal: 45, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Gosari-namul.jpg/300px-Gosari-namul.jpg' },
@@ -730,8 +805,8 @@
 
         // 3. 앱 상태 변수
         let selectedShop = SHOPS.shop1;
-        let diningMode = 'solo';       // 'solo' (혼자) | 'party' (파티)
-        let receiveType = 'pickup';    // 'pickup' (직접픽업 0원) | 'delivery' (배달비 부담)
+        let diningMode = 'solo';       // 'solo' | 'party'
+        let receiveType = 'pickup';    // 'pickup' | 'delivery'
         let pickupDateTime = '';
         let deliveryAddress = '';
 
@@ -739,7 +814,7 @@
         let bentoSlots = [null, null, null, null];
         let activeSlotIndex = 0;
         let currentCategory = 'special';
-        let lastSubmittedOrderKey = null; // 선 주문서 저장 후 이메일 연결용 키
+        let lastSubmittedOrderKey = null;
 
         // 파티장 vs 파티원 상태
         let isMemberMode = false;
@@ -748,6 +823,10 @@
         let memberKey = localStorage.getItem('loro_member_key') || ('m_' + Date.now() + '_' + Math.floor(Math.random() * 1000));
         localStorage.setItem('loro_member_key', memberKey);
         let memberNickname = '파티원';
+
+        // 방장 계좌번호 및 펼쳐진 팀원 영수증 ID 상태
+        let hostAccount = localStorage.getItem('loro_host_account') || '';
+        let expandedMemberId = null;
 
         let partyMembers = JSON.parse(localStorage.getItem('loro_party_members')) || [];
         let analytics = JSON.parse(localStorage.getItem('loro_cvr_stats')) || {
@@ -759,6 +838,7 @@
             localStorage.setItem('loro_party_members', JSON.stringify(partyMembers));
             localStorage.setItem('loro_cvr_stats', JSON.stringify(analytics));
             localStorage.setItem('loro_email_leads', JSON.stringify(leadsList));
+            localStorage.setItem('loro_host_account', hostAccount);
         }
 
         // =========================================================================
@@ -766,9 +846,10 @@
         // =========================================================================
         async function syncAllFromFirebase(showNotice = false) {
             try {
-                const [statsRes, leadsRes, partyRes] = await Promise.all([
+                const [statsRes, leadsRes, partyMetaRes, partyMembersRes] = await Promise.all([
                     fetch(`${FIREBASE_DB_URL}/analytics.json`),
                     fetch(`${FIREBASE_DB_URL}/leads.json`),
+                    fetch(`${FIREBASE_DB_URL}/parties/${partyId}/meta.json`),
                     fetch(`${FIREBASE_DB_URL}/parties/${partyId}/members.json`)
                 ]);
 
@@ -788,8 +869,22 @@
                     }
                 }
 
-                if (partyRes.ok) {
-                    const cloudMembers = await partyRes.json();
+                if (partyMetaRes.ok) {
+                    const meta = await partyMetaRes.json();
+                    if (meta && typeof meta === 'object') {
+                        if (meta.hostAccount) {
+                            hostAccount = meta.hostAccount;
+                            const accInput = document.getElementById('host-account-input');
+                            if (accInput && !accInput.value) accInput.value = hostAccount;
+                        }
+                        if (meta.receiveType) {
+                            receiveType = meta.receiveType;
+                        }
+                    }
+                }
+
+                if (partyMembersRes.ok) {
+                    const cloudMembers = await partyMembersRes.json();
                     if (cloudMembers && typeof cloudMembers === 'object') {
                         partyMembers = Object.values(cloudMembers);
                     }
@@ -807,21 +902,49 @@
 
         async function syncPartyFromFirebase(showNotice = false) {
             try {
-                const res = await fetch(`${FIREBASE_DB_URL}/parties/${partyId}/members.json`);
-                if (res.ok) {
-                    const cloudMembers = await res.json();
+                const [metaRes, membersRes] = await Promise.all([
+                    fetch(`${FIREBASE_DB_URL}/parties/${partyId}/meta.json`),
+                    fetch(`${FIREBASE_DB_URL}/parties/${partyId}/members.json`)
+                ]);
+
+                if (metaRes.ok) {
+                    const meta = await metaRes.json();
+                    if (meta && typeof meta === 'object') {
+                        if (meta.hostAccount) hostAccount = meta.hostAccount;
+                        if (meta.receiveType) receiveType = meta.receiveType;
+                    }
+                }
+
+                if (membersRes.ok) {
+                    const cloudMembers = await membersRes.json();
                     const prevCount = partyMembers.length;
                     partyMembers = (cloudMembers && typeof cloudMembers === 'object') ? Object.values(cloudMembers) : [];
                     saveState();
                     updatePartyBadgeCount();
                     renderPartyManagerList();
-                    if (partyMembers.length > prevCount) {
+                    if (!isMemberMode && partyMembers.length > prevCount) {
                         const newest = partyMembers[partyMembers.length - 1];
-                        showToast(`🙋‍♂️ ${newest.name}님의 주문서가 업데이트되었습니다!`);
+                        showToast(`🙋‍♂️ ${newest.name}님의 영수증과 부담액이 도착했습니다!`);
                     } else if (showNotice) {
                         showToast("파티원 목록을 새로고침했습니다.");
                     }
                 }
+            } catch (e) {}
+        }
+
+        async function syncPartyMetaToFirebase() {
+            try {
+                await fetch(`${FIREBASE_DB_URL}/parties/${partyId}/meta.json`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        shopId: selectedShop.id,
+                        receiveType,
+                        pickupDateTime,
+                        deliveryAddress,
+                        hostAccount
+                    })
+                });
             } catch (e) {}
         }
 
@@ -849,18 +972,16 @@
             el.className = 'bg-gray-900/95 text-white px-4 py-2 rounded-full shadow-lg text-xs font-bold animate-pop';
             el.innerText = msg;
             container.appendChild(el);
-            setTimeout(() => el.remove(), 2300);
+            setTimeout(() => el.remove(), 2400);
         }
 
-        // 화면 전환 (부드러운 애니메이션 자동 적용)
         function switchScreen(viewId) {
             document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
             const nextView = document.getElementById(viewId);
-            void nextView.offsetWidth; // 리플로우 강제로 애니메이션 재실행 보장
+            void nextView.offsetWidth;
             nextView.classList.add('active');
         }
 
-        // 상황별 빠른 추천 필터
         function handleQuickFilter(filterKey) {
             document.querySelectorAll('.filter-chip').forEach(c => {
                 c.className = "filter-chip whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-bold bg-gray-100 text-gray-700 transition";
@@ -906,7 +1027,7 @@
         }
 
         // =========================================================================
-        // Step 2: 주문 설정 모달 (혼자/파티, 직접픽업 달력/배달 장소)
+        // Step 2: 주문 설정 모달
         // =========================================================================
         function setDefaultPickupDateTime() {
             const input = document.getElementById('pickup-datetime-input');
@@ -965,7 +1086,7 @@
             }
         }
 
-        function handleConfirmStep2AndEnter() {
+        async function handleConfirmStep2AndEnter() {
             if (receiveType === 'pickup') {
                 pickupDateTime = document.getElementById('pickup-datetime-input').value;
                 if (!pickupDateTime) {
@@ -984,7 +1105,6 @@
             closeStep2SetupModal();
             trackEvent('storeEnters');
 
-            // 상점 헤더 업데이트
             document.getElementById('store-header-name').innerText = selectedShop.name.replace(/^[^\s]+\s/, '');
             const subLabel = document.getElementById('store-header-sub');
             if (receiveType === 'pickup') {
@@ -994,7 +1114,6 @@
                 subLabel.innerText = `🛵 배달 (${deliveryAddress}) · 배달비 부담`;
             }
 
-            // '혼자 먹어요' 선택 시 파티원 관리 버튼 완전히 숨김 처리
             const partyBtn = document.getElementById('party-manager-top-btn');
             if (diningMode === 'solo') {
                 partyBtn.classList.add('hidden');
@@ -1002,6 +1121,7 @@
             } else {
                 partyBtn.classList.remove('hidden');
                 partyBtn.classList.add('flex');
+                await syncPartyMetaToFirebase();
             }
 
             switchScreen('view-store');
@@ -1012,7 +1132,7 @@
         }
 
         // =========================================================================
-        // 4구 · 6구 · 8구 짝수 대칭 용기 & 30종 반찬 렌더링 (불 이모지 제거)
+        // 4구 · 6구 · 8구 짝수 대칭 용기 & 30종 반찬 렌더링
         // =========================================================================
         function handleChangeNgu(ngu) {
             currentNgu = ngu;
@@ -1095,7 +1215,6 @@
             renderFoodList();
         }
 
-        // 반찬 카드 렌더링 (불 이모지 없이 깔끔한 칼로리 표시)
         function renderFoodList() {
             const container = document.getElementById('food-list-container');
             container.innerHTML = '';
@@ -1165,7 +1284,7 @@
         }
 
         // =========================================================================
-        // 파티원 관리 및 수렴 시스템
+        // ★ 파티원 개별 영수증 & 본인 부담 금액 전송 + 방장 정산 관리 시스템 (방안 B) ★
         // =========================================================================
         async function savePartyMemberToFirebase(memberObj) {
             const key = memberObj.id || ('m_' + Date.now());
@@ -1187,6 +1306,14 @@
             } catch (e) {}
         }
 
+        async function saveHostAccountInfo() {
+            const val = document.getElementById('host-account-input').value.trim();
+            hostAccount = val;
+            saveState();
+            await syncPartyMetaToFirebase();
+            showToast(val ? "💳 정산 계좌가 저장되었습니다! 팀원 영수증에 표시됩니다." : "계좌 정보가 비워졌습니다.");
+        }
+
         function updatePartyBadgeCount() {
             const totalMembers = 1 + partyMembers.length;
             document.getElementById('party-count-badge').innerText = `${totalMembers}명`;
@@ -1196,6 +1323,8 @@
         }
 
         async function openPartyManagerModal() {
+            const accInput = document.getElementById('host-account-input');
+            if (accInput) accInput.value = hostAccount;
             renderPartyManagerList();
             const m = document.getElementById('modal-party-manager');
             m.classList.remove('hidden');
@@ -1212,12 +1341,31 @@
         function handleCopyPartyInviteLink() {
             trackEvent('shareClicks');
             const baseUrl = window.location.origin + window.location.pathname;
-            const inviteUrl = `${baseUrl}?role=member&shop=${selectedShop.id}&party=${partyId}`;
+            // 초대 링크에 방장의 수령 방식(recv)과 계좌 정보도 함께 담아 100% 연동 보장
+            const encodedAcc = hostAccount ? `&acc=${encodeURIComponent(hostAccount)}` : '';
+            const inviteUrl = `${baseUrl}?role=member&shop=${selectedShop.id}&party=${partyId}&recv=${receiveType}${encodedAcc}`;
 
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(inviteUrl);
             }
             showToast('🔗 파티 초대 링크가 복사되었습니다! 단톡방에 공유하세요.');
+        }
+
+        function toggleMemberReceiptDetail(memberId) {
+            expandedMemberId = (expandedMemberId === memberId) ? null : memberId;
+            renderPartyManagerList();
+        }
+
+        async function toggleMemberPaymentStatus(event, memberId) {
+            event.stopPropagation();
+            const target = partyMembers.find(m => m.id === memberId);
+            if (!target) return;
+
+            target.paymentStatus = (target.paymentStatus === 'settled') ? 'pending' : 'settled';
+            await savePartyMemberToFirebase(target);
+            showToast(target.paymentStatus === 'settled'
+                ? `✅ ${target.name}님의 ${(target.price || 0).toLocaleString()}원 정산 완료 처리!`
+                : `⏳ ${target.name}님을 송금 확인 대기로 변경했습니다.`);
         }
 
         function renderPartyManagerList() {
@@ -1226,7 +1374,7 @@
             const myPrice = myItems.reduce((s, i) => s + i.price, 0);
 
             let html = `
-                <div class="bg-white p-2.5 rounded-xl border-2 border-baemin flex justify-between items-center">
+                <div class="bg-white p-3 rounded-xl border-2 border-baemin flex justify-between items-center">
                     <div>
                         <div class="font-bold text-gray-900 text-xs">👑 나 (방장)</div>
                         <div class="text-xs text-gray-500 mt-0.5">${myItems.length > 0 ? myItems.map(i => i.name).join(', ') : '아직 반찬을 담지 않음'}</div>
@@ -1238,32 +1386,91 @@
             `;
 
             let grandTotal = myPrice;
+            let settledTotal = 0;
 
             partyMembers.forEach((m, idx) => {
-                grandTotal += (m.price || 0);
+                const mId = m.id || String(idx);
+                const mPrice = m.price || 0;
+                grandTotal += mPrice;
+                if (m.paymentStatus === 'settled') settledTotal += mPrice;
+
+                const hasOrder = (m.items && m.items.length > 0);
+                const isExpanded = (expandedMemberId === mId);
+
+                // 정산 상태 뱃지 디자인
+                let statusBadgeHtml = '';
+                if (!hasOrder) {
+                    statusBadgeHtml = `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">고르는 중</span>`;
+                } else if (m.paymentStatus === 'settled') {
+                    statusBadgeHtml = `<button type="button" onclick="toggleMemberPaymentStatus(event, '${mId}')" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-300">정산완료 ✓</button>`;
+                } else if (m.paymentStatus === 'paid') {
+                    statusBadgeHtml = `<button type="button" onclick="toggleMemberPaymentStatus(event, '${mId}')" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300 animate-pulse">송금함 · 확인대기</button>`;
+                } else {
+                    statusBadgeHtml = `<button type="button" onclick="toggleMemberPaymentStatus(event, '${mId}')" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-50 text-rockRed border border-red-200">송금 대기중</button>`;
+                }
+
+                // 펼쳐지는 팀원 개별 영수증 표 (단가 포함)
+                let receiptDetailHtml = '';
+                if (isExpanded && hasOrder) {
+                    const detailRows = (m.itemDetails && m.itemDetails.length > 0)
+                        ? m.itemDetails.map(d => `
+                            <tr>
+                                <td class="py-1 text-gray-700">${d.name}</td>
+                                <td class="py-1 text-right font-bold text-gray-900">${(d.price || 0).toLocaleString()}원</td>
+                            </tr>
+                        `).join('')
+                        : m.items.map(name => `
+                            <tr>
+                                <td class="py-1 text-gray-700">${name}</td>
+                                <td class="py-1 text-right text-gray-400">-</td>
+                            </tr>
+                        `).join('');
+
+                    receiptDetailHtml = `
+                        <div class="mt-2.5 pt-2 border-t border-dashed border-gray-200 bg-gray-50/80 rounded-lg p-2.5">
+                            <div class="flex justify-between items-center text-[11px] font-bold text-gray-500 mb-1">
+                                <span>🧾 ${m.name}님의 개별 영수증 (${m.ngu || 4}구)</span>
+                                <span>${m.recvType === 'delivery' ? '배달비 1/N 별도' : '픽업 0원'}</span>
+                            </div>
+                            <table class="w-full text-xs border-collapse">
+                                <tbody class="divide-y divide-gray-100">${detailRows}</tbody>
+                            </table>
+                            <div class="flex justify-between items-center mt-1.5 pt-1.5 border-t border-gray-300 text-xs font-bold">
+                                <span class="text-gray-800">본인 부담 총액</span>
+                                <span class="text-rockRed">${mPrice.toLocaleString()}원</span>
+                            </div>
+                        </div>
+                    `;
+                }
+
                 html += `
-                    <div class="bg-white p-2.5 rounded-xl border border-gray-200 flex justify-between items-center">
-                        <div class="min-w-0 pr-2">
-                            <div class="flex items-center gap-1.5">
-                                <span class="font-bold text-gray-800 text-xs">🙋‍♂️ ${m.name}</span>
-                                <span class="text-[10px] font-bold px-1.5 py-0.2 rounded ${m.items && m.items.length > 0 ? 'bg-teal-50 text-baemin' : 'bg-amber-50 text-amber-600'}">
-                                    ${m.items && m.items.length > 0 ? '주문서 도착' : '고르는 중'}
-                                </span>
+                    <div onclick="toggleMemberReceiptDetail('${mId}')" class="bg-white p-3 rounded-xl border ${isExpanded ? 'border-gray-900' : 'border-gray-200'} cursor-pointer transition">
+                        <div class="flex justify-between items-center">
+                            <div class="min-w-0 pr-2">
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <span class="font-bold text-gray-900 text-xs">🙋‍♂️ ${m.name}</span>
+                                    ${statusBadgeHtml}
+                                </div>
+                                <div class="text-xs text-gray-500 truncate mt-1">
+                                    ${hasOrder ? m.items.join(', ') : '반찬을 고르고 있습니다...'}
+                                </div>
                             </div>
-                            <div class="text-xs text-gray-500 truncate mt-0.5">
-                                ${m.items && m.items.length > 0 ? m.items.join(', ') : '반찬을 고르고 있습니다'}
+                            <div class="flex items-center gap-2 flex-shrink-0">
+                                <div class="text-right">
+                                    <div class="text-xs font-bold text-rockRed">${mPrice.toLocaleString()}원</div>
+                                    ${hasOrder ? `<div class="text-[10px] text-gray-400">${isExpanded ? '영수증 접기 ▲' : '영수증 보기 ▼'}</div>` : ''}
+                                </div>
+                                <button onclick="event.stopPropagation(); removePartyMember('${mId}')" class="text-gray-300 hover:text-rockRed p-1"><i class="fa-solid fa-trash-can text-xs"></i></button>
                             </div>
                         </div>
-                        <div class="flex items-center gap-2 flex-shrink-0">
-                            <span class="text-xs font-bold text-rockRed">${(m.price || 0).toLocaleString()}원</span>
-                            <button onclick="removePartyMember('${m.id || idx}')" class="text-gray-300 hover:text-rockRed"><i class="fa-solid fa-trash-can text-xs"></i></button>
-                        </div>
+                        ${receiptDetailHtml}
                     </div>
                 `;
             });
 
             listEl.innerHTML = html;
             document.getElementById('party-grand-total').innerText = `${grandTotal.toLocaleString()}원`;
+            document.getElementById('party-settled-summary').innerText = `팀원 정산 완료: ${settledTotal.toLocaleString()}원 / 전체 ${grandTotal.toLocaleString()}원`;
             updatePartyBadgeCount();
         }
 
@@ -1286,15 +1493,27 @@
             const pick2 = FOOD_ITEMS[10 + Math.floor(Math.random() * 10)];
             const pick3 = FOOD_ITEMS[20 + Math.floor(Math.random() * 10)];
             const items = [pick1.name, pick2.name, pick3.name];
+            const itemDetails = [
+                { name: pick1.name, price: pick1.price },
+                { name: pick2.name, price: pick2.price },
+                { name: pick3.name, price: pick3.price }
+            ];
             const price = pick1.price + pick2.price + pick3.price;
+            const simId = 'sim_' + Date.now();
 
             await savePartyMemberToFirebase({
-                id: 'sim_' + Date.now(),
+                id: simId,
                 name: randomName,
+                ngu: 4,
                 items,
-                price
+                itemDetails,
+                price,
+                recvType: receiveType,
+                paymentStatus: 'paid'
             });
-            showToast(`🍱 ${randomName}님의 주문서(${price.toLocaleString()}원)가 추가되었습니다!`);
+            expandedMemberId = simId;
+            renderPartyManagerList();
+            showToast(`🧾 ${randomName}님의 영수증과 부담액(${price.toLocaleString()}원)이 도착했습니다!`);
         }
 
         async function handleProceedFromPartyManager() {
@@ -1302,6 +1521,9 @@
             await submitOrderFirstAndShowReceipt(false);
         }
 
+        // =========================================================================
+        // 팀원(파티원) 입장 & 개별 영수증 전송 모달 제어
+        // =========================================================================
         async function handleConfirmMemberJoin() {
             const nameInput = document.getElementById('member-name-input').value.trim();
             memberNickname = nameInput || ('팀원' + Math.floor(10 + Math.random() * 89));
@@ -1310,19 +1532,98 @@
             document.getElementById('modal-member-join').classList.remove('flex');
             document.getElementById('member-mode-banner').classList.remove('hidden');
             document.getElementById('member-nickname-display').innerText = memberNickname;
-            document.getElementById('main-action-btn').innerText = '📤 방장에게 주문서 보내기';
+            document.getElementById('main-action-btn').innerText = '🧾 내 영수증 & 부담액 보내기';
 
             await savePartyMemberToFirebase({
                 id: memberKey,
                 name: memberNickname,
+                ngu: currentNgu,
                 items: [],
-                price: 0
+                itemDetails: [],
+                price: 0,
+                recvType: receiveType,
+                paymentStatus: 'browsing'
             });
-            showToast(`🎉 ${memberNickname}님, 반찬을 골라주세요!`);
+            showToast(`🎉 ${memberNickname}님, 반찬을 담고 방장에게 영수증을 보내세요!`);
+        }
+
+        function openMemberReceiptModal() {
+            const filled = bentoSlots.filter(Boolean);
+            const myTotal = filled.reduce((s, i) => s + i.price, 0);
+
+            document.getElementById('member-receipt-name-badge').innerText = `🙋‍♂️ ${memberNickname}님의 영수증`;
+            document.getElementById('member-receipt-ngu-badge').innerText = `${currentNgu}구 용기 (${filled.length}칸)`;
+
+            const tbody = document.getElementById('member-receipt-tbody');
+            tbody.innerHTML = filled.map(item => `
+                <tr>
+                    <td class="py-1.5 font-bold text-gray-800">${item.name}</td>
+                    <td class="py-1.5 text-right font-bold text-gray-900">${item.price.toLocaleString()}원</td>
+                </tr>
+            `).join('');
+
+            document.getElementById('member-receipt-total-price').innerText = `${myTotal.toLocaleString()}원`;
+
+            // 방안 B: 배달 파티인 경우 배달비 1/N 별도 정산 안내 노출
+            const delivNotice = document.getElementById('member-delivery-notice');
+            if (receiveType === 'delivery') {
+                delivNotice.classList.remove('hidden');
+            } else {
+                delivNotice.classList.add('hidden');
+            }
+
+            // 방장이 계좌번호를 등록해 둔 경우 노출
+            const accBox = document.getElementById('member-host-account-box');
+            if (hostAccount) {
+                document.getElementById('member-host-account-text').innerText = hostAccount;
+                accBox.classList.remove('hidden');
+            } else {
+                accBox.classList.add('hidden');
+            }
+
+            const modal = document.getElementById('modal-member-receipt-send');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeMemberReceiptModal() {
+            const modal = document.getElementById('modal-member-receipt-send');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function copyHostAccountToClipboard() {
+            if (!hostAccount) return;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(hostAccount);
+            }
+            showToast('💳 방장 계좌번호가 복사되었습니다!');
+        }
+
+        async function submitMemberReceiptToHost(paymentStatus) {
+            const filled = bentoSlots.filter(Boolean);
+            const items = filled.map(i => i.name);
+            const itemDetails = filled.map(i => ({ name: i.name, price: i.price }));
+            const price = filled.reduce((s, i) => s + i.price, 0);
+
+            await savePartyMemberToFirebase({
+                id: memberKey,
+                name: memberNickname,
+                ngu: currentNgu,
+                items,
+                itemDetails,
+                price,
+                recvType: receiveType,
+                paymentStatus
+            });
+
+            closeMemberReceiptModal();
+            showToast(`📤 방장 관리창으로 내 영수증과 부담금액(${price.toLocaleString()}원)을 보냈습니다!`);
+            await submitOrderFirstAndShowReceipt(true, paymentStatus);
         }
 
         // =========================================================================
-        // ★ 핵심 개선: [주문서 바로 보내기] 클릭 시 선(先) 주문서 Firebase 저장 -> 후(後) 이메일 수집
+        // 하단 메인 버튼 액션 & 선(先) 주문서 접수 ➡️ 후(後) 이메일 수집
         // =========================================================================
         async function handlePrimaryOrderAction() {
             const filled = bentoSlots.filter(Boolean);
@@ -1332,16 +1633,14 @@
             }
 
             if (isMemberMode) {
-                const items = filled.map(i => i.name);
-                const price = filled.reduce((s, i) => s + i.price, 0);
-                await savePartyMemberToFirebase({ id: memberKey, name: memberNickname, items, price });
-                await submitOrderFirstAndShowReceipt(true);
+                await syncPartyFromFirebase(false); // 최신 방장 계좌/수령방식 동기화 후 열기
+                openMemberReceiptModal();
             } else {
                 await submitOrderFirstAndShowReceipt(false);
             }
         }
 
-        async function submitOrderFirstAndShowReceipt(isFromMember = false) {
+        async function submitOrderFirstAndShowReceipt(isFromMember = false, memberPayStatus = 'pending') {
             trackEvent('checkoutClicks');
 
             const myFilled = bentoSlots.filter(Boolean);
@@ -1364,9 +1663,10 @@
                 partyMembers.forEach(m => {
                     if (m.items && m.items.length > 0) {
                         grandTotal += (m.price || 0);
+                        const payTag = m.paymentStatus === 'settled' ? '정산완료' : (m.paymentStatus === 'paid' ? '송금함' : '정산예정');
                         tbody.innerHTML += `
                             <tr class="bg-teal-50/50">
-                                <td class="py-1.5 font-bold text-teal-900">[${m.name}] ${m.items.join(', ')}</td>
+                                <td class="py-1.5 font-bold text-teal-900">[${m.name}·${payTag}] ${m.items.join(', ')}</td>
                                 <td class="py-1.5 text-right font-bold text-baemin">${(m.price || 0).toLocaleString()}원</td>
                             </tr>
                         `;
@@ -1374,24 +1674,27 @@
                 });
             }
 
-            // 수령 방식 요약 문자열
             const receiveSummary = receiveType === 'pickup'
                 ? `🏃 직접 픽업 (0원) · ${pickupDateTime ? pickupDateTime.replace('T', ' ') : '오늘 방문'}`
-                : `🛵 배달 (${deliveryAddress || '주소 입력됨'}) · 배달비 부담`;
+                : (isFromMember
+                    ? `🛵 배달 파티 · 반찬값 전송 완료 (배달비 1/N 별도 정산 예정)`
+                    : `🛵 배달 (${deliveryAddress || '주소 입력됨'}) · 배달비 부담`);
 
             document.getElementById('receipt-receive-info').innerText = receiveSummary;
             document.getElementById('receipt-shop-name').innerText = selectedShop.name;
+            document.getElementById('receipt-modal-title').innerText = isFromMember
+                ? '방장에게 영수증 & 부담액 전송 완료!'
+                : '주문서가 먼저 접수되었습니다!';
             document.getElementById('receipt-party-badge').innerText = isFromMember 
-                ? `${memberNickname}님 주문서 전송됨` 
-                : (diningMode === 'party' ? `파티 ${1 + partyMembers.length}명 주문 접수됨` : `1인 ${currentNgu}구 주문 접수됨`);
+                ? `${memberNickname}님 (${memberPayStatus === 'paid' ? '송금완료 표시' : '영수증 전송됨'})` 
+                : (diningMode === 'party' ? `파티 ${1 + partyMembers.length}명 통합 접수` : `1인 ${currentNgu}구 주문 접수`);
             document.getElementById('receipt-total-price').innerText = `${grandTotal.toLocaleString()}원`;
 
-            // ★ 이메일을 입력하기 전에 먼저 주문서 데이터를 Firebase DB (/leads)에 즉시 기록 ★
             const orderRecord = {
                 email: '(주문서 선접수 - 이메일 미입력)',
                 note: receiveSummary,
                 shop: selectedShop.name,
-                summary: `${ currentNgu }구 (${grandTotal.toLocaleString()}원) - ${myFilled.map(i => i.name).join('/')}`,
+                summary: `${isFromMember ? `[팀원:${memberNickname}] ` : ''}${currentNgu}구 (${grandTotal.toLocaleString()}원) - ${myFilled.map(i => i.name).join('/')}`,
                 timestamp: Date.now(),
                 dateStr: new Date().toLocaleString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
             };
@@ -1408,11 +1711,13 @@
                 });
                 if (res.ok) {
                     const data = await res.json();
-                    lastSubmittedOrderKey = data.name; // 이후 이메일을 입력하면 이 주문서에 이메일을 업데이트
+                    lastSubmittedOrderKey = data.name;
                 }
             } catch (e) {}
 
-            showToast("🎉 주문서가 먼저 성공적으로 접수되었습니다!");
+            if (!isFromMember) {
+                showToast("🎉 주문서가 먼저 성공적으로 접수되었습니다!");
+            }
 
             document.getElementById('lead-form-view').classList.remove('hidden');
             document.getElementById('lead-success-view').classList.add('hidden');
@@ -1427,7 +1732,6 @@
             modal.classList.remove('flex');
         }
 
-        // 주문 완료 후 이메일 추가 입력 시 -> 방금 저장된 주문서에 이메일 정보 업데이트
         async function handleSubmitEmailLead(e) {
             e.preventDefault();
             const email = document.getElementById('lead-email-input').value.trim();
@@ -1474,7 +1778,7 @@
         }
 
         // =========================================================================
-        // 관리자 인증창 (비밀번호 1216 노출 텍스트 제거)
+        // 관리자 인증창 & 대시보드
         // =========================================================================
         let logoTapCount = 0;
         let logoTapTimer = null;
@@ -1567,10 +1871,18 @@
             const shopParam = params.get('shop');
             const roleParam = params.get('role');
             const partyParam = params.get('party');
+            const recvParam = params.get('recv');
+            const accParam = params.get('acc');
 
             if (partyParam) {
                 partyId = partyParam;
                 localStorage.setItem('loro_party_id', partyId);
+            }
+            if (recvParam === 'pickup' || recvParam === 'delivery') {
+                receiveType = recvParam;
+            }
+            if (accParam) {
+                hostAccount = accParam;
             }
 
             handleSelectShopPin(shopParam && SHOPS[shopParam] ? shopParam : 'shop1');
@@ -1591,7 +1903,13 @@
                 diningMode = 'party';
                 switchScreen('view-store');
                 document.getElementById('store-header-name').innerText = selectedShop.name.replace(/^[^\s]+\s/, '');
+                const subText = receiveType === 'delivery'
+                    ? '🛵 배달 파티 · 반찬값 선전송 (배달비 1/N 별도 정산)'
+                    : '🏃 직접 픽업 파티 (0원)';
+                document.getElementById('store-header-sub').innerText = subText;
+                document.getElementById('join-modal-recv-info').innerText = subText;
                 document.getElementById('join-modal-shop-title').innerText = `${selectedShop.name} 파티 초대`;
+
                 const joinModal = document.getElementById('modal-member-join');
                 joinModal.classList.remove('hidden');
                 joinModal.classList.add('flex');
