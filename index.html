@@ -252,7 +252,7 @@
 
 
         <!-- =====================================================
-             [모달 Step 2] 이용 방식 설정 (혼자/파티 + 픽업 달력/배달 주소)
+             [모달 Step 2] 이용 방식 설정 (초기 선택값 없음 — 전부 직접 선택)
              ===================================================== -->
         <div id="modal-step2-setup" class="fixed inset-0 z-50 bg-lockCharcoal/70 backdrop-blur-xs hidden items-center justify-center p-4">
             <div class="bg-[#FFFDF9] w-full max-w-[375px] rounded-3xl p-5 shadow-2xl border border-[#EAE3D7] animate-pop">
@@ -270,7 +270,7 @@
                     <div>
                         <label class="block text-sm font-extrabold text-lockCharcoal mb-2">1. 누구와 함께 드시나요?</label>
                         <div class="grid grid-cols-2 gap-2.5">
-                            <button type="button" id="mode-btn-solo" onclick="selectDiningMode('solo')" class="py-3 px-2 rounded-xl border-2 border-lockOrange bg-lockOrangeSoft text-lockCharcoal font-extrabold text-sm text-center transition">
+                            <button type="button" id="mode-btn-solo" onclick="selectDiningMode('solo')" class="py-3 px-2 rounded-xl border-2 border-[#E6DFD3] bg-white text-[#7A7268] font-bold text-sm text-center transition">
                                 🙋‍♂️ 혼자 먹어요
                             </button>
                             <button type="button" id="mode-btn-party" onclick="selectDiningMode('party')" class="py-3 px-2 rounded-xl border-2 border-[#E6DFD3] bg-white text-[#7A7268] font-bold text-sm text-center transition">
@@ -282,35 +282,35 @@
                     <div>
                         <label class="block text-sm font-extrabold text-lockCharcoal mb-2">2. 수령 방법을 골라주세요</label>
                         <div class="grid grid-cols-2 gap-2.5">
-                            <button type="button" id="recv-btn-pickup" onclick="selectReceiveType('pickup')" class="py-3 px-2 rounded-xl border-2 border-lockOrange bg-lockOrangeSoft text-lockCharcoal font-extrabold text-sm text-center transition">
+                            <button type="button" id="recv-btn-pickup" onclick="selectReceiveType('pickup')" class="py-3 px-2 rounded-xl border-2 border-[#E6DFD3] bg-white text-[#7A7268] font-bold text-sm text-center transition">
                                 🏃 직접 픽업
-                                <span class="block text-[11px] font-extrabold text-lockGreenDeep mt-0.5">0원</span>
+                                <span id="recv-pickup-sub" class="block text-[11px] font-bold text-[#9C9488] mt-0.5">0원</span>
                             </button>
                             <button type="button" id="recv-btn-delivery" onclick="selectReceiveType('delivery')" class="py-3 px-2 rounded-xl border-2 border-[#E6DFD3] bg-white text-[#7A7268] font-bold text-sm text-center transition">
                                 🛵 배달
-                                <span class="block text-[11px] font-bold text-[#9C9488] mt-0.5">배달비 부담</span>
+                                <span id="recv-delivery-sub" class="block text-[11px] font-bold text-[#9C9488] mt-0.5">배달비 부담</span>
                             </button>
                         </div>
                     </div>
 
-                    <!-- 직접 픽업 선택 시: 달력 위젯 노출 -->
-                    <div id="pickup-date-box" class="bg-lockCream p-3.5 rounded-2xl border border-[#E6DFD3]">
+                    <!-- 직접 픽업 선택 시 노출 (초기값 비어 있음) -->
+                    <div id="pickup-date-box" class="hidden bg-lockCream p-3.5 rounded-2xl border border-[#E6DFD3]">
                         <label class="block text-sm font-extrabold text-lockCharcoal mb-1.5">📅 언제 찾으러 오시나요?</label>
-                        <input type="datetime-local" id="pickup-datetime-input" class="w-full px-3 py-2.5 rounded-xl border border-[#D8D0C3] bg-white text-sm font-bold text-lockCharcoal outline-none focus:border-lockOrange">
+                        <input type="datetime-local" id="pickup-datetime-input" oninput="updateStep2SubmitBtnState()" onchange="updateStep2SubmitBtnState()" class="w-full px-3 py-2.5 rounded-xl border border-[#D8D0C3] bg-white text-sm font-bold text-lockCharcoal outline-none focus:border-lockOrange">
                     </div>
 
-                    <!-- 배달 선택 시: 배달 받을 장소 입력칸 노출 -->
+                    <!-- 배달 선택 시 노출 (초기값 비어 있음) -->
                     <div id="delivery-address-box" class="hidden bg-lockCream p-3.5 rounded-2xl border border-[#E6DFD3]">
                         <div class="flex justify-between items-center mb-1.5">
                             <label class="text-sm font-extrabold text-lockCharcoal">📍 배달 받을 장소</label>
                             <span class="text-xs font-extrabold text-lockTerracotta">배달비 부담</span>
                         </div>
-                        <input type="text" id="delivery-address-input" placeholder="예: 공대 3호관 과방 / 효자동 자취방" class="w-full px-3 py-2.5 rounded-xl border border-[#D8D0C3] bg-white text-sm font-bold text-lockCharcoal outline-none focus:border-lockOrange">
+                        <input type="text" id="delivery-address-input" oninput="updateStep2SubmitBtnState()" placeholder="예: 공대 3호관 과방 / 효자동 자취방" class="w-full px-3 py-2.5 rounded-xl border border-[#D8D0C3] bg-white text-sm font-bold text-lockCharcoal outline-none focus:border-lockOrange">
                     </div>
                 </div>
 
-                <button onclick="handleConfirmStep2AndEnter()" class="w-full bg-lockCharcoal hover:bg-black text-white font-extrabold py-3.5 rounded-xl text-base shadow-md transition active:scale-95">
-                    반찬 고르러 들어가기
+                <button id="step2-submit-btn" onclick="handleConfirmStep2AndEnter()" class="w-full bg-[#E6DFD3] text-[#8A8277] font-bold py-3.5 rounded-xl text-base transition active:scale-95">
+                    위 항목을 먼저 선택해주세요
                 </button>
             </div>
         </div>
@@ -391,7 +391,7 @@
                 <div id="food-list-container" class="flex-1 overflow-y-auto px-4 pt-3.5 pb-28 grid grid-cols-3 gap-x-3 gap-y-4 content-start"></div>
             </div>
 
-            <!-- 최하단 결제 바 (딥 차콜 블랙 배경 + 락 오렌지 메인 버튼) -->
+            <!-- 최하단 결제 바 (전 칸 채움 시에만 활성화) -->
             <div class="absolute bottom-0 inset-x-0 bg-lockCharcoal text-white px-4 py-3.5 flex justify-between items-center gap-2 z-30 shadow-[0_-6px_20px_rgba(24,22,20,0.28)]">
                 <div class="min-w-0">
                     <div class="text-lg font-extrabold leading-tight">
@@ -401,8 +401,8 @@
                         <span id="filled-count-text">0/4칸</span> · 총 <span id="stat-kcal" class="text-lockGreen">0</span>kcal
                     </div>
                 </div>
-                <button id="main-action-btn" onclick="handlePrimaryOrderAction()" class="bg-lockOrange hover:bg-lockOrangeDark text-white font-extrabold px-4 py-2.5 rounded-xl text-sm shadow-md active:scale-95 transition whitespace-nowrap">
-                    주문서 바로 보내기
+                <button id="main-action-btn" onclick="handlePrimaryOrderAction()" class="bg-[#3A3530] text-[#B8B0A4] font-bold px-4 py-2.5 rounded-xl text-sm transition whitespace-nowrap">
+                    4칸 더 채우기
                 </button>
             </div>
         </div>
@@ -417,7 +417,7 @@
                 <h3 id="join-modal-shop-title" class="text-lg font-extrabold text-lockCharcoal mt-2.5">전주 반찬명가 파티</h3>
                 <p id="join-modal-recv-info" class="text-xs font-extrabold text-lockGreenDeep bg-lockGreenSoft py-1.5 px-3 rounded-lg mt-2">🏃 직접 픽업 (0원)</p>
                 <p class="text-sm font-medium text-[#645E56] mt-2.5 leading-snug">
-                    원하는 반찬을 담고 내 금액을 결제하면,<br>방장에게 돈과 영수증이 한 번에 전달됩니다.
+                    도시락 칸을 모두 채우고 내 금액을 결제하면,<br>방장에게 돈과 영수증이 한 번에 전달됩니다.
                 </p>
                 <input type="text" id="member-name-input" placeholder="내 이름 입력 (예: 김동기)" 
                     class="w-full mt-4 px-3.5 py-2.5 rounded-xl border border-[#D8D0C3] bg-white text-sm font-bold text-center text-lockCharcoal outline-none focus:border-lockOrange">
@@ -444,7 +444,6 @@
                 </div>
 
                 <div class="p-4 overflow-y-auto no-scrollbar space-y-3.5">
-                    <!-- 1. 팀원 본인의 반찬 상세 영수증 표 -->
                     <div class="bg-lockCream border border-[#E6DFD3] rounded-2xl p-3.5">
                         <div class="flex justify-between items-center border-b border-[#E6DFD3] pb-2 mb-2">
                             <span id="member-receipt-name-badge" class="text-sm font-extrabold text-lockCharcoal">🙋‍♂️ 참여자님의 도시락</span>
@@ -469,7 +468,6 @@
                         </div>
                     </div>
 
-                    <!-- 2. 간편결제 수단 선택 -->
                     <div>
                         <label class="block text-xs font-extrabold text-[#5C564F] mb-2">결제 수단 선택 (결제 완료 시 방장에게 즉시 전달)</label>
                         <div class="grid grid-cols-3 gap-2">
@@ -485,7 +483,6 @@
                         </div>
                     </div>
 
-                    <!-- 3. 단일 결제 버튼 -->
                     <button type="button" id="member-pay-submit-btn" onclick="executeMemberInstantPayment()" class="w-full bg-lockOrange hover:bg-lockOrangeDark text-white font-extrabold py-3.5 rounded-xl text-sm shadow-md transition active:scale-95">
                         💳 즉시 결제하고 방장에게 영수증 보내기
                     </button>
@@ -516,7 +513,6 @@
                 </div>
 
                 <div class="p-4 overflow-y-auto space-y-3 flex-1 text-sm no-scrollbar">
-                    <!-- ① 초대 링크 공유 -->
                     <div class="bg-lockOrangeSoft border border-lockOrange/35 rounded-2xl p-3 space-y-2">
                         <div class="flex justify-between items-center">
                             <span class="font-extrabold text-lockCharcoal text-xs">① 단톡방에 파티 초대 링크 공유</span>
@@ -528,7 +524,6 @@
                         </button>
                     </div>
 
-                    <!-- ② 결제 완료된 팀원 영수증 목록 -->
                     <div class="bg-lockCream border border-[#E6DFD3] rounded-2xl p-3">
                         <div class="flex justify-between items-center mb-1.5 gap-2">
                             <span class="font-extrabold text-lockCharcoal text-xs">② 참여 현황 (<span id="mgr-member-count" class="text-lockTerracotta">1</span>명)</span>
@@ -541,7 +536,6 @@
                         <div id="party-members-list" class="space-y-2 max-h-56 overflow-y-auto pr-0.5"></div>
                     </div>
 
-                    <!-- ③ 결제 완료 합산 금액 -->
                     <div class="bg-lockCharcoal text-white rounded-2xl p-3.5 flex justify-between items-center gap-2">
                         <div>
                             <div class="text-xs text-[#C7C0B6] font-bold">결제 완료 통합 합계</div>
@@ -602,7 +596,6 @@
                         </div>
                     </div>
 
-                    <!-- 주문 완료 후 선택 이메일 알림 -->
                     <div id="lead-form-view" class="bg-lockOrangeSoft/80 border border-lockOrange/35 rounded-2xl p-3.5">
                         <div class="text-sm font-extrabold text-lockCharcoal">💌 정식 오픈 알림도 받아보실래요?</div>
                         <p class="text-xs font-medium text-[#645E56] mt-1 mb-2.5 leading-snug">
@@ -623,7 +616,6 @@
                         </button>
                     </div>
 
-                    <!-- 이메일 제출 완료 시 화면 -->
                     <div id="lead-success-view" class="p-4 text-center hidden bg-lockGreenSoft rounded-2xl border border-lockGreen">
                         <div class="w-10 h-10 bg-lockGreen text-lockCharcoal rounded-full flex items-center justify-center mx-auto text-lg mb-2">
                             <i class="fa-solid fa-check"></i>
@@ -714,7 +706,7 @@
     </div>
 
     <!-- =====================================================
-         자바스크립트: 로고 컬러 시스템 + 즉시 결제 & 영수증 동시 전송
+         자바스크립트: Step 2 초기 선택값 제거 + 4/6/8구 전 칸 채움 필수 검증
          ===================================================== -->
     <script>
         const ADMIN_PIN = "1216";
@@ -790,10 +782,10 @@
             { id: 'v10', name: '참기름김치', category: 'veggie', oriPrice: null, price: 700, discount: null, kcal: 45, img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Kimchi_01.jpg/300px-Kimchi_01.jpg' }
         ];
 
-        // 3. 앱 상태 변수
+        // 3. 앱 상태 변수 (초기 선택값 없음: null)
         let selectedShop = SHOPS.shop1;
-        let diningMode = 'solo';
-        let receiveType = 'pickup';
+        let diningMode = null;
+        let receiveType = null;
         let pickupDateTime = '';
         let deliveryAddress = '';
 
@@ -854,7 +846,7 @@
 
                 if (partyMetaRes.ok) {
                     const meta = await partyMetaRes.json();
-                    if (meta && typeof meta === 'object' && meta.receiveType) {
+                    if (isMemberMode && meta && typeof meta === 'object' && meta.receiveType) {
                         receiveType = meta.receiveType;
                     }
                 }
@@ -984,21 +976,56 @@
         }
 
         // =========================================================================
-        // Step 2: 주문 설정 모달
+        // Step 2: 주문 설정 모달 (초기 선택값 완전 제거 — 사용자가 전부 직접 선택)
         // =========================================================================
-        function setDefaultPickupDateTime() {
-            const input = document.getElementById('pickup-datetime-input');
-            if (!input.value) {
-                const now = new Date();
-                now.setMinutes(now.getMinutes() + 30 - (now.getMinutes() % 10));
-                const tzOffset = now.getTimezoneOffset() * 60000;
-                input.value = new Date(now - tzOffset).toISOString().slice(0, 16);
+        const STEP2_UNSELECTED_CLS = "py-3 px-2 rounded-xl border-2 border-[#E6DFD3] bg-white text-[#7A7268] font-bold text-sm text-center transition";
+        const STEP2_SELECTED_CLS = "py-3 px-2 rounded-xl border-2 border-lockOrange bg-lockOrangeSoft text-lockCharcoal font-extrabold text-sm text-center transition";
+
+        function resetStep2SetupUI() {
+            diningMode = null;
+            receiveType = null;
+            pickupDateTime = '';
+            deliveryAddress = '';
+
+            document.getElementById('mode-btn-solo').className = STEP2_UNSELECTED_CLS;
+            document.getElementById('mode-btn-party').className = STEP2_UNSELECTED_CLS;
+            document.getElementById('recv-btn-pickup').className = STEP2_UNSELECTED_CLS;
+            document.getElementById('recv-btn-delivery').className = STEP2_UNSELECTED_CLS;
+
+            document.getElementById('recv-pickup-sub').className = "block text-[11px] font-bold text-[#9C9488] mt-0.5";
+            document.getElementById('recv-delivery-sub').className = "block text-[11px] font-bold text-[#9C9488] mt-0.5";
+
+            document.getElementById('pickup-date-box').classList.add('hidden');
+            document.getElementById('delivery-address-box').classList.add('hidden');
+            document.getElementById('pickup-datetime-input').value = '';
+            document.getElementById('delivery-address-input').value = '';
+
+            updateStep2SubmitBtnState();
+        }
+
+        function updateStep2SubmitBtnState() {
+            const btn = document.getElementById('step2-submit-btn');
+            if (!btn) return;
+
+            const hasPickupTime = (receiveType === 'pickup' && document.getElementById('pickup-datetime-input').value.trim() !== '');
+            const hasDeliveryAddr = (receiveType === 'delivery' && document.getElementById('delivery-address-input').value.trim() !== '');
+            const isReady = Boolean(diningMode && (hasPickupTime || hasDeliveryAddr));
+
+            if (isReady) {
+                btn.className = "w-full bg-lockCharcoal hover:bg-black text-white font-extrabold py-3.5 rounded-xl text-base shadow-md transition active:scale-95";
+                btn.innerText = "반찬 고르러 들어가기";
+            } else {
+                btn.className = "w-full bg-[#E6DFD3] text-[#8A8277] font-bold py-3.5 rounded-xl text-base transition active:scale-95";
+                if (!diningMode) btn.innerText = "인원을 먼저 선택해주세요";
+                else if (!receiveType) btn.innerText = "수령 방법을 선택해주세요";
+                else if (receiveType === 'pickup') btn.innerText = "픽업 날짜와 시간을 선택해주세요";
+                else btn.innerText = "배달 받을 장소를 입력해주세요";
             }
         }
 
         function openStep2SetupModal() {
             document.getElementById('setup-shop-title').innerText = selectedShop.name;
-            setDefaultPickupDateTime();
+            resetStep2SetupUI();
             const modal = document.getElementById('modal-step2-setup');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
@@ -1012,42 +1039,51 @@
 
         function selectDiningMode(mode) {
             diningMode = mode;
-            const soloBtn = document.getElementById('mode-btn-solo');
-            const partyBtn = document.getElementById('mode-btn-party');
-            if (mode === 'solo') {
-                soloBtn.className = "py-3 px-2 rounded-xl border-2 border-lockOrange bg-lockOrangeSoft text-lockCharcoal font-extrabold text-sm text-center transition";
-                partyBtn.className = "py-3 px-2 rounded-xl border-2 border-[#E6DFD3] bg-white text-[#7A7268] font-bold text-sm text-center transition";
-            } else {
-                partyBtn.className = "py-3 px-2 rounded-xl border-2 border-lockOrange bg-lockOrangeSoft text-lockCharcoal font-extrabold text-sm text-center transition";
-                soloBtn.className = "py-3 px-2 rounded-xl border-2 border-[#E6DFD3] bg-white text-[#7A7268] font-bold text-sm text-center transition";
-            }
+            document.getElementById('mode-btn-solo').className = (mode === 'solo') ? STEP2_SELECTED_CLS : STEP2_UNSELECTED_CLS;
+            document.getElementById('mode-btn-party').className = (mode === 'party') ? STEP2_SELECTED_CLS : STEP2_UNSELECTED_CLS;
+            updateStep2SubmitBtnState();
         }
 
         function selectReceiveType(type) {
             receiveType = type;
-            const pickupBtn = document.getElementById('recv-btn-pickup');
-            const delivBtn = document.getElementById('recv-btn-delivery');
             const pickupBox = document.getElementById('pickup-date-box');
             const delivBox = document.getElementById('delivery-address-box');
 
+            document.getElementById('recv-btn-pickup').className = (type === 'pickup') ? STEP2_SELECTED_CLS : STEP2_UNSELECTED_CLS;
+            document.getElementById('recv-btn-delivery').className = (type === 'delivery') ? STEP2_SELECTED_CLS : STEP2_UNSELECTED_CLS;
+
+            document.getElementById('recv-pickup-sub').className = (type === 'pickup')
+                ? "block text-[11px] font-extrabold text-lockGreenDeep mt-0.5"
+                : "block text-[11px] font-bold text-[#9C9488] mt-0.5";
+            document.getElementById('recv-delivery-sub').className = (type === 'delivery')
+                ? "block text-[11px] font-extrabold text-lockTerracotta mt-0.5"
+                : "block text-[11px] font-bold text-[#9C9488] mt-0.5";
+
             if (type === 'pickup') {
-                pickupBtn.className = "py-3 px-2 rounded-xl border-2 border-lockOrange bg-lockOrangeSoft text-lockCharcoal font-extrabold text-sm text-center transition";
-                delivBtn.className = "py-3 px-2 rounded-xl border-2 border-[#E6DFD3] bg-white text-[#7A7268] font-bold text-sm text-center transition";
                 pickupBox.classList.remove('hidden');
                 delivBox.classList.add('hidden');
             } else {
-                delivBtn.className = "py-3 px-2 rounded-xl border-2 border-lockOrange bg-lockOrangeSoft text-lockCharcoal font-extrabold text-sm text-center transition";
-                pickupBtn.className = "py-3 px-2 rounded-xl border-2 border-[#E6DFD3] bg-white text-[#7A7268] font-bold text-sm text-center transition";
                 pickupBox.classList.add('hidden');
                 delivBox.classList.remove('hidden');
             }
+            updateStep2SubmitBtnState();
         }
 
         async function handleConfirmStep2AndEnter() {
+            if (!diningMode) {
+                showToast("혼자 먹기 또는 파티 주문을 먼저 선택해주세요!");
+                return;
+            }
+            if (!receiveType) {
+                showToast("직접 픽업 또는 배달을 선택해주세요!");
+                return;
+            }
+
             if (receiveType === 'pickup') {
                 pickupDateTime = document.getElementById('pickup-datetime-input').value;
                 if (!pickupDateTime) {
-                    showToast("픽업 날짜와 시간을 선택해주세요!");
+                    showToast("픽업 날짜와 시간을 직접 선택해주세요!");
+                    document.getElementById('pickup-datetime-input').focus();
                     return;
                 }
             } else {
@@ -1083,6 +1119,7 @@
                 await syncPartyMetaToFirebase();
             }
 
+            updateTotalsUI();
             switchScreen('view-store');
         }
 
@@ -1176,7 +1213,6 @@
             renderFoodList();
         }
 
-        // 3열 고가독성 반찬 카드
         function renderFoodList() {
             const container = document.getElementById('food-list-container');
             container.innerHTML = '';
@@ -1212,7 +1248,7 @@
 
             let target = bentoSlots[activeSlotIndex] === null ? activeSlotIndex : bentoSlots.findIndex(s => s === null);
             if (target === -1) {
-                showToast(`${currentNgu}구 용기가 모두 찼어요! 칸을 눌러 비우거나 6구·8구로 바꿔보세요.`);
+                showToast(`${currentNgu}구 용기가 모두 찼어요! 칸을 눌러 비우거나 용기를 변경해 보세요.`);
                 return;
             }
 
@@ -1228,12 +1264,17 @@
 
         function updateTotalsUI() {
             const filled = bentoSlots.filter(Boolean);
+            const remaining = currentNgu - filled.length;
+            const isFull = (remaining === 0);
+
             const total = filled.reduce((s, i) => s + i.price, 0);
             const oriTotal = filled.reduce((s, i) => s + (i.oriPrice || i.price), 0);
             const kcal = filled.reduce((s, i) => s + i.kcal, 0);
 
             document.getElementById('total-price-text').innerText = total.toLocaleString();
-            document.getElementById('filled-count-text').innerText = `${filled.length}/${currentNgu}칸`;
+            const filledCountEl = document.getElementById('filled-count-text');
+            filledCountEl.innerText = isFull ? `${filled.length}/${currentNgu}칸 완성!` : `${filled.length}/${currentNgu}칸`;
+            filledCountEl.className = isFull ? 'text-lockGreen font-extrabold' : '';
             document.getElementById('stat-kcal').innerText = kcal.toLocaleString();
 
             const saved = oriTotal - total;
@@ -1244,6 +1285,18 @@
             } else {
                 badge.classList.add('hidden');
             }
+
+            const actionBtn = document.getElementById('main-action-btn');
+            if (actionBtn) {
+                if (isFull) {
+                    actionBtn.className = "bg-lockOrange hover:bg-lockOrangeDark text-white font-extrabold px-4 py-2.5 rounded-xl text-sm shadow-md active:scale-95 transition whitespace-nowrap";
+                    actionBtn.innerText = isMemberMode ? '💳 결제 & 영수증 보내기' : '주문서 바로 보내기';
+                } else {
+                    actionBtn.className = "bg-[#3A3530] text-[#B8B0A4] font-bold px-4 py-2.5 rounded-xl text-sm transition whitespace-nowrap";
+                    actionBtn.innerText = `${remaining}칸 더 채우기`;
+                }
+            }
+
             updatePartyBadgeCount();
         }
 
@@ -1295,7 +1348,7 @@
         function handleCopyPartyInviteLink() {
             trackEvent('shareClicks');
             const baseUrl = window.location.origin + window.location.pathname;
-            const inviteUrl = `${baseUrl}?role=member&shop=${selectedShop.id}&party=${partyId}&recv=${receiveType}`;
+            const inviteUrl = `${baseUrl}?role=member&shop=${selectedShop.id}&party=${partyId}&recv=${receiveType || 'pickup'}`;
 
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(inviteUrl);
@@ -1312,11 +1365,18 @@
             const listEl = document.getElementById('party-members-list');
             const myItems = bentoSlots.filter(Boolean);
             const myPrice = myItems.reduce((s, i) => s + i.price, 0);
+            const myRemain = currentNgu - myItems.length;
 
             let html = `
                 <div class="bg-[#FFFDF9] p-3 rounded-xl border-2 border-lockOrange flex justify-between items-center gap-2">
                     <div class="min-w-0">
-                        <div class="font-extrabold text-lockCharcoal text-xs">👑 나 (방장)</div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-extrabold text-lockCharcoal text-xs">👑 나 (방장)</span>
+                            ${myRemain > 0
+                                ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-lockOrangeSoft text-lockOrangeDark">${myRemain}칸 더 필요</span>`
+                                : `<span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-lockGreenSoft text-lockGreenDeep">${currentNgu}구 완성</span>`
+                            }
+                        </div>
                         <div class="text-xs text-[#7A7268] truncate mt-0.5">${myItems.length > 0 ? myItems.map(i => i.name).join(', ') : '아직 반찬을 담지 않음'}</div>
                     </div>
                     <span class="text-xs font-extrabold text-lockOrangeDark whitespace-nowrap">${myPrice.toLocaleString()}원</span>
@@ -1422,14 +1482,12 @@
             const randomName = sampleNames[partyMembers.length % sampleNames.length] + (partyMembers.length + 1);
             const pick1 = FOOD_ITEMS[Math.floor(Math.random() * 10)];
             const pick2 = FOOD_ITEMS[10 + Math.floor(Math.random() * 10)];
-            const pick3 = FOOD_ITEMS[20 + Math.floor(Math.random() * 10)];
-            const items = [pick1.name, pick2.name, pick3.name];
-            const itemDetails = [
-                { name: pick1.name, price: pick1.price },
-                { name: pick2.name, price: pick2.price },
-                { name: pick3.name, price: pick3.price }
-            ];
-            const price = pick1.price + pick2.price + pick3.price;
+            const pick3 = FOOD_ITEMS[20 + Math.floor(Math.random() * 5)];
+            const pick4 = FOOD_ITEMS[25 + Math.floor(Math.random() * 5)];
+            const picks = [pick1, pick2, pick3, pick4];
+            const items = picks.map(p => p.name);
+            const itemDetails = picks.map(p => ({ name: p.name, price: p.price }));
+            const price = picks.reduce((sum, p) => sum + p.price, 0);
             const simId = 'sim_' + Date.now();
 
             await savePartyMemberToFirebase({
@@ -1444,10 +1502,22 @@
             });
             expandedMemberId = simId;
             renderPartyManagerList();
-            showToast(`💳 ${randomName}님의 결제(${price.toLocaleString()}원)와 영수증이 도착했습니다!`);
+            showToast(`💳 ${randomName}님의 4구 결제(${price.toLocaleString()}원)와 영수증이 도착했습니다!`);
         }
 
         async function handleProceedFromPartyManager() {
+            const filled = bentoSlots.filter(Boolean);
+            if (filled.length < currentNgu) {
+                const remain = currentNgu - filled.length;
+                closePartyManagerModal();
+                showToast(`방장님의 ${currentNgu}구 도시락을 모두 채워주세요! (${remain}칸 남음)`);
+                const firstEmpty = bentoSlots.findIndex(s => s === null);
+                if (firstEmpty !== -1) {
+                    activeSlotIndex = firstEmpty;
+                    renderBentoSlots();
+                }
+                return;
+            }
             closePartyManagerModal();
             await submitOrderFirstAndShowReceipt(false);
         }
@@ -1463,7 +1533,8 @@
             document.getElementById('modal-member-join').classList.remove('flex');
             document.getElementById('member-mode-banner').classList.remove('hidden');
             document.getElementById('member-nickname-display').innerText = memberNickname;
-            document.getElementById('main-action-btn').innerText = '💳 결제 & 영수증 보내기';
+
+            updateTotalsUI();
 
             await savePartyMemberToFirebase({
                 id: memberKey,
@@ -1474,7 +1545,7 @@
                 price: 0,
                 paymentStatus: 'browsing'
             });
-            showToast(`🎉 ${memberNickname}님, 반찬을 담고 결제해 주세요!`);
+            showToast(`🎉 ${memberNickname}님, ${currentNgu}구 칸을 모두 채운 뒤 결제해 주세요!`);
         }
 
         function selectPayMethod(method) {
@@ -1525,8 +1596,14 @@
         }
 
         async function executeMemberInstantPayment() {
-            const btn = document.getElementById('member-pay-submit-btn');
             const filled = bentoSlots.filter(Boolean);
+            if (filled.length < currentNgu) {
+                closeMemberPayModal();
+                showToast(`${currentNgu}구 도시락의 모든 칸을 채워야 결제할 수 있어요!`);
+                return;
+            }
+
+            const btn = document.getElementById('member-pay-submit-btn');
             const items = filled.map(i => i.name);
             const itemDetails = filled.map(i => ({ name: i.name, price: i.price }));
             const price = filled.reduce((s, i) => s + i.price, 0);
@@ -1554,12 +1631,18 @@
         }
 
         // =========================================================================
-        // 하단 메인 버튼 & 선(先) 주문서 접수 ➡️ 후(後) 이메일 수집
+        // 하단 메인 버튼: 4·6·8구 모든 칸이 채워지지 않으면 주문 차단
         // =========================================================================
         async function handlePrimaryOrderAction() {
             const filled = bentoSlots.filter(Boolean);
-            if (filled.length === 0) {
-                showToast('먼저 반찬을 1개 이상 도시락에 담아주세요!');
+            if (filled.length < currentNgu) {
+                const remain = currentNgu - filled.length;
+                showToast(`${currentNgu}구 도시락을 모두 채워주세요! (${remain}칸 남음)`);
+                const firstEmpty = bentoSlots.findIndex(s => s === null);
+                if (firstEmpty !== -1) {
+                    activeSlotIndex = firstEmpty;
+                    renderBentoSlots();
+                }
                 return;
             }
 
@@ -1603,7 +1686,7 @@
             }
 
             const receiveSummary = receiveType === 'pickup'
-                ? `🏃 직접 픽업 (0원) · ${pickupDateTime ? pickupDateTime.replace('T', ' ') : '오늘 방문'}`
+                ? `🏃 직접 픽업 (0원) · ${pickupDateTime ? pickupDateTime.replace('T', ' ') : '직접 방문'}`
                 : (isFromMember
                     ? `🛵 배달 파티 · ${selectedPayMethod} 결제 및 영수증 전송 완료`
                     : `🛵 배달 (${deliveryAddress || '주소 입력됨'}) · 배달비 부담`);
@@ -1810,7 +1893,6 @@
             }
 
             handleSelectShopPin(shopParam && SHOPS[shopParam] ? shopParam : 'shop1');
-            setDefaultPickupDateTime();
             renderBentoSlots();
             renderFoodList();
             updateTotalsUI();
@@ -1825,6 +1907,7 @@
             if (roleParam === 'member') {
                 isMemberMode = true;
                 diningMode = 'party';
+                if (!receiveType) receiveType = 'pickup';
                 switchScreen('view-store');
                 document.getElementById('store-header-name').innerText = selectedShop.name.replace(/^[^\s]+\s/, '');
                 const subText = receiveType === 'delivery'
@@ -1833,6 +1916,7 @@
                 document.getElementById('store-header-sub').innerText = subText;
                 document.getElementById('join-modal-recv-info').innerText = subText;
                 document.getElementById('join-modal-shop-title').innerText = `${selectedShop.name} 파티 초대`;
+                updateTotalsUI();
 
                 const joinModal = document.getElementById('modal-member-join');
                 joinModal.classList.remove('hidden');
