@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#FAF7F2">
-    <title>도시락도 락이다 (LOCK & ROCK)</title>
+    <title>도시락도 락이다 (LOCK &amp; ROCK)</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- SUIT 공식 최신 저장소(sun-typeface) + Noto Sans KR 이중 백업 -->
@@ -163,7 +163,7 @@
              [화면 2] 지도 탐색 화면
              ===================================================== -->
         <div id="view-map" class="app-view bg-lockCream z-20">
-            <div class="bg-[#FFFDF9] px-5 pt-4 pb-3 shadow-xs z-10 border-b border-[#EAE3D7]">
+            <div class="bg-[#FFFDF9] px-5 pt-4 pb-3 shadow-sm z-10 border-b border-[#EAE3D7]">
                 <div class="flex items-center justify-between gap-2">
                     <div onclick="handleSecretLogoTap()" class="flex items-center gap-2 cursor-pointer min-w-0">
                         <span class="bg-lockCharcoal text-white text-[11px] font-extrabold px-2 py-0.5 rounded-md whitespace-nowrap">LOCK &amp; ROCK</span>
@@ -197,7 +197,7 @@
                 <div class="road-v left-[72%]"></div>
 
                 <div class="absolute top-3 left-0 right-0 flex justify-center z-20 px-4 pointer-events-none">
-                    <div class="bg-lockCharcoal/92 backdrop-blur text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg text-center">
+                    <div class="bg-lockCharcoal/90 backdrop-blur-sm text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg text-center">
                         👇 매장을 터치하면 오늘 반찬을 볼 수 있어요
                     </div>
                 </div>
@@ -262,7 +262,7 @@
         <!-- =====================================================
              [모달 Step 2] 이용 방식 설정 (초기 선택값 없음 — 전부 직접 선택)
              ===================================================== -->
-        <div id="modal-step2-setup" class="fixed inset-0 z-50 bg-lockCharcoal/70 backdrop-blur-xs hidden items-center justify-center p-4">
+        <div id="modal-step2-setup" class="fixed inset-0 z-50 bg-lockCharcoal/70 backdrop-blur-sm hidden items-center justify-center p-4">
             <div class="bg-[#FFFDF9] w-full max-w-[375px] rounded-3xl p-5 shadow-2xl border border-[#EAE3D7] animate-pop">
                 <div class="flex justify-between items-center border-b border-[#EFE9DF] pb-3">
                     <div>
@@ -336,7 +336,7 @@
             </div>
 
             <!-- 상점 헤더 -->
-            <div class="bg-[#FFFDF9] px-4 py-2.5 shadow-2xs z-10 flex items-center justify-between gap-2 border-b border-[#EAE3D7]">
+            <div class="bg-[#FFFDF9] px-4 py-2.5 shadow-sm z-10 flex items-center justify-between gap-2 border-b border-[#EAE3D7]">
                 <div class="flex items-center gap-2.5 min-w-0">
                     <button onclick="handleBackToMap()" class="w-8 h-8 rounded-full bg-[#F2ECE2] flex items-center justify-center text-lockCharcoal font-bold flex-shrink-0">
                         <i class="fa-solid fa-arrow-left text-sm"></i>
@@ -348,9 +348,9 @@
                 </div>
 
                 <!-- 파티원 관리 버튼 ('혼자 먹어요' 선택 시 hidden) -->
-                <button id="party-manager-top-btn" onclick="openPartyManagerModal()" class="hidden bg-lockCharcoal hover:bg-black text-white px-3 py-1.5 rounded-full text-xs font-extrabold items-center gap-1.5 shadow-xs active:scale-95 flex-shrink-0 whitespace-nowrap">
+                <button id="party-manager-top-btn" onclick="openPartyManagerModal()" class="hidden bg-lockCharcoal hover:bg-black text-white px-3 py-1.5 rounded-full text-xs font-extrabold items-center gap-1.5 shadow-sm active:scale-95 flex-shrink-0 whitespace-nowrap">
                     <span>👑 파티 관리</span>
-                    <span id="party-count-badge" class="bg-lockOrange text-white text-[11px] font-extrabold px-1.5 py-0.2 rounded-full">1명</span>
+                    <span id="party-count-badge" class="bg-lockOrange text-white text-[11px] font-extrabold px-1.5 py-0.5 rounded-full">1명</span>
                 </button>
             </div>
 
@@ -378,14 +378,14 @@
                     </div>
                 </div>
 
-                <!-- 대칭형 도시락 그리드 컨테이너 -->
-                <div id="bento-container" class="w-full h-[176px] bg-lockWood rounded-2xl p-2.5 shadow-inner border-2 border-[#D4C1A1] bento-grid-4"></div>
+                <!-- 대칭형 도시락 그리드 컨테이너 (여유 높이 188px) -->
+                <div id="bento-container" class="w-full h-[188px] bg-lockWood rounded-2xl p-2.5 shadow-inner border-2 border-[#D4C1A1] bento-grid-4"></div>
             </div>
 
             <!-- 하단: 반찬 선택 영역 -->
             <div class="flex-1 bg-lockCream flex flex-col overflow-hidden">
                 <div class="flex gap-2 px-4 py-2.5 border-b border-[#EAE3D7] bg-[#F5EFE6]">
-                    <button onclick="handleSelectCategory('special')" data-cat="special" class="cat-tab flex-1 py-2 rounded-xl text-xs font-extrabold transition bg-lockTerracotta text-white shadow-2xs whitespace-nowrap">
+                    <button onclick="handleSelectCategory('special')" data-cat="special" class="cat-tab flex-1 py-2 rounded-xl text-xs font-extrabold transition bg-lockTerracotta text-white shadow-sm whitespace-nowrap">
                         🚨 마감특가
                     </button>
                     <button onclick="handleSelectCategory('meat')" data-cat="meat" class="cat-tab flex-1 py-2 rounded-xl text-xs font-bold transition bg-[#FFFDF9] text-[#5C564F] border border-[#E5DDD0] whitespace-nowrap">
@@ -420,7 +420,7 @@
         <!-- =====================================================
              [모달 1] 파티원 입장 환영 팝업
              ===================================================== -->
-        <div id="modal-member-join" class="fixed inset-0 z-50 bg-lockCharcoal/75 backdrop-blur-xs hidden items-center justify-center p-4">
+        <div id="modal-member-join" class="fixed inset-0 z-50 bg-lockCharcoal/75 backdrop-blur-sm hidden items-center justify-center p-4">
             <div class="bg-[#FFFDF9] w-full max-w-[350px] rounded-3xl p-5 text-center shadow-2xl border border-[#EAE3D7] animate-pop">
                 <span class="bg-lockOrangeSoft text-lockOrangeDark text-xs font-extrabold px-3 py-1 rounded-full">👑 함께주문 파티 초대장</span>
                 <h3 id="join-modal-shop-title" class="text-lg font-extrabold text-lockCharcoal mt-2.5">전주 반찬명가 파티</h3>
@@ -440,7 +440,7 @@
         <!-- =====================================================
              [모달: 팀원 전용] 즉시 결제 & 영수증 동시 전송
              ===================================================== -->
-        <div id="modal-member-pay-send" class="fixed inset-0 z-50 bg-lockCharcoal/75 backdrop-blur-xs hidden items-center justify-center p-4">
+        <div id="modal-member-pay-send" class="fixed inset-0 z-50 bg-lockCharcoal/75 backdrop-blur-sm hidden items-center justify-center p-4">
             <div class="bg-[#FFFDF9] w-full max-w-[380px] max-h-[90dvh] rounded-3xl overflow-hidden shadow-2xl flex flex-col animate-pop">
                 <div class="bg-lockCharcoal text-white px-5 py-3.5 flex justify-between items-center">
                     <div>
@@ -506,7 +506,7 @@
         <!-- =====================================================
              [모달 2] 파티장(방장) 관리창
              ===================================================== -->
-        <div id="modal-party-manager" class="fixed inset-0 z-50 bg-lockCharcoal/75 backdrop-blur-xs hidden items-center justify-center p-3">
+        <div id="modal-party-manager" class="fixed inset-0 z-50 bg-lockCharcoal/75 backdrop-blur-sm hidden items-center justify-center p-3">
             <div class="bg-[#FFFDF9] w-full max-w-[405px] max-h-[90dvh] rounded-3xl overflow-hidden shadow-2xl flex flex-col animate-pop">
                 <div class="bg-lockCharcoal text-white px-5 py-4 flex justify-between items-center">
                     <div>
@@ -527,7 +527,7 @@
                             <span class="font-extrabold text-lockCharcoal text-xs">① 단톡방에 파티 초대 링크 공유</span>
                             <span id="party-code-badge" class="text-xs font-extrabold text-lockOrangeDark">방코드: LR000</span>
                         </div>
-                        <button onclick="handleCopyPartyInviteLink()" class="w-full bg-lockOrange hover:bg-lockOrangeDark text-white font-extrabold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-xs">
+                        <button onclick="handleCopyPartyInviteLink()" class="w-full bg-lockOrange hover:bg-lockOrangeDark text-white font-extrabold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm">
                             <i class="fa-solid fa-link"></i>
                             <span>파티 초대 링크 복사하기</span>
                         </button>
@@ -563,7 +563,7 @@
         <!-- =====================================================
              [모달 3] 선(先) 주문서 접수 완료 영수증 ➡️ 후(後) 이메일 알림 신청
              ===================================================== -->
-        <div id="modal-lead" class="fixed inset-0 z-50 bg-lockCharcoal/75 backdrop-blur-xs hidden items-center justify-center p-4">
+        <div id="modal-lead" class="fixed inset-0 z-50 bg-lockCharcoal/75 backdrop-blur-sm hidden items-center justify-center p-4">
             <div class="bg-[#FFFDF9] w-full max-w-[380px] max-h-[90dvh] rounded-3xl overflow-hidden shadow-2xl flex flex-col animate-pop">
                 
                 <div class="bg-lockCharcoal text-white px-5 py-3.5 flex justify-between items-center">
@@ -643,7 +643,7 @@
         <!-- =====================================================
              [모달 4] 관리자 인증창 & 대시보드
              ===================================================== -->
-        <div id="modal-pin" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs hidden items-center justify-center p-4">
+        <div id="modal-pin" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
             <div class="bg-lockCharcoal text-white w-full max-w-[300px] rounded-3xl p-5 border border-white/15 text-center animate-pop">
                 <h3 class="text-base font-extrabold">🔒 관리자 인증</h3>
                 <p class="text-xs text-[#A8A196] mt-1">관리자 전용 보안코드를 입력하세요.</p>
@@ -659,7 +659,7 @@
             </div>
         </div>
 
-        <div id="modal-admin" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs hidden items-center justify-center p-3">
+        <div id="modal-admin" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3">
             <div class="bg-lockCharcoal text-white w-full max-w-[410px] max-h-[90dvh] rounded-3xl overflow-hidden border border-white/15 flex flex-col animate-pop">
                 <div class="px-5 py-3.5 bg-[#221F1C] border-b border-white/10 flex justify-between items-center">
                     <div>
@@ -732,7 +732,7 @@
 
             const artMap = {
                 // [10% 할인 5종]
-                s1: `<!-- 한돈제육볶음 -->
+                s1: `
                     <ellipse cx="52" cy="54" rx="22" ry="13" fill="#C9381E" transform="rotate(-15 52 54)"/>
                     <ellipse cx="70" cy="66" rx="21" ry="13" fill="#D94526" transform="rotate(18 70 66)"/>
                     <ellipse cx="47" cy="70" rx="18" ry="11" fill="#B52B14" transform="rotate(10 47 70)"/>
@@ -742,13 +742,13 @@
                     <rect x="65" y="58" width="13" height="4.5" rx="2.2" fill="#5CA338" transform="rotate(-30 65 58)"/>
                     <rect x="50" y="70" width="12" height="4.5" rx="2.2" fill="#4A8B2C" transform="rotate(12 50 70)"/>
                     <circle cx="58" cy="54" r="1.8" fill="#FFF6DC"/><circle cx="64" cy="66" r="1.8" fill="#FFF6DC"/><circle cx="48" cy="62" r="1.8" fill="#FFF6DC"/><circle cx="72" cy="54" r="1.6" fill="#FFF6DC"/>`,
-                s7: `<!-- 매콤코다리 -->
+                s7: `
                     <rect x="28" y="45" width="38" height="20" rx="9" fill="#B92C19" transform="rotate(-18 47 55)"/>
                     <rect x="50" y="57" width="40" height="20" rx="9" fill="#D23C22" transform="rotate(14 70 67)"/>
                     <path d="M35 52 L55 46 M57 65 L80 71" stroke="#F4A582" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
                     <circle cx="58" cy="48" r="5" fill="#529632"/><circle cx="43" cy="67" r="4.5" fill="#63AB3E"/>
                     <circle cx="52" cy="57" r="1.8" fill="#FFF5D6"/><circle cx="68" cy="62" r="1.8" fill="#FFF5D6"/><circle cx="75" cy="69" r="1.6" fill="#FFF5D6"/>`,
-                s8: `<!-- 메추리장조림 -->
+                s8: `
                     <circle cx="60" cy="60" r="36" fill="#7A4924" opacity="0.22"/>
                     <ellipse cx="47" cy="51" rx="14" ry="12" fill="#8C5327"/><ellipse cx="44" cy="47" rx="4" ry="2.5" fill="#B97B48" opacity="0.6"/>
                     <ellipse cx="73" cy="53" rx="14" ry="12" fill="#7D471F"/><ellipse cx="70" cy="49" rx="4" ry="2.5" fill="#B97B48" opacity="0.6"/>
@@ -756,7 +756,7 @@
                     <ellipse cx="74" cy="73" rx="12" ry="10" fill="#854D23"/>
                     <path d="M35 64 Q55 58 76 62" stroke="#4D8A2E" stroke-width="6" stroke-linecap="round" fill="none"/>
                     <circle cx="60" cy="59" r="1.7" fill="#FFF5D6"/><circle cx="55" cy="70" r="1.7" fill="#FFF5D6"/>`,
-                s5: `<!-- 삼색어묵볶음 -->
+                s5: `
                     <rect x="33" y="42" width="24" height="16" rx="3" fill="#E8C088" transform="rotate(-12 45 50)"/>
                     <rect x="57" y="40" width="24" height="16" rx="3" fill="#DFB071" transform="rotate(15 69 48)"/>
                     <rect x="36" y="61" width="24" height="16" rx="3" fill="#E2B679" transform="rotate(8 48 69)"/>
@@ -765,7 +765,7 @@
                     <rect x="44" y="66" width="14" height="4" rx="2" fill="#539434" transform="rotate(-25 51 68)"/>
                     <rect x="65" y="54" width="14" height="4" rx="2" fill="#539434" transform="rotate(20 72 56)"/>
                     <circle cx="52" cy="58" r="1.6" fill="#FFF8E1"/><circle cx="68" cy="65" r="1.6" fill="#FFF8E1"/>`,
-                s9: `<!-- 감자채볶음 -->
+                s9: `
                     <g stroke="#F0D992" stroke-width="5" stroke-linecap="round">
                         <line x1="34" y1="48" x2="72" y2="44"/><line x1="38" y1="56" x2="84" y2="52"/>
                         <line x1="32" y1="64" x2="78" y2="68"/><line x1="42" y1="74" x2="86" y2="62"/>
@@ -779,13 +779,13 @@
                     <circle cx="58" cy="58" r="1.5" fill="#4A443C"/><circle cx="67" cy="66" r="1.5" fill="#4A443C"/>`,
 
                 // [30% 할인 3종]
-                s2: `<!-- 수제떡갈비 -->
+                s2: `
                     <rect x="29" y="39" width="38" height="32" rx="11" fill="#6E3B1E" transform="rotate(-10 48 55)"/>
                     <rect x="51" y="51" width="38" height="32" rx="11" fill="#7D4423" transform="rotate(10 70 67)"/>
                     <path d="M36 47 L58 55 M35 55 L57 63 M58 58 L80 68 M57 66 L79 76" stroke="#47230F" stroke-width="2.5" stroke-linecap="round"/>
                     <ellipse cx="47" cy="52" rx="3" ry="1.8" fill="#F5E5B8"/><ellipse cx="71" cy="66" rx="3" ry="1.8" fill="#F5E5B8"/>
                     <circle cx="52" cy="57" r="2.5" fill="#5EA339"/><circle cx="65" cy="61" r="2.5" fill="#5EA339"/>`,
-                s3: `<!-- 쏘야볶음 -->
+                s3: `
                     <rect x="33" y="44" width="22" height="13" rx="6.5" fill="#C94127" transform="rotate(-22 44 50)"/>
                     <rect x="61" y="45" width="22" height="13" rx="6.5" fill="#D94B2E" transform="rotate(25 72 51)"/>
                     <rect x="38" y="65" width="22" height="13" rx="6.5" fill="#BD381F" transform="rotate(15 49 71)"/>
@@ -794,7 +794,7 @@
                     <rect x="52" y="52" width="12" height="10" rx="3" fill="#529932" transform="rotate(15 58 57)"/>
                     <rect x="55" y="63" width="11" height="9" rx="3" fill="#F5B82E" transform="rotate(-20 60 67)"/>
                     <circle cx="57" cy="57" r="1.6" fill="#FFF7DF"/><circle cx="67" cy="64" r="1.6" fill="#FFF7DF"/>`,
-                s4: `<!-- 두부양념조림 -->
+                s4: `
                     <rect x="32" y="40" width="32" height="24" rx="4" fill="#F6E8C8" stroke="#D9A85B" stroke-width="2.5" transform="rotate(-12 48 52)"/>
                     <rect x="52" y="54" width="34" height="25" rx="4" fill="#FAF0D7" stroke="#D9A85B" stroke-width="2.5" transform="rotate(8 69 66)"/>
                     <path d="M36 47 Q48 44 58 53" stroke="#CC371D" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.9"/>
@@ -803,14 +803,14 @@
                     <circle cx="52" cy="51" r="1.6" fill="#FFF6DC"/><circle cx="64" cy="65" r="1.6" fill="#FFF6DC"/>`,
 
                 // [50% 할인 2종]
-                s10: `<!-- 바삭김치전 -->
+                s10: `
                     <circle cx="60" cy="60" r="34" fill="#E36E32"/>
                     <circle cx="60" cy="60" r="31" fill="#EF8542"/>
                     <path d="M40 46 Q52 40 58 49 M66 44 Q76 50 72 60 M42 66 Q50 76 62 72 M66 72 Q76 70 78 62" stroke="#C42B16" stroke-width="5" stroke-linecap="round" fill="none"/>
                     <rect x="46" y="56" width="10" height="4" rx="2" fill="#4B8F2C" transform="rotate(20 51 58)"/>
                     <rect x="64" y="52" width="10" height="4" rx="2" fill="#4B8F2C" transform="rotate(-35 69 54)"/>
                     <circle cx="56" cy="65" r="2.2" fill="#B54918" opacity="0.5"/><circle cx="46" cy="48" r="2" fill="#B54918" opacity="0.5"/>`,
-                s6: `<!-- 시금치나물 -->
+                s6: `
                     <g fill="#3E7C2B">
                         <ellipse cx="46" cy="52" rx="18" ry="9" transform="rotate(-25 46 52)"/>
                         <ellipse cx="72" cy="54" rx="18" ry="9" transform="rotate(20 72 54)"/>
@@ -824,7 +824,7 @@
                     <circle cx="52" cy="53" r="1.9" fill="#FFF3C7"/><circle cx="64" cy="57" r="1.9" fill="#FFF3C7"/><circle cx="58" cy="67" r="1.9" fill="#FFF3C7"/><circle cx="69" cy="62" r="1.7" fill="#FFF3C7"/>`,
 
                 // [고기·메인 10종]
-                m1: `<!-- 언양소불고기 -->
+                m1: `
                     <ellipse cx="52" cy="54" rx="22" ry="13" fill="#6E4427" transform="rotate(-15 52 54)"/>
                     <ellipse cx="70" cy="65" rx="20" ry="12" fill="#7E4F2F" transform="rotate(20 70 65)"/>
                     <ellipse cx="50" cy="70" rx="18" ry="10" fill="#5D371D" transform="rotate(8 50 70)"/>
@@ -832,42 +832,42 @@
                     <rect x="52" y="46" width="14" height="4.5" rx="2.2" fill="#579B35" transform="rotate(24 59 48)"/>
                     <rect x="60" y="68" width="13" height="4.5" rx="2.2" fill="#579B35" transform="rotate(-22 66 70)"/>
                     <circle cx="56" cy="58" r="1.8" fill="#FFF6DC"/><circle cx="67" cy="60" r="1.8" fill="#FFF6DC"/>`,
-                m2: `<!-- 두툼계란말이 -->
+                m2: `
                     <rect x="29" y="42" width="28" height="22" rx="7" fill="#F9C938" stroke="#E0A51A" stroke-width="2" transform="rotate(-14 43 53)"/>
                     <rect x="57" y="40" width="28" height="22" rx="7" fill="#FAD24D" stroke="#E0A51A" stroke-width="2" transform="rotate(10 71 51)"/>
                     <rect x="44" y="61" width="30" height="22" rx="7" fill="#F7C22E" stroke="#E0A51A" stroke-width="2" transform="rotate(-4 59 72)"/>
                     <path d="M36 52 Q43 47 48 53 M64 50 Q71 46 76 52 M52 72 Q59 67 66 72" stroke="#D99814" stroke-width="2" fill="none"/>
                     <circle cx="42" cy="50" r="2" fill="#E3562A"/><circle cx="71" cy="52" r="2" fill="#4D9430"/><circle cx="59" cy="71" r="2" fill="#E3562A"/><circle cx="64" cy="74" r="2" fill="#4D9430"/>`,
-                m3: `<!-- 수비드닭가슴 -->
+                m3: `
                     <ellipse cx="44" cy="55" rx="12" ry="20" fill="#F3E5D0" stroke="#DFC9A8" stroke-width="2" transform="rotate(-18 44 55)"/>
                     <ellipse cx="59" cy="58" rx="12" ry="21" fill="#F8EDE0" stroke="#DFC9A8" stroke-width="2" transform="rotate(-12 59 58)"/>
                     <ellipse cx="74" cy="62" rx="12" ry="20" fill="#FFF6EA" stroke="#DFC9A8" stroke-width="2" transform="rotate(-6 74 62)"/>
                     <circle cx="44" cy="52" r="1.3" fill="#4A443C"/><circle cx="59" cy="58" r="1.3" fill="#4A443C"/><circle cx="72" cy="64" r="1.3" fill="#4A443C"/>
                     <ellipse cx="60" cy="46" rx="6" ry="3.5" fill="#5EA63A" transform="rotate(-25 60 46)"/>`,
-                m4: `<!-- 수제동그랑땡 -->
+                m4: `
                     <circle cx="47" cy="52" r="15" fill="#D98B3B" stroke="#B56A22" stroke-width="2"/>
                     <circle cx="73" cy="54" r="15" fill="#E09443" stroke="#B56A22" stroke-width="2"/>
                     <circle cx="59" cy="72" r="15" fill="#D48435" stroke="#B56A22" stroke-width="2"/>
                     <circle cx="43" cy="49" r="2.2" fill="#4D8F2E"/><circle cx="51" cy="55" r="2" fill="#E0522A"/>
                     <circle cx="70" cy="52" r="2.2" fill="#E0522A"/><circle cx="77" cy="57" r="2" fill="#4D8F2E"/>
                     <circle cx="56" cy="70" r="2.2" fill="#4D8F2E"/><circle cx="64" cy="74" r="2" fill="#E0522A"/>`,
-                m5: `<!-- 옛날소시지전 -->
+                m5: `
                     <circle cx="47" cy="52" r="15" fill="#F7C948"/><circle cx="47" cy="52" r="12" fill="#E88B8E"/>
                     <circle cx="73" cy="55" r="15" fill="#F7C948"/><circle cx="73" cy="55" r="12" fill="#E88B8E"/>
                     <circle cx="58" cy="72" r="15" fill="#F7C948"/><circle cx="58" cy="72" r="12" fill="#E88B8E"/>
                     <circle cx="44" cy="49" r="1.8" fill="#F5B0B2"/><circle cx="71" cy="53" r="1.8" fill="#F5B0B2"/><circle cx="56" cy="70" r="1.8" fill="#F5B0B2"/>`,
-                m6: `<!-- 스팸노릇구이 -->
+                m6: `
                     <rect x="31" y="41" width="38" height="22" rx="5" fill="#E47E7A" stroke="#BA514D" stroke-width="2.5" transform="rotate(-12 50 52)"/>
                     <rect x="49" y="57" width="38" height="22" rx="5" fill="#EC8A86" stroke="#BA514D" stroke-width="2.5" transform="rotate(8 68 68)"/>
                     <path d="M38 48 L58 44 M40 55 L60 51 M56 64 L78 67 M55 71 L77 74" stroke="#B5492B" stroke-width="2.2" stroke-linecap="round" opacity="0.65"/>`,
-                m7: `<!-- 매콤오징어 -->
+                m7: `
                     <rect x="33" y="45" width="26" height="16" rx="6" fill="#C9331C" transform="rotate(-18 46 53)"/>
                     <rect x="59" y="46" width="26" height="16" rx="6" fill="#DC3F24" transform="rotate(20 72 54)"/>
                     <rect x="44" y="64" width="28" height="16" rx="6" fill="#B82B16" transform="rotate(4 58 72)"/>
                     <path d="M38 52 L50 48 M42 56 L54 52 M65 50 L77 56 M50 70 L64 70" stroke="#FFE6DC" stroke-width="2" stroke-linecap="round" opacity="0.75"/>
                     <rect x="54" y="56" width="12" height="4" rx="2" fill="#529632" transform="rotate(-25 60 58)"/>
                     <circle cx="58" cy="64" r="1.7" fill="#FFF7DF"/><circle cx="70" cy="54" r="1.7" fill="#FFF7DF"/>`,
-                m8: `<!-- 소고기장조림 -->
+                m8: `
                     <g stroke="#6B3D1E" stroke-width="7" stroke-linecap="round">
                         <line x1="36" y1="50" x2="72" y2="46"/><line x1="34" y1="59" x2="78" y2="57"/>
                         <line x1="40" y1="68" x2="82" y2="66"/><line x1="46" y1="76" x2="74" y2="74"/>
@@ -875,7 +875,7 @@
                     <path d="M40 52 Q56 49 74 52" stroke="#8C5630" stroke-width="3" fill="none"/>
                     <path d="M38 66 Q58 60 76 68" stroke="#4D8A2E" stroke-width="5.5" stroke-linecap="round" fill="none"/>
                     <circle cx="70" cy="48" r="5" fill="#E3C796"/>`,
-                m9: `<!-- 고추장진미채 -->
+                m9: `
                     <g stroke="#C73218" stroke-width="4.5" stroke-linecap="round" fill="none">
                         <path d="M36 48 Q50 38 64 50 T84 48"/>
                         <path d="M34 58 Q48 48 62 60 T86 58"/>
@@ -886,7 +886,7 @@
                         <path d="M40 52 Q54 44 68 54"/><path d="M42 64 Q56 56 70 66"/>
                     </g>
                     <circle cx="52" cy="52" r="1.8" fill="#FFF5D6"/><circle cx="65" cy="60" r="1.8" fill="#FFF5D6"/><circle cx="56" cy="70" r="1.8" fill="#FFF5D6"/>`,
-                m10: `<!-- 견과멸치볶음 -->
+                m10: `
                     <g stroke="#A68256" stroke-width="4.5" stroke-linecap="round" fill="none">
                         <path d="M36 48 Q46 44 56 49"/><path d="M62 46 Q72 42 82 48"/>
                         <path d="M38 60 Q48 56 58 62"/><path d="M60 62 Q70 58 82 64"/>
@@ -898,7 +898,7 @@
                     <circle cx="54" cy="62" r="1.7" fill="#FFF5D6"/><circle cx="68" cy="54" r="1.7" fill="#FFF5D6"/>`,
 
                 // [야채·나물 10종]
-                v1: `<!-- 콩나물무침 -->
+                v1: `
                     <g stroke="#EFE2A8" stroke-width="3.5" stroke-linecap="round" fill="none">
                         <path d="M38 52 Q54 42 74 54"/><path d="M34 62 Q56 52 80 62"/>
                         <path d="M40 72 Q60 64 78 72"/><path d="M48 44 Q58 60 50 78"/>
@@ -907,7 +907,7 @@
                     <circle cx="35" cy="62" r="4.5" fill="#DFB62E"/><circle cx="78" cy="71" r="4.5" fill="#E8C23B"/>
                     <circle cx="50" cy="76" r="4.5" fill="#DFB62E"/><circle cx="62" cy="48" r="4.2" fill="#F0CD4E"/>
                     <rect x="54" y="57" width="10" height="3.5" rx="1.8" fill="#529632" transform="rotate(-20 59 59)"/>`,
-                v2: `<!-- 새콤무생채 -->
+                v2: `
                     <g stroke="#E3532B" stroke-width="4" stroke-linecap="round">
                         <line x1="36" y1="48" x2="74" y2="45"/><line x1="34" y1="56" x2="82" y2="54"/>
                         <line x1="38" y1="64" x2="84" y2="66"/><line x1="42" y1="73" x2="76" y2="70"/>
@@ -918,7 +918,7 @@
                     </g>
                     <line x1="52" y1="50" x2="68" y2="56" stroke="#4D8F2E" stroke-width="3.5" stroke-linecap="round"/>
                     <circle cx="58" cy="62" r="1.7" fill="#FFF7DF"/><circle cx="66" cy="52" r="1.7" fill="#FFF7DF"/>`,
-                v3: `<!-- 들깨고사리 -->
+                v3: `
                     <g stroke="#5C442E" stroke-width="4.5" stroke-linecap="round" fill="none">
                         <path d="M36 52 Q52 40 74 50"/><path d="M34 62 Q56 50 82 60"/>
                         <path d="M40 72 Q58 62 78 72"/><path d="M48 44 Q64 60 48 76"/>
@@ -927,20 +927,20 @@
                         <path d="M42 56 Q60 48 76 66"/>
                     </g>
                     <circle cx="52" cy="54" r="2.2" fill="#D9C6A3"/><circle cx="66" cy="58" r="2.2" fill="#D9C6A3"/><circle cx="58" cy="68" r="2.2" fill="#D9C6A3"/>`,
-                v4: `<!-- 표고버섯볶음 -->
+                v4: `
                     <path d="M34 55 C34 42 58 42 58 55 Z" fill="#7D5333"/><rect x="43" y="54" width="6" height="8" rx="2" fill="#E8D8BE"/>
                     <path d="M58 52 C58 39 82 39 82 52 Z" fill="#6E4629"/><rect x="67" y="51" width="6" height="8" rx="2" fill="#E8D8BE"/>
                     <path d="M46 73 C46 60 72 60 72 73 Z" fill="#8C5F3C"/><rect x="56" y="72" width="6" height="8" rx="2" fill="#E8D8BE"/>
                     <rect x="52" y="56" width="11" height="4" rx="2" fill="#529632" transform="rotate(25 57 58)"/>
                     <circle cx="60" cy="65" r="1.7" fill="#FFF6DC"/>`,
-                v5: `<!-- 오이부추무침 -->
+                v5: `
                     <path d="M34 54 A15 15 0 0 1 64 54 Z" fill="#C9E8B7" stroke="#4D8F2E" stroke-width="3.5" transform="rotate(-15 49 54)"/>
                     <path d="M56 58 A15 15 0 0 1 86 58 Z" fill="#C9E8B7" stroke="#4D8F2E" stroke-width="3.5" transform="rotate(20 71 58)"/>
                     <path d="M42 74 A15 15 0 0 1 72 74 Z" fill="#C9E8B7" stroke="#4D8F2E" stroke-width="3.5" transform="rotate(-5 57 74)"/>
                     <path d="M44 50 L68 62 M48 68 L74 52" stroke="#D94526" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
                     <line x1="42" y1="62" x2="76" y2="66" stroke="#3F7A24" stroke-width="3" stroke-linecap="round"/>
                     <circle cx="56" cy="56" r="1.7" fill="#FFF7DF"/>`,
-                v6: `<!-- 쫀득연근조림 -->
+                v6: `
                     <circle cx="48" cy="54" r="18" fill="#8F5930" stroke="#6B3E1D" stroke-width="2"/>
                     <circle cx="48" cy="45" r="2.6" fill="#F7F1E6"/><circle cx="56" cy="50" r="2.6" fill="#F7F1E6"/><circle cx="55" cy="59" r="2.6" fill="#F7F1E6"/>
                     <circle cx="47" cy="63" r="2.6" fill="#F7F1E6"/><circle cx="40" cy="58" r="2.6" fill="#F7F1E6"/><circle cx="41" cy="49" r="2.6" fill="#F7F1E6"/>
@@ -948,7 +948,7 @@
                     <circle cx="71" cy="57" r="2.6" fill="#F7F1E6"/><circle cx="79" cy="62" r="2.6" fill="#F7F1E6"/><circle cx="78" cy="71" r="2.6" fill="#F7F1E6"/>
                     <circle cx="70" cy="75" r="2.6" fill="#F7F1E6"/><circle cx="63" cy="70" r="2.6" fill="#F7F1E6"/><circle cx="64" cy="61" r="2.6" fill="#F7F1E6"/>
                     <circle cx="60" cy="58" r="1.8" fill="#FFF5D6"/><circle cx="72" cy="66" r="1.8" fill="#FFF5D6"/>`,
-                v7: `<!-- 검은콩조림 -->
+                v7: `
                     <g fill="#2A2623">
                         <ellipse cx="44" cy="48" rx="9" ry="7.5" transform="rotate(-15 44 48)"/>
                         <ellipse cx="62" cy="46" rx="9" ry="7.5" transform="rotate(10 62 46)"/>
@@ -963,7 +963,7 @@
                         <ellipse cx="56" cy="58" rx="3" ry="1.5"/><ellipse cx="73" cy="67" rx="3" ry="1.5"/>
                     </g>
                     <circle cx="52" cy="54" r="1.8" fill="#FFF6DC"/><circle cx="68" cy="60" r="1.8" fill="#FFF6DC"/>`,
-                v8: `<!-- 도라지오이 -->
+                v8: `
                     <g stroke="#E34B26" stroke-width="5" stroke-linecap="round">
                         <line x1="36" y1="50" x2="72" y2="46"/><line x1="38" y1="60" x2="80" y2="56"/>
                         <line x1="42" y1="70" x2="78" y2="68"/>
@@ -974,13 +974,13 @@
                     <path d="M56 54 A11 11 0 0 1 78 54 Z" fill="#C9E8B7" stroke="#4D8F2E" stroke-width="3" transform="rotate(15 67 54)"/>
                     <path d="M36 68 A11 11 0 0 1 58 68 Z" fill="#C9E8B7" stroke="#4D8F2E" stroke-width="3" transform="rotate(-20 47 68)"/>
                     <circle cx="60" cy="62" r="1.7" fill="#FFF7DF"/>`,
-                v9: `<!-- 가지나물 -->
+                v9: `
                     <rect x="34" y="45" width="32" height="12" rx="6" fill="#BFA8C9" stroke="#5A356E" stroke-width="3.5" transform="rotate(-18 50 51)"/>
                     <rect x="52" y="54" width="32" height="12" rx="6" fill="#CDB8D6" stroke="#5A356E" stroke-width="3.5" transform="rotate(15 68 60)"/>
                     <rect x="38" y="66" width="32" height="12" rx="6" fill="#BFA8C9" stroke="#5A356E" stroke-width="3.5" transform="rotate(-6 54 72)"/>
                     <rect x="56" y="47" width="10" height="3.5" rx="1.7" fill="#529632" transform="rotate(28 61 49)"/>
                     <circle cx="52" cy="62" r="1.8" fill="#FFF6DC"/><circle cx="67" cy="65" r="1.8" fill="#FFF6DC"/>`,
-                v10: `<!-- 참기름김치 -->
+                v10: `
                     <path d="M34 48 Q50 38 66 50 L60 64 Q44 58 34 48 Z" fill="#D43B1C"/>
                     <path d="M54 48 Q72 44 84 58 L74 72 Q58 66 54 48 Z" fill="#E34B26"/>
                     <path d="M38 64 Q54 58 70 72 L58 80 Q44 76 38 64 Z" fill="#C42E14"/>
@@ -1024,7 +1024,7 @@
         };
 
         // 2. 현실적인 1칸(40~50g) 기준 반찬 30종
-        //    마감특가는 10%(5종) · 30%(3종) · 50%(2종)으로 현실적 배분 및 정확한 할인 계산 적용
+        //    마감특가는 10%(5종) · 30%(3종) · 50%(2종)으로 현실적 배분
         const FOOD_ITEMS = [
             // [🚨 마감특가 - 10% 할인 5종]
             { id: 's1', name: '한돈제육볶음', category: 'special', discountRate: 10, oriPrice: 1500, price: 1350, kcal: 115 },
@@ -1430,7 +1430,7 @@
             });
 
             const box = document.getElementById('bento-container');
-            box.className = `w-full h-[176px] bg-lockWood rounded-2xl p-2.5 shadow-inner border-2 border-[#D4C1A1] bento-grid-${ngu}`;
+            box.className = `w-full h-[188px] bg-lockWood rounded-2xl p-2.5 shadow-inner border-2 border-[#D4C1A1] bento-grid-${ngu}`;
             renderBentoSlots();
             updateTotalsUI();
         }
@@ -1443,12 +1443,12 @@
                 const isTarget = (idx === activeSlotIndex && !food);
                 const slot = document.createElement('div');
                 slot.className = `relative rounded-xl flex flex-col items-center justify-center p-1 cursor-pointer transition overflow-hidden ${
-                    food ? 'bg-[#FFFDF9] shadow-xs border border-lockOrange/60' 
+                    food ? 'bg-[#FFFDF9] shadow-sm border border-lockOrange/60' 
                          : isTarget ? 'bg-lockOrangeSoft border-2 border-dashed border-lockOrange' 
                                     : 'bg-[#FFFDF9]/85 border border-dashed border-[#CBBBA3]'
                 }`;
 
-                const imgSizeClass = currentNgu === 8 ? 'w-8 h-8' : 'w-10 h-10';
+                const imgSizeClass = currentNgu === 8 ? 'w-8 h-8' : 'w-9 h-9';
                 const nameClass = currentNgu === 8 ? 'text-[10px]' : 'text-[11px]';
 
                 if (food) {
@@ -1490,7 +1490,7 @@
             document.querySelectorAll('.cat-tab').forEach(btn => {
                 if (btn.dataset.cat === cat) {
                     const activeBg = (cat === 'special') ? 'bg-lockTerracotta' : 'bg-lockOrange';
-                    btn.className = `cat-tab flex-1 py-2 rounded-xl text-xs font-extrabold transition ${activeBg} text-white shadow-2xs whitespace-nowrap`;
+                    btn.className = `cat-tab flex-1 py-2 rounded-xl text-xs font-extrabold transition ${activeBg} text-white shadow-sm whitespace-nowrap`;
                 } else {
                     btn.className = "cat-tab flex-1 py-2 rounded-xl text-xs font-bold transition bg-[#FFFDF9] text-[#5C564F] border border-[#E5DDD0] whitespace-nowrap";
                 }
@@ -1501,10 +1501,10 @@
         // 깔끔한 개별 반찬 카드 생성기 (카드 위 개별 할인율 뱃지 완전 제거)
         function createFoodCardEl(item, isDiscounted = false) {
             const card = document.createElement('div');
-            card.className = "flex flex-col items-center text-center cursor-pointer active:scale-95 transition p-2 rounded-2xl bg-[#FFFDF9] hover:bg-lockOrangeSoft/60 border border-[#EAE3D7] shadow-2xs";
+            card.className = "flex flex-col items-center text-center cursor-pointer active:scale-95 transition p-2 rounded-2xl bg-[#FFFDF9] hover:bg-lockOrangeSoft/60 border border-[#EAE3D7] shadow-sm";
 
             card.innerHTML = `
-                <div class="w-14 h-14 rounded-full overflow-hidden shadow-xs border border-[#E6DFD3] bg-lockCream flex items-center justify-center">
+                <div class="w-14 h-14 rounded-full overflow-hidden shadow-sm border border-[#E6DFD3] bg-lockCream flex items-center justify-center">
                     <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover">
                 </div>
                 <div class="text-xs font-extrabold text-lockCharcoal mt-1.5 leading-tight w-full truncate">${item.name}</div>
@@ -2220,8 +2220,8 @@
             a.click();
         }
 
-        // 초기 구동
-        window.addEventListener('DOMContentLoaded', async () => {
+        // 초기 구동 (Firebase 동기화는 백그라운드로 분리해 스플래시 지연 방지)
+        window.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const shopParam = params.get('shop');
             const roleParam = params.get('role');
@@ -2241,7 +2241,7 @@
             renderFoodList();
             updateTotalsUI();
 
-            await syncAllFromFirebase(false);
+            syncAllFromFirebase(false);
             trackEvent('visits');
 
             setInterval(() => {
